@@ -1,9 +1,9 @@
 ﻿<?php 
 // DB credentials.
-define('DB_HOST','localhost');
-define('DB_USER','webuser');
-define('DB_PASS','gDBDE07"sex"97nEss');
-define('DB_NAME','websitedatabase');
+define('DB_HOST','127.0.0.1');
+define('DB_USER','root');
+define('DB_PASS','');
+define('DB_NAME','datasikkerhet');
 // Establish database connection.
 try
 {

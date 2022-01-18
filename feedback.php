@@ -19,7 +19,7 @@ if(isset($_POST['submit']))
 	$title=$_POST['title'];
     $description=$_POST['description'];
 	$user=$_SESSION['alogin'];
-	$reciver= 'Admin';
+	$receiver= 'Admin';
     $notitype='Send Feedback';
     $attachment=' ';
 
@@ -27,18 +27,18 @@ if(isset($_POST['submit']))
 		{
 			$attachment=$final_file;
 		}
-	$notireciver = 'Admin';
-    $sqlnoti="insert into notification (notiuser,notireciver,notitype) values (:notiuser,:notireciver,:notitype)";
+	$notireceiver = 'Admin';
+    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
-	$querynoti-> bindParam(':notireciver', $notireciver, PDO::PARAM_STR);
+	$querynoti-> bindParam(':notireceiver', $notireceiver, PDO::PARAM_STR);
     $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     $querynoti->execute();
 
-	$sql="insert into feedback (sender, reciver, title,feedbackdata,attachment) values (:user,:reciver,:title,:description,:attachment)";
+	$sql="insert into feedback (sender, receiver, title,feedbackdata,attachment) values (:user,:receiver,:title,:description,:attachment)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $user, PDO::PARAM_STR);
-	$query-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 	$query-> bindParam(':title', $title, PDO::PARAM_STR);
 	$query-> bindParam(':description', $description, PDO::PARAM_STR);
 	$query-> bindParam(':attachment', $attachment, PDO::PARAM_STR);
@@ -108,9 +108,9 @@ if(isset($_POST['submit']))
 		$result=$query->fetch(PDO::FETCH_OBJ);
 		$cnt=1;	
 ?>
-	<?php include('includes/header.php');?>
+	<?php include('includes/header-students.php');?>
 	<div class="ts-main-content">
-	<?php include('includes/leftbar.php');?>
+	<?php include('includes/leftbar-students.php');?>
 		<div class="content-wrapper">
 			<div class="container-fluid">
 				<div class="row">
