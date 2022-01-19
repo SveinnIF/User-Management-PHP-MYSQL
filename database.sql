@@ -63,7 +63,7 @@ CREATE TABLE `deleteduser` (
 CREATE TABLE `feedback` (
   `id` int(11) NOT NULL,
   `sender` varchar(50) NOT NULL,
-  `reciver` varchar(50) NOT NULL,
+  `receiver` varchar(50) NOT NULL,
   `title` varchar(100) NOT NULL,
   `feedbackdata` varchar(500) NOT NULL,
   `attachment` varchar(50) NOT NULL
@@ -78,7 +78,7 @@ CREATE TABLE `feedback` (
 CREATE TABLE `notification` (
   `id` int(11) NOT NULL,
   `notiuser` varchar(50) NOT NULL,
-  `notireciver` varchar(50) NOT NULL,
+  `notireceiver` varchar(50) NOT NULL,
   `notitype` varchar(50) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -86,24 +86,36 @@ CREATE TABLE `notification` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `students`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE `students` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
-  `gender` varchar(50) NOT NULL,
-  `mobile` varchar(50) NOT NULL,
-  `designation` varchar(50) NOT NULL,
-  `image` varchar(50) NOT NULL,
+  `fieldofstudy` varchar(50) NOT NULL,
+  `class` varchar(50) NOT NULL,
   `status` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Table structure for table `lecturers`
+--
+
+CREATE TABLE `lecturers` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `course` varchar(50) NOT NULL,
+  `image` varchar(50) NOT NULL,
+  `status` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for table `admin`
@@ -130,9 +142,15 @@ ALTER TABLE `notification`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `students`
 --
-ALTER TABLE `users`
+ALTER TABLE `students`
+  ADD PRIMARY KEY (`id`);
+  
+  --
+-- Indexes for table `lecturers`
+--
+ALTER TABLE `lecturers`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -164,9 +182,16 @@ ALTER TABLE `notification`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `students`
 --
-ALTER TABLE `users`
+ALTER TABLE `students`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+COMMIT;
+
+--
+-- AUTO_INCREMENT for table `lecturers`
+--
+ALTER TABLE `lecturers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 COMMIT;
 

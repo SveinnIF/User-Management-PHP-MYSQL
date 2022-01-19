@@ -36,7 +36,7 @@ if(isset($_POST['submit']))
 			$image=$final_file;
 		}
 
-	$sql="UPDATE users SET name=(:name), email=(:email), gender=(:gender), mobile=(:mobileno), designation=(:designation), Image=(:image) WHERE id=(:idedit)";
+	$sql="UPDATE students SET name=(:name), email=(:email), gender=(:gender), mobile=(:mobileno), designation=(:designation), Image=(:image) WHERE id=(:idedit)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':name', $name, PDO::PARAM_STR);
 	$query-> bindParam(':email', $email, PDO::PARAM_STR);
@@ -103,7 +103,7 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-		$sql = "SELECT * from users where id = :editid";
+		$sql = "SELECT * from students where id = :editid";
 		$query = $dbh -> prepare($sql);
 		$query->bindParam(':editid',$editid,PDO::PARAM_INT);
 		$query->execute();

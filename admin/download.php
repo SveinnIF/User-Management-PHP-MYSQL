@@ -22,8 +22,8 @@ if(strlen($_SESSION['alogin'])==0)
 									</thead>
 
 <?php 
-$filename="Users list";
-$sql = "SELECT * from Users";
+$filename="students list";
+$sql = "SELECT * from students";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);

@@ -10,7 +10,7 @@ else{
 if(isset($_GET['del']))
 {
 $id=$_GET['del'];
-$sql = "delete from users WHERE id=:id";
+$sql = "delete from students WHERE id=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
@@ -21,7 +21,7 @@ if(isset($_REQUEST['unconfirm']))
 	{
 	$aeid=intval($_GET['unconfirm']);
 	$memstatus=1;
-	$sql = "UPDATE users SET status=:status WHERE  id=:aeid";
+	$sql = "UPDATE students SET status=:status WHERE  id=:aeid";
 	$query = $dbh->prepare($sql);
 	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
 	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
@@ -33,7 +33,7 @@ if(isset($_REQUEST['unconfirm']))
 	{
 	$aeid=intval($_GET['confirm']);
 	$memstatus=0;
-	$sql = "UPDATE users SET status=:status WHERE  id=:aeid";
+	$sql = "UPDATE students SET status=:status WHERE  id=:aeid";
 	$query = $dbh->prepare($sql);
 	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
 	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
@@ -114,7 +114,7 @@ if(isset($_REQUEST['unconfirm']))
 
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading">List Users</div>
+							<div class="panel-heading">List students</div>
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
@@ -133,10 +133,10 @@ if(isset($_REQUEST['unconfirm']))
 									<tbody>
 
 <?php 
-$reciver = 'Admin';
-$sql = "SELECT * from  feedback where reciver = (:reciver)";
+$receiver = 'Admin';
+$sql = "SELECT * from  feedback where receiver = (:receiver)";
 $query = $dbh -> prepare($sql);
-$query-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;

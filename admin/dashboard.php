@@ -60,14 +60,14 @@ else{
 											<div class="panel-body bk-primary text-light">
 												<div class="stat-panel text-center">
 <?php 
-$sql ="SELECT id from users";
+$sql ="SELECT id from students";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $bg=$query->rowCount();
 ?>
 													<div class="stat-panel-number h1 "><?php echo htmlentities($bg);?></div>
-													<div class="stat-panel-title text-uppercase">Total Users</div>
+													<div class="stat-panel-title text-uppercase">Total students</div>
 												</div>
 											</div>
 											<a href="userlist.php" class="block-anchor panel-footer">Full Detail <i class="fa fa-arrow-right"></i></a>
@@ -79,10 +79,10 @@ $bg=$query->rowCount();
 												<div class="stat-panel text-center">
 
 <?php 
-$reciver = 'Admin';
-$sql1 ="SELECT id from feedback where reciver = (:reciver)";
+$receiver = 'Admin';
+$sql1 ="SELECT id from feedback where receiver = (:receiver)";
 $query1 = $dbh -> prepare($sql1);;
-$query1-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+$query1-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query1->execute();
 $results1=$query1->fetchAll(PDO::FETCH_OBJ);
 $regbd=$query1->rowCount();
@@ -101,10 +101,10 @@ $regbd=$query1->rowCount();
 												<div class="stat-panel text-center">
 
 <?php 
-$reciver = 'Admin';
-$sql12 ="SELECT id from notification where notireciver = (:reciver)";
+$receiver = 'Admin';
+$sql12 ="SELECT id from notification where notireceiver = (:receiver)";
 $query12 = $dbh -> prepare($sql12);;
-$query12-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+$query12-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query12->execute();
 $results12=$query12->fetchAll(PDO::FETCH_OBJ);
 $regbd2=$query12->rowCount();
@@ -128,7 +128,7 @@ $results6=$query6->fetchAll(PDO::FETCH_OBJ);
 $query=$query6->rowCount();
 ?>
 													<div class="stat-panel-number h1 "><?php echo htmlentities($query);?></div>
-													<div class="stat-panel-title text-uppercase">Deleted Users</div>
+													<div class="stat-panel-title text-uppercase">Deleted students</div>
 												</div>
 											</div>
 											<a href="deleteduser.php" class="block-anchor panel-footer text-center">Full Detail &nbsp; <i class="fa fa-arrow-right"></i></a>

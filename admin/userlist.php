@@ -12,7 +12,7 @@ if(isset($_GET['del']) && isset($_GET['name']))
 $id=$_GET['del'];
 $name=$_GET['name'];
 
-$sql = "delete from users WHERE id=:id";
+$sql = "delete from students WHERE id=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
@@ -29,7 +29,7 @@ if(isset($_REQUEST['unconfirm']))
 	{
 	$aeid=intval($_GET['unconfirm']);
 	$memstatus=1;
-	$sql = "UPDATE users SET status=:status WHERE  id=:aeid";
+	$sql = "UPDATE students SET status=:status WHERE  id=:aeid";
 	$query = $dbh->prepare($sql);
 	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
 	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
@@ -41,7 +41,7 @@ if(isset($_REQUEST['unconfirm']))
 	{
 	$aeid=intval($_GET['confirm']);
 	$memstatus=0;
-	$sql = "UPDATE users SET status=:status WHERE  id=:aeid";
+	$sql = "UPDATE students SET status=:status WHERE  id=:aeid";
 	$query = $dbh->prepare($sql);
 	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
 	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
@@ -66,7 +66,7 @@ if(isset($_REQUEST['unconfirm']))
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Manage Users</title>
+	<title>Manage students</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -118,11 +118,11 @@ if(isset($_REQUEST['unconfirm']))
 				<div class="row">
 					<div class="col-md-12">
 
-						<h2 class="page-title">Manage Users</h2>
+						<h2 class="page-title">Manage students</h2>
 
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading">List Users</div>
+							<div class="panel-heading">List students</div>
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
@@ -143,7 +143,7 @@ if(isset($_REQUEST['unconfirm']))
 									
 									<tbody>
 
-<?php $sql = "SELECT * from  users ";
+<?php $sql = "SELECT * from  students ";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);

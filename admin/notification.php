@@ -90,10 +90,10 @@ if(isset($_POST['submit']))
 									<div class="panel-heading">Notification</div>
 									   <div class="panel-body">
 <?php 
-$reciver = 'Admin';
-$sql = "SELECT * from  notification where notireciver = (:reciver) order by time DESC";
+$receiver = 'Admin';
+$sql = "SELECT * from  notification where notireceiver = (:receiver) order by time DESC";
 $query = $dbh -> prepare($sql);
-$query-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
