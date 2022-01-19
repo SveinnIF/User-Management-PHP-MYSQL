@@ -1,9 +1,9 @@
 ﻿<?php 
 // DB credentials.
 define('DB_HOST','localhost');
-define('DB_USER','webuser');
-define('DB_PASS','gDBDE07"sex"97nEss');
-define('DB_NAME','websitedatabase');
+define('DB_USER','Sveinn');
+define('DB_PASS','#OQI¤HT#=NI(GQ#=%(HN#¤Y%?)N#%H¤#%H#%¤=HG#JN=');
+define('DB_NAME','database4testserver');
 // Establish database connection.
 try
 {
@@ -14,3 +14,4 @@ catch (PDOException $e)
 exit("Error: " . $e->getMessage());
 }
 ?>
+
