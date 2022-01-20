@@ -42,7 +42,7 @@ if (isset($_POST["email"])) {
       "MIME-Version: 1.0",
       "Content-type: text/html; charset=utf-8"
     ]);
-    $link = "http://158.39.188.201/steg1/2c-reset.php?i=".$user["id"]."&h=".$hash;
+    $link = "http://158.39.188.201/steg1/reset.php?i=".$user["id"]."&h=".$hash;
     $message = "<a href='$link'>Click here to reset password</a>";
     if (!@mail($user["email"], $subject, $message, $header)) {
       $result = "Failed to send email!";
