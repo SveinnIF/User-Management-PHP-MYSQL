@@ -7,7 +7,7 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
   // (A) CONNECT TO DATABASE
  
   // (B) CHECK IF VALID REQUEST
-  $stmt = $pdo->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
+  $stmt = $dbh->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
   $stmt->execute([$_GET["i"]]);
   $request = $stmt->fetch();
   if (is_array($request)) {
@@ -28,9 +28,9 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
     $password = substr(str_shuffle($chars),0 ,8); // 8 characters
  
     // UPDATE DATABASE
-    $stmt = $pdo->prepare("UPDATE `students` SET `password`=? WHERE `id`=?");
+    $stmt = $dbh->prepare("UPDATE `students` SET `password`=? WHERE `id`=?");
     $stmt->execute([$password, $_GET["i"]]);
-    $stmt = $pdo->prepare("DELETE FROM `password_reset` WHERE `id`=?");
+    $stmt = $dbh->prepare("DELETE FROM `password_reset` WHERE `id`=?");
     $stmt->execute([$_GET["i"]]);
  
     // SHOW RESULTS (UPDATED PASSWORD)
