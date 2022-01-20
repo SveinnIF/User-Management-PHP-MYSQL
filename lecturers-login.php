@@ -16,7 +16,7 @@ $results=$query->fetchAll(PDO::FETCH_OBJ);
 if($query->rowCount() > 0)
 {
 $_SESSION['alogin']=$_POST['username'];
-echo "<script type='text/javascript'> document.location = 'messages-lecturers.php'; </script>";
+echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
 } else{
   
   echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
