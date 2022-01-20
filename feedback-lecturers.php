@@ -41,10 +41,6 @@ if(isset($_REQUEST['unconfirm']))
 	$msg="Changes Sucessfully";
 	}
 
-
-
-
-
  ?>
 
 <!doctype html>
@@ -116,21 +112,6 @@ if(isset($_REQUEST['unconfirm']))
 						<div class="panel panel-default">
 							<div class="panel-heading">List Students</div>
 						</div>
-						
-							
-							<label class="col-sm-1 control-label">Course<span style="color:red">*</span></label>
-                            <div class="col-sm-5">
-							<select name="course" class="form-control" required>
-                            <option value="">Select</option>
-                            <option value=".NET">.NET</option>
-							<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-							<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-							<option value="Bildeanalyse">Bildeanalyse</option>
-							<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-							<option value="Autonome kjøretøy">Autonome kjøretøy</option>
-							</select>
-							</div>
-							<br><br>
 							
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
@@ -138,25 +119,27 @@ if(isset($_REQUEST['unconfirm']))
 								<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-												<th>#</th>
-												<th>Course</th>
-												<th>Title</th>
-                                                <th>Feedback</th>
-                                                <th>Attachment</th>
-											    <th>Action</th>	
+											<th>#</th>
+											<th>Course</th>
+											<th>Title</th>
+											<th>Feedback</th>
+											<th>Attachment</th>
+											<th>Action</th>	
 										</tr>
 									</thead>
 									
 									<tbody>
 
-<?php 
+<?php
 $receiver = 'Lecturers';
-$sql = "SELECT * from feedback where receiver = (:receiver)";
+$emailforcourse = $_SESSION['alogin'];
+$sql = "SELECT feedback.*, lecturers.course FROM feedback LEFT OUTER JOIN lecturers ON email = '$emailforcourse' AND receiver = (:receiver) GROUP BY lecturers.course";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
+
 if($query->rowCount() > 0)
 {
 foreach($results as $result)
