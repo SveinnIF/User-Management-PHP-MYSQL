@@ -102,7 +102,7 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-		$sql = "SELECT * from users;";
+		$sql = "SELECT * from students;";
 		$query = $dbh -> prepare($sql);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);

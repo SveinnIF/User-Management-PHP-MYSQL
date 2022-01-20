@@ -15,22 +15,22 @@ else{
 
 	if(isset($_POST['submit']))
   {	
-	$reciver=$_POST['email'];
+	$receiver=$_POST['email'];
     $message=$_POST['message'];
 	$notitype='Send Message';
 	$sender='Admin';
 	
-    $sqlnoti="insert into notification (notiuser,notireciver,notitype) values (:notiuser,:notireciver,:notitype)";
+    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
-	$querynoti-> bindParam(':notireciver',$reciver, PDO::PARAM_STR);
+	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
     $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     $querynoti->execute();
 
-	$sql="insert into feedback (sender, reciver, feedbackdata) values (:user,:reciver,:description)";
+	$sql="insert into feedback (sender, receiver, feedbackdata) values (:user,:receiver,:description)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
-	$query-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 	$query-> bindParam(':description', $message, PDO::PARAM_STR);
     $query->execute(); 
 	$msg="Feedback Send";
@@ -92,7 +92,7 @@ else{
 
 <body>
 <?php
-		$sql = "SELECT * from users;";
+		$sql = "SELECT * from students;";
 		$query = $dbh -> prepare($sql);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
