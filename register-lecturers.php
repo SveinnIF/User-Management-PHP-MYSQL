@@ -124,16 +124,25 @@ $error="Something went wrong. Please try again";
 
                             <label class="col-sm-1 control-label">Course<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="text" name="course" class="form-control" required>
+							<select name="course" class="form-control" required>
+                            <option value="">Select</option>
+                            <option value=".NET">.NET</option>
+							<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
+							<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
+							<option value="Bildeanalyse">Bildeanalyse</option>
+							<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
+							<option value="Autonome kjøretøy">Autonome kjøretøy</option>
+							</select>
                             </div>
-                            </div>
-
-                            <div class="form-group">
+							</div>
+							
+							<div class="form-group">
                             <label class="col-sm-1 control-label">Picture<span style="color:red">*</span></label>
                             <div class="col-sm-5">
                             <div><input type="file" name="image" class="form-control"></div>
                             </div>
-                            </div>
+							</div>
+                            
 
 								<br>
                                 <button class="btn btn-primary" name="submit" type="submit">Register</button>
