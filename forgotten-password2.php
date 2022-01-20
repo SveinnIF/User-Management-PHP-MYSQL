@@ -3,7 +3,6 @@ session_start();
 error_reporting(0);
 include('includes/config.php');
 if (isset($_POST["email"])) {
-   echo "<p>Benis</p>";
  
   // (B2) CHECK IF VALID USER
   $stmt = $dbh->prepare("SELECT * FROM `students` WHERE `email`=?");
