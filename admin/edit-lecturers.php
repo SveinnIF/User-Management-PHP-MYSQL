@@ -7,45 +7,42 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{
+
+if(isset($_GET['edit']))
+	{
+		$editid=$_GET['edit'];
+	}
+
+
 	
 if(isset($_POST['submit']))
-  {	
-	$file = $_FILES['attachment']['name'];
-	$file_loc = $_FILES['attachment']['tmp_name'];
-	$folder="attachment/";
+  {
+	$file = $_FILES['image']['name'];
+	$file_loc = $_FILES['image']['tmp_name'];
+	$folder="../images/";
 	$new_file_name = strtolower($file);
 	$final_file=str_replace(' ','-',$new_file_name);
 	
-	$title=$_POST['title'];
-    $description=$_POST['description'];
+	$name=$_POST['name'];
+	$email=$_POST['email'];
 	$course=$_POST['course'];
-	$user=$_SESSION['alogin'];
-	$receiver='Lecturers' AND 'Admin';
-    $notitype='Send Feedback';
-    $attachment=' ';
+	$idedit=$_POST['idedit'];
+	$image=$_POST['image'];
 
 	if(move_uploaded_file($file_loc,$folder.$final_file))
 		{
-			$attachment=$final_file;
+			$image=$final_file;
 		}
-	$notireceiver = 'Lecturers' AND 'Admin';
-    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
-    $querynoti = $dbh->prepare($sqlnoti);
-	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
-	$querynoti-> bindParam(':notireceiver', $notireceiver, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    $querynoti->execute();
 
-	$sql="insert into feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
+	$sql="UPDATE lecturers SET name=(:name), email=(:email), course=(:course), Image=(:image) WHERE id=(:idedit)";
 	$query = $dbh->prepare($sql);
-	$query-> bindParam(':user', $user, PDO::PARAM_STR);
-	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+	$query-> bindParam(':name', $name, PDO::PARAM_STR);
+	$query-> bindParam(':email', $email, PDO::PARAM_STR);
 	$query-> bindParam(':course', $course, PDO::PARAM_STR);
-	$query-> bindParam(':title', $title, PDO::PARAM_STR);
-	$query-> bindParam(':description', $description, PDO::PARAM_STR);
-	$query-> bindParam(':attachment', $attachment, PDO::PARAM_STR);
-    $query->execute(); 
-	$msg="Feedback Send";
+	$query-> bindParam(':image', $image, PDO::PARAM_STR);
+	$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
+	$query->execute();
+	$msg="Information Updated Successfully";
 }    
 ?>
 
@@ -60,7 +57,7 @@ if(isset($_POST['submit']))
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Edit Profile</title>
+	<title>Edit Lecturer</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -81,7 +78,7 @@ if(isset($_POST['submit']))
 
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
 	<style>
-	.errorWrap {
+.errorWrap {
     padding: 10px;
     margin: 0 0 20px 0;
 	background: #dd3d36;
@@ -98,75 +95,70 @@ if(isset($_POST['submit']))
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 		</style>
-
-
 </head>
 
 <body>
 <?php
-		$sql = "SELECT * from students;";
+		$sql = "SELECT * from lecturers where id = :editid";
 		$query = $dbh -> prepare($sql);
+		$query->bindParam(':editid',$editid,PDO::PARAM_INT);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
 		$cnt=1;	
 ?>
-	<?php include('includes/header-students.php');?>
+	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
-	<?php include('includes/leftbar-students.php');?>
+	<?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
+						<h3 class="page-title">Edit User : <?php echo htmlentities($result->name); ?></h3>
 						<div class="row">
-                       
 							<div class="col-md-12">
-                            <h2>Give us Feedback</h2>
 								<div class="panel panel-default">
 									<div class="panel-heading">Edit Info</div>
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-<div class="panel-body">
-<form method="post" class="form-horizontal" enctype="multipart/form-data">
-
+									<div class="panel-body">
+<form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
 <div class="form-group">
-    <input type="hidden" name="user" value="<?php echo htmlentities($result->email); ?>">
-	<label class="col-sm-2 control-label">Title<span style="color:red">*</span></label>
-	<div class="col-sm-4">
-	<input type="text" name="title" class="form-control" required>
-	</div>
-
-    <label class="col-sm-1 control-label">Course<span style="color:red">*</span></label>
-    <div class="col-sm-5">
-	<select name="course" class="form-control" required>
-    <option value="">Select</option>
-    <option value=".NET">.NET</option>
-	<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-	<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-	<option value="Bildeanalyse">Bildeanalyse</option>
-	<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-	<option value="Autonome kjøretøy">Autonome kjøretøy</option>
-	</select>
-	</div>
+<label class="col-sm-2 control-label">Name<span style="color:red">*</span></label>
+<div class="col-sm-4">
+<input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->name);?>">
+</div>
+<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
+<div class="col-sm-4">
+<input type="email" name="email" class="form-control" required value="<?php echo htmlentities($result->email);?>">
+</div>
 </div>
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Attachment<span style="color:red"></span></label>
-	<div class="col-sm-4">
-	<input type="file" name="attachment" class="form-control">
-	</div>
+<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
+<div class="col-sm-4">
+<input type="text" name="course" class="form-control" required value="<?php echo htmlentities($result->course);?>">
+</div>
 </div>
 
+
 <div class="form-group">
-	<label class="col-sm-2 control-label">Description<span style="color:red">*</span></label>
-	<div class="col-sm-10">
-	<textarea class="form-control" rows="5" name="description"></textarea>
-	</div>
+<label class="col-sm-2 control-label">Image<span style="color:red">*</span></label>
+<div class="col-sm-4">
+<input type="file" name="image" class="form-control">
 </div>
+
+	<div class="col-sm-8 col-sm-offset-2">
+		<img src="../images/<?php echo htmlentities($result->image);?>" width="150px"/>
+		<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
+		<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
+</div>
+</div>
+
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
-		<button class="btn btn-primary" name="submit" type="submit">Send</button>
+		<button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
 	</div>
 </div>
 
@@ -175,8 +167,14 @@ if(isset($_POST['submit']))
 								</div>
 							</div>
 						</div>
+						
+					
+
 					</div>
 				</div>
+				
+			
+
 			</div>
 		</div>
 	</div>
@@ -198,6 +196,7 @@ if(isset($_POST['submit']))
 					}, 3000);
 					});
 	</script>
+
 </body>
 </html>
 <?php } ?>

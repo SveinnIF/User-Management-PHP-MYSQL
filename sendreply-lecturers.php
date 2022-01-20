@@ -7,46 +7,34 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{
-	
-if(isset($_POST['submit']))
-  {	
-	$file = $_FILES['attachment']['name'];
-	$file_loc = $_FILES['attachment']['tmp_name'];
-	$folder="attachment/";
-	$new_file_name = strtolower($file);
-	$final_file=str_replace(' ','-',$new_file_name);
-	
-	$title=$_POST['title'];
-    $description=$_POST['description'];
-	$course=$_POST['course'];
-	$user=$_SESSION['alogin'];
-	$receiver='Lecturers' AND 'Admin';
-    $notitype='Send Feedback';
-    $attachment=' ';
 
-	if(move_uploaded_file($file_loc,$folder.$final_file))
-		{
-			$attachment=$final_file;
-		}
-	$notireceiver = 'Lecturers' AND 'Admin';
+	if(isset($_GET['reply']))
+	{
+	$replyto=$_GET['reply'];
+	}   
+
+	if(isset($_POST['submit']))
+  {	
+	$receiver=$_POST['email'];
+    $message=$_POST['message'];
+	$notitype='Send Message';
+	$sender='Lecturers';
+	
     $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
-	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
-	$querynoti-> bindParam(':notireceiver', $notireceiver, PDO::PARAM_STR);
+	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
+	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
     $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     $querynoti->execute();
 
-	$sql="insert into feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
+	$sql="insert into feedback (sender, receiver, feedbackdata) values (:user,:receiver,:description)";
 	$query = $dbh->prepare($sql);
-	$query-> bindParam(':user', $user, PDO::PARAM_STR);
+	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
-	$query-> bindParam(':course', $course, PDO::PARAM_STR);
-	$query-> bindParam(':title', $title, PDO::PARAM_STR);
-	$query-> bindParam(':description', $description, PDO::PARAM_STR);
-	$query-> bindParam(':attachment', $attachment, PDO::PARAM_STR);
+	$query-> bindParam(':description', $message, PDO::PARAM_STR);
     $query->execute(); 
 	$msg="Feedback Send";
-}    
+  }
 ?>
 
 <!doctype html>
@@ -110,63 +98,43 @@ if(isset($_POST['submit']))
 		$result=$query->fetch(PDO::FETCH_OBJ);
 		$cnt=1;	
 ?>
-	<?php include('includes/header-students.php');?>
+	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
-	<?php include('includes/leftbar-students.php');?>
+	<?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
 						<div class="row">
-                       
 							<div class="col-md-12">
-                            <h2>Give us Feedback</h2>
+                            <h2>Reply Feedback</h2>
 								<div class="panel panel-default">
 									<div class="panel-heading">Edit Info</div>
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-<div class="panel-body">
+									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
 <div class="form-group">
-    <input type="hidden" name="user" value="<?php echo htmlentities($result->email); ?>">
-	<label class="col-sm-2 control-label">Title<span style="color:red">*</span></label>
+	<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-	<input type="text" name="title" class="form-control" required>
-	</div>
-
-    <label class="col-sm-1 control-label">Course<span style="color:red">*</span></label>
-    <div class="col-sm-5">
-	<select name="course" class="form-control" required>
-    <option value="">Select</option>
-    <option value=".NET">.NET</option>
-	<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-	<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-	<option value="Bildeanalyse">Bildeanalyse</option>
-	<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-	<option value="Autonome kjøretøy">Autonome kjøretøy</option>
-	</select>
+	<input type="text" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
 	</div>
 </div>
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Attachment<span style="color:red"></span></label>
-	<div class="col-sm-4">
-	<input type="file" name="attachment" class="form-control">
+	<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
+	<div class="col-sm-6">
+	<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
 	</div>
 </div>
 
-<div class="form-group">
-	<label class="col-sm-2 control-label">Description<span style="color:red">*</span></label>
-	<div class="col-sm-10">
-	<textarea class="form-control" rows="5" name="description"></textarea>
-	</div>
-</div>
+<input type="hidden" name="editid" class="form-control" required value="<?php echo htmlentities($result->id);?>">
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
-		<button class="btn btn-primary" name="submit" type="submit">Send</button>
+		<button class="btn btn-primary" name="submit" type="submit" >Send Reply</button>
 	</div>
 </div>
 

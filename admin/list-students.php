@@ -7,15 +7,52 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{
-if(isset($_GET['del']))
+if(isset($_GET['del']) && isset($_GET['name']))
 {
 $id=$_GET['del'];
-$sql = "delete from feedback WHERE id=:id";
+$name=$_GET['name'];
+
+$sql = "delete from students WHERE id=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
+
+$sql2 = "insert into deleteduser (email) values (:name)";
+$query2 = $dbh->prepare($sql2);
+$query2 -> bindParam(':name',$name, PDO::PARAM_STR);
+$query2 -> execute();
+
 $msg="Data Deleted successfully";
 }
+
+if(isset($_REQUEST['unconfirm']))
+	{
+	$aeid=intval($_GET['unconfirm']);
+	$memstatus=1;
+	$sql = "UPDATE students SET status=:status WHERE  id=:aeid";
+	$query = $dbh->prepare($sql);
+	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
+	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+	$query -> execute();
+	$msg="Changes Sucessfully";
+	}
+
+	if(isset($_REQUEST['confirm']))
+	{
+	$aeid=intval($_GET['confirm']);
+	$memstatus=0;
+	$sql = "UPDATE students SET status=:status WHERE  id=:aeid";
+	$query = $dbh->prepare($sql);
+	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
+	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+	$query -> execute();
+	$msg="Changes Sucessfully";
+	}
+
+
+
+
+
  ?>
 
 <!doctype html>
@@ -29,7 +66,7 @@ $msg="Data Deleted successfully";
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Manage Feedback</title>
+	<title>Manage students</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -81,34 +118,31 @@ $msg="Data Deleted successfully";
 				<div class="row">
 					<div class="col-md-12">
 
-						<h2 class="page-title">Manage Feedback</h2>
+						<h2 class="page-title">Manage students</h2>
 
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading">List Users</div>
+							<div class="panel-heading">List students</div>
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
 								<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-										    <th>#</th>
-											<th>Course</th>
-											<th>User Email</th>
-											<th>Title</th>
-                                            <th>Feedback</th>
-											<th>Attachment</th>
+										<th>#</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Field of study</th>
+												<th>Class</th>
+                                                <th>Account</th>
 											<th>Action</th>	
 										</tr>
 									</thead>
 									
 									<tbody>
 
-<?php 
-$receiver = 'Lecturers' AND 'Admin';
-$sql = "SELECT * from  feedback where receiver = (:receiver)";
+<?php $sql = "SELECT * from  students ";
 $query = $dbh -> prepare($sql);
-$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -118,14 +152,24 @@ foreach($results as $result)
 {				?>	
 										<tr>
 											<td><?php echo htmlentities($cnt);?></td>
-											<td><?php echo htmlentities($result->course);?></td>
-                                            <td><?php echo htmlentities($result->sender);?></td>
-											<td><?php echo htmlentities($result->title);?></td>
-                                            <td><?php echo htmlentities($result->feedbackdata);?></td>
-                                            <td><a href="../attachment/<?php echo htmlentities($result->attachment);?>" ><?php echo htmlentities($result->attachment);?></a></td>
+                                            <td><?php echo htmlentities($result->name);?></td>
+                                            <td><?php echo htmlentities($result->email);?></td>
+                                            <td><?php echo htmlentities($result->fieldofstudy);?></td>
+                                            <td><?php echo htmlentities($result->class);?></td>
+                                            <td>
+                                            
+                                            <?php if($result->status == 1)
+                                                    {?>
+                                                    <a href="students-list.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
+                                                    <?php } else {?>
+                                                    <a href="students-list.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
+                                                    <?php } ?>
+</td>
+                                            </td>
+											
 <td>
-<a href="sendreply.php?reply=<?php echo $result->sender;?>">&nbsp; <i class="fa fa-mail-reply"></i></a>&nbsp;&nbsp;
-<a href="feedback.php?del=<?php echo $result->id;?>&name=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
+<a href="edit-students.php?edit=<?php echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+<a href="list-students.php?del=<?php echo $result->id;?>&name=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
 </td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
@@ -158,6 +202,7 @@ foreach($results as $result)
 					}, 3000);
 					});
 		</script>
+		
 </body>
 </html>
 <?php } ?>
