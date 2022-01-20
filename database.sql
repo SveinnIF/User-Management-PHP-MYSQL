@@ -64,6 +64,7 @@ CREATE TABLE `feedback` (
   `id` int(11) NOT NULL,
   `sender` varchar(50) NOT NULL,
   `receiver` varchar(50) NOT NULL,
+  `course` varchar(50) NOT NULL,
   `title` varchar(100) NOT NULL,
   `feedbackdata` varchar(500) NOT NULL,
   `attachment` varchar(50) NOT NULL
@@ -167,7 +168,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `deleteduser`
 --
 ALTER TABLE `deleteduser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `feedback`
@@ -192,7 +193,7 @@ COMMIT;
 -- AUTO_INCREMENT for table `lecturers`
 --
 ALTER TABLE `lecturers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
