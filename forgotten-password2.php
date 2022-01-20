@@ -6,7 +6,7 @@ if (isset($_POST["email"])) {
 
  
   // (B2) CHECK IF VALID USER
-  if($stmt = $pdo->prepare("SELECT * FROM `students` WHERE `email`=?");)
+  if($stmt = $pdo->prepare("SELECT * FROM `students` WHERE `email`=?"));
   $stmt->execute([$_POST["email"]]);
   $user = $stmt->fetch();
   $result = is_array($user)
