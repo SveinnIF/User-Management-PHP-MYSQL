@@ -3,10 +3,10 @@ session_start();
 error_reporting(0);
 include('includes/config.php');
 if (isset($_POST["email"])) {
-
+   echo "<p>Benis</p>";
  
   // (B2) CHECK IF VALID USER
-  if($stmt = $pdo->prepare("SELECT * FROM `students` WHERE `email`=?"));
+  $stmt = $dbh->prepare("SELECT * FROM `students` WHERE `email`=?");
   $stmt->execute([$_POST["email"]]);
   $user = $stmt->fetch();
   $result = is_array($user)
@@ -15,7 +15,7 @@ if (isset($_POST["email"])) {
  
   // (B3) CHECK PREVIOUS REQUEST (PREVENT SPAM)
   if ($result == "") {
-    $stmt = $pdo->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
+    $stmt = $dbh->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
     $stmt->execute([$user["id"]]);
     $request = $stmt->fetch();
     $now = strtotime("now");
@@ -31,7 +31,7 @@ if (isset($_POST["email"])) {
     $hash = md5($user["email"] . $now);
  
     // DATABASE ENTRY
-    $stmt = $pdo->prepare("REPLACE INTO `password_reset` VALUES (?,?,?)");
+    $stmt = $dbh->prepare("REPLACE INTO `password_reset` VALUES (?,?,?)");
     $stmt->execute([$user["id"], $hash, date("Y-m-d H:i:s")]);
  
     // SEND EMAIL - CHANGE TO YOUR OWN!
