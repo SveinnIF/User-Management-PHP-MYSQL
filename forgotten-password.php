@@ -5,8 +5,7 @@ if(isset($_POST['login']))
 {
 $status='1';
 $email=$_POST['username'];
-$password = "SELECT password FROM students WHERE email=:email";
-$sql ="SELECT email FROM students WHERE email=:email and status=(:status)";
+$sql ="SELECT password FROM students WHERE email=:email and status=(:status)";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':email', $email, PDO::PARAM_STR);
 $query-> bindParam(':status', $status, PDO::PARAM_STR);
@@ -17,7 +16,7 @@ if($query->rowCount() > 0)
 {
 				$to = $email;
                 $subject = "Password";
-                $txt = "Your password is : $password.";
+                $txt = "Your password is : $sql.";
                 $headers = "From: sveinnif@hiof.no" . "\r\n" .
                 "CC: somebodyelse@example.com";
                 mail($to,$subject,$txt,$headers);
