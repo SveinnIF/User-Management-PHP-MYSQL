@@ -18,8 +18,9 @@ if(isset($_POST['submit']))
 	
 	$title=$_POST['title'];
     $description=$_POST['description'];
+	$course=$_POST['course'];
 	$user=$_SESSION['alogin'];
-	$receiver= 'Admin';
+	$receiver='Lecturers' AND 'Admin';
     $notitype='Send Feedback';
     $attachment=' ';
 
@@ -27,7 +28,7 @@ if(isset($_POST['submit']))
 		{
 			$attachment=$final_file;
 		}
-	$notireceiver = 'Admin';
+	$notireceiver = 'Lecturers' AND 'Admin';
     $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
@@ -35,10 +36,11 @@ if(isset($_POST['submit']))
     $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     $querynoti->execute();
 
-	$sql="insert into feedback (sender, receiver, title,feedbackdata,attachment) values (:user,:receiver,:title,:description,:attachment)";
+	$sql="insert into feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+	$query-> bindParam(':course', $course, PDO::PARAM_STR);
 	$query-> bindParam(':title', $title, PDO::PARAM_STR);
 	$query-> bindParam(':description', $description, PDO::PARAM_STR);
 	$query-> bindParam(':attachment', $attachment, PDO::PARAM_STR);
@@ -134,6 +136,21 @@ if(isset($_POST['submit']))
 	<input type="text" name="title" class="form-control" required>
 	</div>
 
+    <label class="col-sm-1 control-label">Course<span style="color:red">*</span></label>
+    <div class="col-sm-5">
+	<select name="course" class="form-control" required>
+    <option value="">Select</option>
+    <option value=".NET">.NET</option>
+	<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
+	<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
+	<option value="Bildeanalyse">Bildeanalyse</option>
+	<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
+	<option value="Autonome kjøretøy">Autonome kjøretøy</option>
+	</select>
+	</div>
+</div>
+
+<div class="form-group">
 	<label class="col-sm-2 control-label">Attachment<span style="color:red"></span></label>
 	<div class="col-sm-4">
 	<input type="file" name="attachment" class="form-control">
