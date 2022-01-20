@@ -11,12 +11,12 @@ $query-> bindParam(':email', $email, PDO::PARAM_STR);
 $query-> bindParam(':status', $status, PDO::PARAM_STR);
 $query-> execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
-
+$password = $sql -> fetch();
 if($query->rowCount() > 0)
 {
 				$to = $email;
                 $subject = "Password";
-                $txt = "Your password is : $sql.";
+                $txt = "Your password is : $password.";
                 $headers = "From: sveinnif@hiof.no" . "\r\n" .
                 "CC: somebodyelse@example.com";
                 mail($to,$subject,$txt,$headers);
