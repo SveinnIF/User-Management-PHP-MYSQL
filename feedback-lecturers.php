@@ -133,7 +133,7 @@ if(isset($_REQUEST['unconfirm']))
 <?php
 $receiver = 'Lecturers';
 $emailforcourse = $_SESSION['alogin'];
-$sql = "SELECT feedback.*, lecturers.course FROM feedback LEFT OUTER JOIN lecturers ON email = '$emailforcourse' AND receiver = (:receiver) GROUP BY lecturers.course";
+$sql = "SELECT feedback.*, lecturers.course FROM feedback LEFT OUTER JOIN lecturers ON feedback.course = lecturers.course WHERE email = '$emailforcourse' AND receiver = (:receiver)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
