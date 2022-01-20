@@ -4,9 +4,9 @@
 				<li class="ts-label">Main</li>
 				<li><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 			
-			<li><a href="students-list.php"><i class="fa fa-users"></i> Student List</a>
+			<li><a href="list-students.php"><i class="fa fa-users"></i> Student List</a>
 			</li>
-			<li><a href="lecturers-list.php"><i class="fa fa-users"></i> Lecturers List</a>
+			<li><a href="list-lecturers.php"><i class="fa fa-users"></i> Lecturers List</a>
 			</li>
 			<li><a href="profile.php"><i class="fa fa-user"></i> &nbsp;Profile</a>
 			</li>
