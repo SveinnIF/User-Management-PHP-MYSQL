@@ -123,29 +123,41 @@ if(isset($_POST['submit']))
 
 									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
+
 <div class="form-group">
+
 <label class="col-sm-2 control-label">Name<span style="color:red">*</span></label>
 <div class="col-sm-4">
 <input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->name);?>">
 </div>
+
 <label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
 <div class="col-sm-4">
 <input type="email" name="email" class="form-control" required value="<?php echo htmlentities($result->email);?>">
 </div>
+
 </div>
 
 <div class="form-group">
-<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
-<div class="col-sm-4">
-<input type="text" name="course" class="form-control" required value="<?php echo htmlentities($result->course);?>">
-</div>
-</div>
 
-
-<div class="form-group">
 <label class="col-sm-2 control-label">Image<span style="color:red">*</span></label>
 <div class="col-sm-4">
 <input type="file" name="image" class="form-control">
+</div>
+
+<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
+<div class="col-sm-4">
+<select name="course" class="form-control" required>
+<option value="">Select</option>
+<option value=".NET">.NET</option>
+<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
+<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
+<option value="Bildeanalyse">Bildeanalyse</option>
+<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
+<option value="Autonome kjøretøy">Autonome kjøretøy</option>
+</select>
+</div>
+
 </div>
 
 	<div class="col-sm-8 col-sm-offset-2">
@@ -157,9 +169,11 @@ if(isset($_POST['submit']))
 
 
 <div class="form-group">
+
 	<div class="col-sm-8 col-sm-offset-2">
 		<button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
 	</div>
+	
 </div>
 
 </form>
