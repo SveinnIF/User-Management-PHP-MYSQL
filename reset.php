@@ -19,7 +19,7 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
     $expire = strtotime($request["reset_time"]) + $prvalid;
     if ($now >= $expire) { $result = "Request expired"; }
   }
-  echo "<div>$result</div>";
+
   // (D) PROCEED PASSWORD RESET
  echo "<div>check 2</div>";
 
@@ -114,13 +114,6 @@ return true;
                       
                 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
         else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
-                      <div class="form-group">
-                        <label class="col-sm-4 control-label">Current Password</label>
-                        <div class="col-sm-8">
-                          <input type="password" class="form-control" name="password" id="password" required>
-                        </div>
-                      </div>
-                      <div class="hr-dashed"></div>
                       
                       <div class="form-group">
                         <label class="col-sm-4 control-label">New Password</label>
