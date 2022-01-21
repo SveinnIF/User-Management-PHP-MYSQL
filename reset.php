@@ -33,32 +33,30 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
     #$stmt = $dbh->prepare("DELETE FROM `password_reset` WHERE `id`=?");
     #$stmt->execute([$_GET["i"]]);
  
-    // SHOW RESULTS (UPDATED PASSWORD)
+    // UPDATE PASSWORD
 
   if ($result=="") { echo "<div>check 3</div>";
   $password=md5($_POST['password']);
   $newpassword=md5($_POST['newpassword']);
-  $username=$_GET["i"];
+  $id=$_GET["i"];
    echo "<div>check 4</div>";
-  $sql ="SELECT Password FROM students WHERE email=:username and password=:password";
+  $sql ="SELECT Password FROM students WHERE id=:id";
   $query= $dbh -> prepare($sql);
-  $query-> bindParam(':username', $username, PDO::PARAM_STR);
-  $query-> bindParam(':password', $password, PDO::PARAM_STR);
+  $query-> bindParam(':id', $id, PDO::PARAM_STR);
   $query-> execute();
   $results = $query -> fetchAll(PDO::FETCH_OBJ);
   if($query -> rowCount() > 0)
   {
      echo "<div>check 5</div>";
-  $con="update students set password=:newpassword where email=:username";
+  $con="update students set password=:newpassword where id=:id";
   $chngpwd1 = $dbh->prepare($con);
-  $chngpwd1-> bindParam(':username', $username, PDO::PARAM_STR);
+  $chngpwd1-> bindParam(':id', $id, PDO::PARAM_STR);
   $chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
   $chngpwd1->execute();
   $msg="Your Password succesfully changed";
   }
   else {
-  $error="Your current password is not valid."; 
-  }
+  $error="Enter password."; 
   }
   }
 }
