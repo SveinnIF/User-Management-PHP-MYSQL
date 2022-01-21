@@ -175,7 +175,15 @@ return true;
   <script src="js/Chart.min.js"></script>
   <script src="js/fileinput.js"></script>
   <script src="js/chartData.js"></script>
-  <script src="js/main.js"></script>
+  <script type="text/javascript">
+         $(document).ready(function () {          
+          setTimeout(function() {
+            $('.succWrap').slideUp("slow");
+          }, 3000);
+          });
+  </script>
+
+
 
 </body>
 
