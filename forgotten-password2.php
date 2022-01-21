@@ -17,6 +17,7 @@ if (isset($_POST["email"])) {
     $stmt->execute([$user["id"]]);
     $request = $stmt->fetch();
     $now = strtotime("now");
+    $prvalid = 300;
     if (is_array($request)) {
       $expire = strtotime($request["reset_time"]) + $prvalid;
       if ($now < $expire) { $result = "<h3 class='text-center text-bold mt-4x'>Please try again later</h3>"; }

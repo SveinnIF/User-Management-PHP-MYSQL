@@ -3,7 +3,7 @@ session_start();
 error_reporting(0);
 include('includes/config.php');
 $result = "";
- echo "<div>check </div>";
+
 if (isset($_GET["i"]) && isset($_GET["h"])) {
   // (B) CHECK IF VALID REQUEST
   $stmt = $dbh->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
@@ -14,14 +14,14 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
   } else { $result = "Invalid request"; }
  echo "<div>check 1</div>";
   // (C) CHECK EXPIRED
-  #if ($result=="") {
-   # $now = strtotime("now");
-    #$expire = strtotime($request["reset_time"]) + $prvalid;
-    #if ($now >= $expire) { $result = "Request expired"; }
-  #}
+ $prvalid = 300;
+  if ($result=="") {
+    $now = strtotime("now");
+    $expire = strtotime($request["reset_time"]) + $prvalid;
+    if ($now >= $expire) { $result = "Request expired"; }
+  }
 
-  // (D) PROCEED PASSWORD RESET
- echo "<div>check 2</div>";
+  // (D) PROCEED PASSWORD RESET;
 
     // RANDOM PASSWORD
     #$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=+?";
