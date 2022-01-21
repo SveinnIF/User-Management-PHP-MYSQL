@@ -50,7 +50,7 @@ if (isset($_POST["email"])) {
  
   // (B5) RESULTS
   if ($result=="") { $result = "Email has been sent - Please click on the link in the email to confirm."; }
-  echo '<div><h2 class="text-center text-bold mt-4x">$result</h2></div>';
+  echo '<h3 class="text-center"> $result </h3>';
 }
 ?>
 

@@ -20,10 +20,24 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
   }
   echo $result;
   // (D) PROCEED PASSWORD RESET
+
+
+    // RANDOM PASSWORD
+    #$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=+?";
+    #$password = substr(str_shuffle($chars),0 ,8); // 8 characters
+ 
+    // UPDATE DATABASE
+    #$stmt = $dbh->prepare("UPDATE `students` SET `password`=? WHERE `id`=?");
+    #$stmt->execute([$password, $_GET["i"]]);
+    #$stmt = $dbh->prepare("DELETE FROM `password_reset` WHERE `id`=?");
+    #$stmt->execute([$_GET["i"]]);
+ 
+    // SHOW RESULTS (UPDATED PASSWORD)
+
   if ($result=="") {
   $password=md5($_POST['password']);
   $newpassword=md5($_POST['newpassword']);
-  $username=$_SESSION['alogin'];
+  $username=$_GET["i"];
   $sql ="SELECT Password FROM students WHERE email=:username and password=:password";
   $query= $dbh -> prepare($sql);
   $query-> bindParam(':username', $username, PDO::PARAM_STR);
@@ -61,25 +75,15 @@ echo "<div>$result</div>";
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-  <meta name="theme-color" content="#3e454c">
-  
-  <title>Student Change Password</title>
 
-  <!-- Font awesome -->
+  
   <link rel="stylesheet" href="css/font-awesome.min.css">
-  <!-- Sandstone Bootstrap CSS -->
   <link rel="stylesheet" href="css/bootstrap.min.css">
-  <!-- Bootstrap Datatables -->
   <link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
-  <!-- Bootstrap social button library -->
   <link rel="stylesheet" href="css/bootstrap-social.css">
-  <!-- Bootstrap select -->
   <link rel="stylesheet" href="css/bootstrap-select.css">
-  <!-- Bootstrap file input -->
   <link rel="stylesheet" href="css/fileinput.min.css">
-  <!-- Awesome Bootstrap checkbox -->
   <link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
-  <!-- Admin Stye -->
   <link rel="stylesheet" href="css/style.css">
 <script type="text/javascript">
 function valid()
@@ -93,44 +97,18 @@ return false;
 return true;
 }
 </script>
-  <style>
-.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-  background: #dd3d36;
-  color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-  background: #5cb85c;
-  color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-    </style>
-
-
 </head>
 
 <body>
-  <div class="ts-main-content">
-    <div class="content-wrapper">
-      <div class="container-fluid">
-
+  <div class="login-page bk-img">
+    <div class="form-content">
+      <div class="container">
         <div class="row">
-          <div class="col-md-12">
-          
-            <h2 class="page-title">Change Password</h2>
-
-            <div class="row">
-              <div class="col-md-10">
-                <div class="panel panel-default">
-                  <div class="panel-heading">Form fields</div>
-                  <div class="panel-body">
-                    <form method="post" name="chngpwd" class="form-horizontal" onSubmit="return valid();">
+          <div class="col-md-6 col-md-offset-3">
+            <h1 class="text-center text-bold mt-4x">Change Password</h1>
+            <div class="well row pt-2x pb-3x bk-light">
+              <div class="col-md-8 col-md-offset-2">
+                <form method="post" name="chngpwd" class="form-horizontal" onSubmit="return valid();">
                     
                       
                 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
@@ -165,27 +143,16 @@ return true;
                         <div class="col-sm-8 col-sm-offset-4">
                 
                           <button class="btn btn-primary" name="submit" type="submit">Save changes</button>
-                        </div>
-                      </div>
-
-                    </form>
-
-                  </div>
-                </div>
+                </form>
+                <br>
               </div>
-              
             </div>
-            
-          
-
           </div>
         </div>
-        
-      
       </div>
     </div>
   </div>
-
+  
   <!-- Loading Scripts -->
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap-select.min.js"></script>
@@ -196,15 +163,7 @@ return true;
   <script src="js/fileinput.js"></script>
   <script src="js/chartData.js"></script>
   <script src="js/main.js"></script>
-  <script type="text/javascript">
-         $(document).ready(function () {          
-          setTimeout(function() {
-            $('.succWrap').slideUp("slow");
-          }, 3000);
-          });
-  </script>
 
 </body>
 
 </html>
-<?php } ?>
