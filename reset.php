@@ -167,6 +167,7 @@ return true;
   </div>
   
   <!-- Loading Scripts -->
+  <!-- Loading Scripts -->
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap-select.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
@@ -175,6 +176,7 @@ return true;
   <script src="js/Chart.min.js"></script>
   <script src="js/fileinput.js"></script>
   <script src="js/chartData.js"></script>
+  <script src="js/main.js"></script>
   <script type="text/javascript">
          $(document).ready(function () {          
           setTimeout(function() {

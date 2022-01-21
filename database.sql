@@ -118,6 +118,16 @@ CREATE TABLE `lecturers` (
   `status` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+-- PASSWORD RESET
+CREATE TABLE `password_reset` (
+  `id` int(11) NOT NULL,
+  `reset_hash` varchar(64) NOT NULL,
+  `reset_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `password_reset`
+  ADD PRIMARY KEY (`id`);
 --
 -- Indexes for table `admin`
 --
