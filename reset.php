@@ -14,11 +14,11 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
   } else { $result = "Invalid request"; }
  echo "<div>check 1</div>";
   // (C) CHECK EXPIRED
-  if ($result=="") {
-    $now = strtotime("now");
-    $expire = strtotime($request["reset_time"]) + $prvalid;
-    if ($now >= $expire) { $result = "Request expired"; }
-  }
+  #if ($result=="") {
+   # $now = strtotime("now");
+    #$expire = strtotime($request["reset_time"]) + $prvalid;
+    #if ($now >= $expire) { $result = "Request expired"; }
+  #}
 
   // (D) PROCEED PASSWORD RESET
  echo "<div>check 2</div>";
