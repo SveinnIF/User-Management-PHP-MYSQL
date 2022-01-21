@@ -3,14 +3,13 @@ session_start();
 error_reporting(0);
 include('includes/config.php');
 if (isset($_POST["email"])) {
- 
   // (B2) CHECK IF VALID USER
   $stmt = $dbh->prepare("SELECT * FROM `students` WHERE `email`=?");
   $stmt->execute([$_POST["email"]]);
   $user = $stmt->fetch();
-  $result = is_array($user)
+  $result =is_array($user)
           ? "" 
-          : $_POST["email"] . " is not registered." ;
+          : $_POST["email"] . "is not registered." ;
  
   // (B3) CHECK PREVIOUS REQUEST (PREVENT SPAM)
   if ($result == "") {
@@ -20,7 +19,7 @@ if (isset($_POST["email"])) {
     $now = strtotime("now");
     if (is_array($request)) {
       $expire = strtotime($request["reset_time"]) + $prvalid;
-      if ($now < $expire) { $result = "Please try again later"; }
+      if ($now < $expire) { $result = "<h3 class='text-center text-bold mt-4x'>Please try again later</h3>"; }
     }
   }
  
@@ -44,13 +43,13 @@ if (isset($_POST["email"])) {
     $link = "http://158.39.188.201/steg1/reset.php?i=".$user["id"]."&h=".$hash;
     $message = "<a href='$link'>Click here to reset password</a>";
     if (!@mail($user["email"], $subject, $message, $header)) {
-      $result = "Failed to send email!";
+      $result = "<h3 class='text-center text-bold mt-4x' style='color:Tomato;'>Failed to send email! - Contact administrator</h3>";
     }
   }
  
   // (B5) RESULTS
-  if ($result=="") { $result = "Email has been sent - Please click on the link in the email to confirm."; }
-  echo '<h3 class="text-center"> $result </h3>';
+  if ($result=="") { $result = "<h3 class='text-center text-bold mt-4x'>Email has been sent - Please click on the link in the email to confirm.</h3>"; }
+  echo "<div> $result </div>";
 }
 ?>
 

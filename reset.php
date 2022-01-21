@@ -3,6 +3,7 @@ session_start();
 error_reporting(0);
 include('includes/config.php');
 $result = "";
+ echo "<div>check </div>";
 if (isset($_GET["i"]) && isset($_GET["h"])) {
   // (B) CHECK IF VALID REQUEST
   $stmt = $dbh->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
@@ -11,16 +12,16 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
   if (is_array($request)) {
     if ($request["reset_hash"] != $_GET["h"]) { $result = "Invalid request"; }
   } else { $result = "Invalid request"; }
-
+ echo "<div>check 1</div>";
   // (C) CHECK EXPIRED
   if ($result=="") {
     $now = strtotime("now");
     $expire = strtotime($request["reset_time"]) + $prvalid;
     if ($now >= $expire) { $result = "Request expired"; }
   }
-  echo $result;
+  echo "<div>$result</div>";
   // (D) PROCEED PASSWORD RESET
-
+ echo "<div>check 2</div>";
 
     // RANDOM PASSWORD
     #$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=+?";
@@ -34,10 +35,11 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
  
     // SHOW RESULTS (UPDATED PASSWORD)
 
-  if ($result=="") {
+  if ($result=="") { echo "<div>check 3</div>";
   $password=md5($_POST['password']);
   $newpassword=md5($_POST['newpassword']);
   $username=$_GET["i"];
+   echo "<div>check 4</div>";
   $sql ="SELECT Password FROM students WHERE email=:username and password=:password";
   $query= $dbh -> prepare($sql);
   $query-> bindParam(':username', $username, PDO::PARAM_STR);
@@ -46,6 +48,7 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
   $results = $query -> fetchAll(PDO::FETCH_OBJ);
   if($query -> rowCount() > 0)
   {
+     echo "<div>check 5</div>";
   $con="update students set password=:newpassword where email=:username";
   $chngpwd1 = $dbh->prepare($con);
   $chngpwd1-> bindParam(':username', $username, PDO::PARAM_STR);
