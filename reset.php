@@ -18,7 +18,7 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
     $expire = strtotime($request["reset_time"]) + $prvalid;
     if ($now >= $expire) { $result = "Request expired"; }
   }
-  echo "<p>Punkt 0</p>";
+  echo $result;
   // (D) PROCEED PASSWORD RESET
   if ($result=="") {
     // RANDOM PASSWORD
