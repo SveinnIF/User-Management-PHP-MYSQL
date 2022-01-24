@@ -84,9 +84,10 @@ else{
 								<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-										       <th>#</th>
-												<th>User</th>
-												<th>Message</th>
+											<th>#</th>
+											<th>Lecturer</th>
+											<th>User</th>
+											<th>Message</th>
 										</tr>
 									</thead>
 									
@@ -94,7 +95,7 @@ else{
 
 <?php 
 $receiver = $_SESSION['alogin'];
-$sql = "SELECT * from  feedback where receiver = (:receiver)";
+$sql = "SELECT *, image FROM feedback, lecturers WHERE receiver = (:receiver);";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
@@ -106,6 +107,11 @@ foreach($results as $result)
 {				?>	
 										<tr>
 											<td><?php echo htmlentities($cnt);?></td>
+											<td>
+												<img src="../images/<?php echo htmlentities($result->image);?>" width="150px"/>
+												<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
+												<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
+											</td>
                                             <td><?php echo htmlentities($result->sender);?></td>
 											<td><?php echo htmlentities($result->feedbackdata);?></td>
 										</tr>
