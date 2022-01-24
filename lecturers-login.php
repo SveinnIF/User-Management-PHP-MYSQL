@@ -1,6 +1,7 @@
 <?php
 session_start();
 include('includes/config.php');
+$pw_error_ms = "";
 if(isset($_POST['login']))
 {
 $status='1';
@@ -18,8 +19,8 @@ if($query->rowCount() > 0)
 $_SESSION['alogin']=$_POST['username'];
 echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
 } else{
-  
-  echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
+  $pw_error_ms = "<p style='color:red;'>Warning: Wrong password.</p><p>Forgot your password? <a href='forgotten-password2.php' >Change password</a></p>";
+  #echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
 
 }
 
@@ -67,8 +68,10 @@ echo "<script type='text/javascript'> document.location = 'feedback-lecturers.ph
 									<button class="btn btn-primary btn-block" name="login" type="submit">LOGIN</button>
 								</form>
 								<br>
+								<?=$pw_error_ms?>
 								<p>Don't Have an Account? <a href="register-lecturers.php" >Signup</a></p>
 								<p>Are You A Student? <a href="index.php" >Click Here</a></p>
+								</br>
 							</div>
 						</div>
 					</div>

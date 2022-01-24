@@ -5,6 +5,7 @@ include('includes/config.php');
 $result = "";
 
 if (isset($_GET["i"]) && isset($_GET["h"])) {
+  
   // (B) CHECK IF VALID REQUEST
   $stmt = $dbh->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
   $stmt->execute([$_GET["i"]]);
@@ -12,51 +13,38 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
   if (is_array($request)) {
     if ($request["reset_hash"] != $_GET["h"]) { $result = "Invalid request"; }
   } else { $result = "Invalid request"; }
- echo "<div>check 1</div>";
+  
   // (C) CHECK EXPIRED
- $prvalid = 300;
+ $prvalid = 400;
   if ($result=="") {
     $now = strtotime("now");
     $expire = strtotime($request["reset_time"]) + $prvalid;
     if ($now >= $expire) { $result = "Request expired"; }
   }
 
-  // (D) PROCEED PASSWORD RESET;
 
-    // RANDOM PASSWORD
-    #$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=+?";
-    #$password = substr(str_shuffle($chars),0 ,8); // 8 characters
- 
-    // UPDATE DATABASE
-    #$stmt = $dbh->prepare("UPDATE `students` SET `password`=? WHERE `id`=?");
-    #$stmt->execute([$password, $_GET["i"]]);
-    #$stmt = $dbh->prepare("DELETE FROM `password_reset` WHERE `id`=?");
-    #$stmt->execute([$_GET["i"]]);
- 
     // UPDATE PASSWORD
-
-  if ($result=="") { echo "<div>check 3</div>";
-  $password=md5($_POST['password']);
-  $newpassword=md5($_POST['newpassword']);
-  $id=$_GET["i"];
-   echo "<div>check 4</div>";
-  $sql ="SELECT Password FROM students WHERE id=:id";
-  $query= $dbh -> prepare($sql);
-  $query-> bindParam(':id', $id, PDO::PARAM_STR);
-  $query-> execute();
-  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-  if($query -> rowCount() > 0)
-  {
-     echo "<div>check 5</div>";
-  $con="update students set password=:newpassword where id=:id";
-  $chngpwd1 = $dbh->prepare($con);
-  $chngpwd1-> bindParam(':id', $id, PDO::PARAM_STR);
-  $chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
-  $chngpwd1->execute();
-  $msg="Your Password succesfully changed";
-  }
+  if ($result=="") {
+    $password=md5($_POST['password']);
+    $newpassword=md5($_POST['newpassword']);
+    $id=$_GET["i"];
+    $sql ="SELECT Password FROM lecturers WHERE id=:id";
+    $query= $dbh -> prepare($sql);
+    $query-> bindParam(':id', $id, PDO::PARAM_STR);
+    $query-> execute();
+    $results = $query -> fetchAll(PDO::FETCH_OBJ);
+  
+    if($query -> rowCount() > 0)
+    {
+    $con="update lecturers set password=:newpassword where id=:id";
+    $chngpwd1 = $dbh->prepare($con);
+    $chngpwd1-> bindParam(':id', $id, PDO::PARAM_STR);
+    $chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
+    $chngpwd1->execute();
+    $msg="Your Password succesfully changed";
+    }
   else {
-  $error="Enter password."; 
+    $error="Enter password."; 
   }
   }
 }
@@ -65,7 +53,6 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
 else { $result = "Invalid request"; }
  
 // (F) OUTPUT RESULTS
-echo "<div>$result</div>";
 ?>
 <!doctype html>
 <html lang="en" class="no-js">

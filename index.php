@@ -69,6 +69,7 @@ echo "<script type='text/javascript'> document.location = 'feedback-students.php
 								<br>
 								<p>Don't Have an Account? <a href="register-students.php" >Signup</a></p>
 								<p>Are You A Lecturer? <a href="lecturers-login.php" >Click here</a></p>
+								</br>
 							</div>
 						</div>
 					</div>

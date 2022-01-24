@@ -4,12 +4,12 @@ error_reporting(0);
 include('includes/config.php');
 if (isset($_POST["email"])) {
   // (B2) CHECK IF VALID USER
-  $stmt = $dbh->prepare("SELECT * FROM `students` WHERE `email`=?");
+  $stmt = $dbh->prepare("SELECT * FROM `lecturers` WHERE `email`=?");
   $stmt->execute([$_POST["email"]]);
   $user = $stmt->fetch();
   $result =is_array($user)
           ? "" 
-          : $_POST["email"] . "is not registered." ;
+          : $_POST["email"] . " is not registered." ;
  
   // (B3) CHECK PREVIOUS REQUEST (PREVENT SPAM)
   if ($result == "") {
@@ -17,10 +17,10 @@ if (isset($_POST["email"])) {
     $stmt->execute([$user["id"]]);
     $request = $stmt->fetch();
     $now = strtotime("now");
-    $prvalid = 300;
+    $prvalid = 400;
     if (is_array($request)) {
       $expire = strtotime($request["reset_time"]) + $prvalid;
-      if ($now < $expire) { $result = "<h3 class='text-center text-bold mt-4x'>Please try again later</h3>"; }
+      if ($now < $expire) { $result = "Please try again later"; }
     }
   }
  
@@ -44,13 +44,13 @@ if (isset($_POST["email"])) {
     $link = "http://158.39.188.201/steg1/reset.php?i=".$user["id"]."&h=".$hash;
     $message = "<a href='$link'>Click here to reset password</a>";
     if (!@mail($user["email"], $subject, $message, $header)) {
-      $result = "<h3 class='text-center text-bold mt-4x' style='color:Tomato;'>Failed to send email! - Contact administrator</h3>";
+      $result = "Failed to send email! - Contact administrator";
     }
   }
  
   // (B5) RESULTS
-  if ($result=="") { $result = "<h3 class='text-center text-bold mt-4x'>Email has been sent - Please click on the link in the email to confirm.</h3>"; }
-  echo "<div> $result </div>";
+  if ($result=="") { $result = "Email has been sent - Please click on the link in the email to confirm."; }
+  #echo "<div> $result </div>";
 }
 ?>
 
@@ -92,6 +92,9 @@ if (isset($_POST["email"])) {
 									<input type="text" placeholder="Email" name="email" class="form-control mb" required>
 
 									<button class="btn btn-primary btn-block" name="login" type="submit">SEND</button>
+									<b>
+									<h4 class="text-center"><?=$result?></h4>
+									</b>
 								</form>
 							</div>
 						</div>
