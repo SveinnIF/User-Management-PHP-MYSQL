@@ -18,7 +18,7 @@ else{
 	$receiver=$_POST['email'];
     $message=$_POST['message'];
 	$notitype='Send Message';
-	$sender='Lecturers';
+	$sender=$_SESSION['alogin'];
 	
     $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
@@ -48,7 +48,7 @@ else{
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Edit Profile</title>
+	<title>Send Reply</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
