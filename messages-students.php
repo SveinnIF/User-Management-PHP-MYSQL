@@ -95,7 +95,7 @@ else{
 
 <?php 
 $receiver = $_SESSION['alogin'];
-$sql = "SELECT *, image FROM feedback, lecturers WHERE receiver = (:receiver);";
+$sql = "SELECT *, image FROM feedback, lecturers WHERE receiver = (:receiver) GROUP BY feedbackdata;";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
