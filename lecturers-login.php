@@ -37,7 +37,7 @@ echo "<script type='text/javascript'> document.location = 'feedback-lecturers.ph
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	
+<title>Lecturer Sign-in</title>	
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
