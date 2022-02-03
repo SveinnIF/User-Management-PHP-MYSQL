@@ -45,8 +45,6 @@ PHP User Management System is a powerful PHP script that offers a secure user ma
 | <img src="/Sc/5.PNG"> | <img src="/Sc/6.PNG"> |
 
 
-### Database Files are included in Project. (database.sql)
-
 ### Author
 
 Ajay Randhawa
