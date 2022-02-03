@@ -73,37 +73,6 @@ else { $result = "Invalid request"; }
   <link rel="stylesheet" href="css/fileinput.min.css">
   <link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
   <link rel="stylesheet" href="css/style.css">
-<script type="text/javascript">
-function valid()
-{
-if(document.chngpwd.newpassword.value!= document.chngpwd.confirmpassword.value)
-{
-alert("New Password and Confirm Password Field do not match  !!");
-document.chngpwd.confirmpassword.focus();
-return false;
-}
-return true;
-}
-</script>
-</script>
-  <style>
-.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-  background: #dd3d36;
-  color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-  background: #5cb85c;
-  color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-    </style>
 </head>
 
 <body>
@@ -117,9 +86,7 @@ return true;
               <div class="col-md-8 col-md-offset-2">
                 <form method="post" name="chngpwd" class="form-horizontal" onSubmit="return valid();">
                     
-                      
-                <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-        else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
+
                       
                       <div class="form-group">
                         <label class="col-sm-4 control-label">New Password</label>
@@ -135,6 +102,9 @@ return true;
                           <input type="password" class="form-control" name="confirmpassword" id="confirmpassword" required>
                         </div>
                       </div>
+                      <?=$result?>
+                      <?=$error?>
+                      <?=$msg?>
                       <div class="hr-dashed"></div>
                     
                 
@@ -153,7 +123,7 @@ return true;
     </div>
   </div>
   
-  <!-- Loading Scripts -->
+
   <!-- Loading Scripts -->
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap-select.min.js"></script>
@@ -164,13 +134,7 @@ return true;
   <script src="js/fileinput.js"></script>
   <script src="js/chartData.js"></script>
   <script src="js/main.js"></script>
-  <script type="text/javascript">
-         $(document).ready(function () {          
-          setTimeout(function() {
-            $('.succWrap').slideUp("slow");
-          }, 3000);
-          });
-  </script>
+  <script type="text/javascript"></script>
 
 
 
