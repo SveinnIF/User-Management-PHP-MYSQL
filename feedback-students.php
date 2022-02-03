@@ -60,7 +60,7 @@ if(isset($_POST['submit']))
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Edit Profile</title>
+	<title>Send Feedback</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -104,7 +104,7 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-		$sql = "SELECT * from students;";
+		$sql = "SELECT *, lecturers.image FROM students, lecturers;";
 		$query = $dbh -> prepare($sql);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
@@ -130,14 +130,24 @@ if(isset($_POST['submit']))
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
 <div class="form-group">
+	<label class="col-sm-2 control-label">Lecturer<span style="color:red">*</span></label>
+	<div class="col-sm-4">
+		<img src="../images/<?php echo htmlentities($result->image);?>" width="150px"/>
+		<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
+		<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
+	</div>
+
     <input type="hidden" name="user" value="<?php echo htmlentities($result->email); ?>">
-	<label class="col-sm-2 control-label">Title<span style="color:red">*</span></label>
+	<label class="col-sm-1 control-label">Title<span style="color:red">*</span></label>
 	<div class="col-sm-4">
 	<input type="text" name="title" class="form-control" required>
 	</div>
-
-    <label class="col-sm-1 control-label">Course<span style="color:red">*</span></label>
-    <div class="col-sm-5">
+</div>
+	
+	
+<div class="form-group">
+    <label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
+    <div class="col-sm-4">
 	<select name="course" class="form-control" required>
     <option value="">Select</option>
     <option value=".NET">.NET</option>
@@ -147,11 +157,9 @@ if(isset($_POST['submit']))
 	<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
 	<option value="Autonome kjøretøy">Autonome kjøretøy</option>
 	</select>
-	</div>
-</div>
+	</div>  
 
-<div class="form-group">
-	<label class="col-sm-2 control-label">Attachment<span style="color:red"></span></label>
+	<label class="col-sm-1 control-label">Attachment<span style="color:red"></span></label>
 	<div class="col-sm-4">
 	<input type="file" name="attachment" class="form-control">
 	</div>
