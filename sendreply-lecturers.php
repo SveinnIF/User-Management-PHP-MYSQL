@@ -18,7 +18,7 @@ else{
 	$receiver=$_POST['email'];
     $message=$_POST['message'];
 	$notitype='Send Message';
-	$sender='Lecturers';
+	$sender=$_SESSION['alogin'];
 	
     $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
