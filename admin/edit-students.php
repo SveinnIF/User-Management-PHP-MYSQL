@@ -130,7 +130,6 @@ if(isset($_POST['submit']))
 <label class="col-sm-2 control-label">Class<span style="color:red">*</span></label>
 <div class="col-sm-4">
 <select name="class" class="form-control" required value="<?php echo htmlentities($result->class);?>">
-<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
                             <option value="">Select</option>
                             <option value="19/20">19/20</option>
                             <option value="20/21">20/21</option>
