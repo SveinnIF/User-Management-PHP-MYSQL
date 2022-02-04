@@ -86,7 +86,7 @@ else{
 										<tr>
 											<th>#</th>
 											<th>Lecturer</th>
-											<th>User</th>
+											<th>Course</th>
 											<th>Message</th>
 										</tr>
 									</thead>
@@ -95,7 +95,7 @@ else{
 
 <?php 
 $receiver = $_SESSION['alogin'];
-$sql = "SELECT *, image FROM feedback, lecturers WHERE receiver = (:receiver);";
+$sql = "SELECT * FROM feedback, lecturers WHERE receiver = (:receiver) GROUP BY feedback.id";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
@@ -108,11 +108,13 @@ foreach($results as $result)
 										<tr>
 											<td><?php echo htmlentities($cnt);?></td>
 											<td>
-												<img src="../images/<?php echo htmlentities($result->image);?>" width="150px"/>
+												<img src="images/<?php echo htmlentities($result->image);?>" width="150px"/>
+												<?php echo str_repeat('&nbsp;', 3);?>
+												<?php echo htmlentities($result->sender);?>
 												<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
 												<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
 											</td>
-                                            <td><?php echo htmlentities($result->sender);?></td>
+											<td><?php echo htmlentities($result->course);?></td>
 											<td><?php echo htmlentities($result->feedbackdata);?></td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
