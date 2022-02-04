@@ -18,7 +18,7 @@ else{
 	$receiver=$_POST['email'];
     $message=$_POST['message'];
 	$notitype='Send Message';
-	$sender='Lecturers';
+	$sender=$_SESSION['alogin'];
 	
     $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
@@ -27,7 +27,7 @@ else{
     $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     $querynoti->execute();
 
-	$sql="insert into feedback (sender, receiver, feedbackdata) values (:user,:receiver,:description)";
+	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, '', '', :description, '')";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
@@ -48,7 +48,7 @@ else{
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Edit Profile</title>
+	<title>Send Reply</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
