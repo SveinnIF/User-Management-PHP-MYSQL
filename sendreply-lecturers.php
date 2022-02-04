@@ -17,6 +17,7 @@ else{
   {	
 	$receiver=$_POST['email'];
     $message=$_POST['message'];
+	$course=$_POST['course'];
 	$notitype='Send Message';
 	$sender=$_SESSION['alogin'];
 	
@@ -27,10 +28,11 @@ else{
     $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     $querynoti->execute();
 
-	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, '', '', :description, '')";
+	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, :course, '', :description, '')";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+	$query-> bindParam(':course', $course, PDO::PARAM_STR);
 	$query-> bindParam(':description', $message, PDO::PARAM_STR);
     $query->execute(); 
 	$msg="Feedback Send";
@@ -92,7 +94,7 @@ else{
 
 <body>
 <?php
-		$sql = "SELECT * from students;";
+		$sql = "SELECT * from students, feedback;";
 		$query = $dbh -> prepare($sql);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
@@ -109,17 +111,26 @@ else{
 							<div class="col-md-12">
                             <h2>Reply Feedback</h2>
 								<div class="panel panel-default">
-									<div class="panel-heading">Edit Info</div>
+									<div class="panel-heading">Send Reply</div>
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
 									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
+<input type="hidden" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
+
 <div class="form-group">
-	<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
+	<label class="col-sm-2 control-label">Title<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-	<input type="text" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
+	<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($result->title);?>">
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
+	<div class="col-sm-4">
+	<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
 	</div>
 </div>
 
@@ -130,7 +141,7 @@ else{
 	</div>
 </div>
 
-<input type="hidden" name="editid" class="form-control" required value="<?php echo htmlentities($result->id);?>">
+
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
