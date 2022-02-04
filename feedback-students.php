@@ -132,7 +132,7 @@ if(isset($_POST['submit']))
 <div class="form-group">
 	<label class="col-sm-2 control-label">Lecturer<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-		<img src="../images/<?php echo htmlentities($result->image);?>" width="150px"/>
+		<img src="images/<?php echo htmlentities($result->image);?>" width="150px"/>
 		<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
 		<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
 	</div>
