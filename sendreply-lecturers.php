@@ -29,11 +29,10 @@ else{
     	$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     	$querynoti->execute();
 
-	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, :course, '', :description, '')";
+	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, '', '', :description, '')";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
-	$query-> bindParam(':course', $course, PDO::PARAM_STR);
 	$query-> bindParam(':description', $message, PDO::PARAM_STR);
     	$query->execute(); 
 	$msg="Feedback Send";
