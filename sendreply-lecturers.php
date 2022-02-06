@@ -96,7 +96,7 @@ else{
 <body>
 <?php
 		$sender=$_SESSION['alogin'];
-		$sql = "SELECT * FROM feedback WHERE sender = '$sender' AND receiver = '$replyto';";
+		$sql = "SELECT * FROM feedback WHERE receiver = '$sender' AND receiver = '$replyto';";
 		$query = $dbh -> prepare($sql);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
@@ -121,20 +121,6 @@ else{
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
 <input type="hidden" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
-
-<div class="form-group">
-	<label class="col-sm-2 control-label">Title</span></label>
-	<div class="col-sm-4">
-	<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($result->title);?>">
-	</div>
-</div>
-
-<div class="form-group">
-	<label class="col-sm-2 control-label">Course</label>
-	<div class="col-sm-4">
-	<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
-	</div>
-</div>
 
 <div class="form-group">
 	<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
