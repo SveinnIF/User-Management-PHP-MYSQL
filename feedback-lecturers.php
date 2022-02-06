@@ -151,7 +151,7 @@ foreach($results as $result)
                                             <td><a href="../attachment/<?php echo htmlentities($result->attachment);?>" ><?php echo htmlentities($result->attachment);?></a></td>
 											
 <td>
-<a href="sendreply-lecturers.php?reply">&nbsp; <i class="fa fa-mail-reply"></i></a>&nbsp;&nbsp;
+<a href="sendreply-lecturers.php?reply=<?php echo $result->sender;?>">&nbsp; <i class="fa fa-mail-reply"></i></a>&nbsp;&nbsp;
 </td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
