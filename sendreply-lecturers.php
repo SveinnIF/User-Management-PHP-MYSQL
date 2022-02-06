@@ -12,6 +12,7 @@ else{
 	{
 	$replyto=$_GET['reply'];
 	}   
+	
 
 	if(isset($_POST['submit']))
   {	
@@ -21,7 +22,7 @@ else{
 	$notitype='Send Message';
 	$sender=$_SESSION['alogin'];
 	
-    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
+    $sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
@@ -87,14 +88,15 @@ else{
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-		</style>
+	</style>
 
 
 </head>
 
 <body>
 <?php
-		$sql = "SELECT * from students, feedback;";
+		$sender=$_SESSION['alogin'];
+		$sql = "SELECT * FROM feedback WHERE sender = '$sender' AND receiver = '$replyto';";
 		$query = $dbh -> prepare($sql);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
@@ -121,14 +123,14 @@ else{
 <input type="hidden" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Title<span style="color:red">*</span></label>
+	<label class="col-sm-2 control-label">Title</span></label>
 	<div class="col-sm-4">
 	<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($result->title);?>">
 	</div>
 </div>
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
+	<label class="col-sm-2 control-label">Course</label>
 	<div class="col-sm-4">
 	<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
 	</div>
@@ -141,7 +143,7 @@ else{
 	</div>
 </div>
 
-
+<input type="hidden" name="feedbackid" value="<?php echo htmlentities($result->id);?>" >
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
