@@ -17,17 +17,17 @@ else{
 	if(isset($_POST['submit']))
   {	
 	$receiver=$_POST['email'];
-    $message=$_POST['message'];
+    	$message=$_POST['message'];
 	$course=$_POST['course'];
 	$notitype='Send Message';
 	$sender=$_SESSION['alogin'];
 	
-    $sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
-    $querynoti = $dbh->prepare($sqlnoti);
+    	$sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
+    	$querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    $querynoti->execute();
+    	$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+    	$querynoti->execute();
 
 	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, :course, '', :description, '')";
 	$query = $dbh->prepare($sql);
@@ -35,7 +35,7 @@ else{
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 	$query-> bindParam(':course', $course, PDO::PARAM_STR);
 	$query-> bindParam(':description', $message, PDO::PARAM_STR);
-    $query->execute(); 
+    	$query->execute(); 
 	$msg="Feedback Send";
   }
 ?>
@@ -73,20 +73,20 @@ else{
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
 	<style>
 	.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
+    	padding: 10px;
+    	margin: 0 0 20px 0;
 	background: #dd3d36;
 	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
+	.succWrap{
+    	padding: 10px;
+    	margin: 0 0 20px 0;
 	background: #5cb85c;
 	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 	</style>
 
@@ -96,7 +96,7 @@ else{
 <body>
 <?php
 		$sender=$_SESSION['alogin'];
-		$sql = "SELECT * FROM feedback WHERE receiver = '$sender' AND receiver = '$replyto';";
+		$sql = "SELECT * FROM feedback WHERE sender = '$sender' AND receiver = '$replyto';";
 		$query = $dbh -> prepare($sql);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
@@ -125,7 +125,7 @@ else{
 <div class="form-group">
 	<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
 	<div class="col-sm-6">
-	<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
+		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
 	</div>
 </div>
 
