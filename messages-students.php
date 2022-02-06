@@ -86,7 +86,6 @@ else{
 										<tr>
 											<th>#</th>
 											<th>Lecturer</th>
-											<th>Course</th>
 											<th>Message</th>
 										</tr>
 									</thead>
@@ -114,7 +113,6 @@ foreach($results as $result)
 												<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
 												<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
 											</td>
-											<td><?php echo htmlentities($result->course);?></td>
 											<td><?php echo htmlentities($result->feedbackdata);?></td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
