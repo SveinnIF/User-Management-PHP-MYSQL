@@ -17,24 +17,23 @@ else{
 	if(isset($_POST['submit']))
   {	
 	$receiver=$_POST['email'];
-    	$message=$_POST['message'];
-	$course=$_POST['course'];
+    $message=$_POST['message'];
 	$notitype='Send Message';
 	$sender=$_SESSION['alogin'];
 	
-    	$sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
-    	$querynoti = $dbh->prepare($sqlnoti);
+    $sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
+    $querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
-    	$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    	$querynoti->execute();
+    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+    $querynoti->execute();
 
 	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, '', '', :description, '')";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 	$query-> bindParam(':description', $message, PDO::PARAM_STR);
-    	$query->execute(); 
+    $query->execute(); 
 	$msg="Feedback Send";
   }
 ?>
@@ -72,20 +71,20 @@ else{
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
 	<style>
 	.errorWrap {
-    	padding: 10px;
-    	margin: 0 0 20px 0;
+    padding: 10px;
+    margin: 0 0 20px 0;
 	background: #dd3d36;
 	color:#fff;
-    	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-	.succWrap{
-    	padding: 10px;
-    	margin: 0 0 20px 0;
+.succWrap{
+    padding: 10px;
+    margin: 0 0 20px 0;
 	background: #5cb85c;
 	color:#fff;
-    	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 	</style>
 
@@ -93,14 +92,6 @@ else{
 </head>
 
 <body>
-<?php
-		$sender=$_SESSION['alogin'];
-		$sql = "SELECT * FROM feedback WHERE sender = '$sender' AND receiver = '$replyto';";
-		$query = $dbh -> prepare($sql);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
-		$cnt=1;	
-?>
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
 	<?php include('includes/leftbar.php');?>
@@ -116,7 +107,7 @@ else{
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-									<div class="panel-body">
+<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
 <input type="hidden" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
@@ -127,8 +118,6 @@ else{
 		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
 	</div>
 </div>
-
-<input type="hidden" name="feedbackid" value="<?php echo htmlentities($result->id);?>" >
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
