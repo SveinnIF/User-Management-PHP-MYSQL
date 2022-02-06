@@ -17,24 +17,24 @@ if(isset($_POST['submit']))
 	$final_file=str_replace(' ','-',$new_file_name);
 	
 	$title=$_POST['title'];
-    $description=$_POST['description'];
+    	$description=$_POST['description'];
 	$course=$_POST['course'];
 	$user=$_SESSION['alogin'];
 	$receiver='Lecturers' AND 'Admin';
-    $notitype='Send Feedback';
-    $attachment=' ';
+    	$notitype='Send Feedback';
+    	$attachment=' ';
 
 	if(move_uploaded_file($file_loc,$folder.$final_file))
 		{
 			$attachment=$final_file;
 		}
-	$notireceiver = 'Lecturers' AND 'Admin';
-    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
-    $querynoti = $dbh->prepare($sqlnoti);
+	$notireceiver = 'Admin';
+    	$sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
+    	$querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver', $notireceiver, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    $querynoti->execute();
+    	$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+   	$querynoti->execute();
 
 	$sql="insert into feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
 	$query = $dbh->prepare($sql);
