@@ -12,23 +12,22 @@ else{
 	{
 	$replyto=$_GET['reply'];
 	}   
-	
 
 	if(isset($_POST['submit']))
   {	
 	$receiver=$_POST['email'];
     $message=$_POST['message'];
 	$notitype='Send Message';
-	$sender=$_SESSION['alogin'];
+	$sender='Lecturers';
 	
-    $sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
+    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
     $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     $querynoti->execute();
 
-	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, '', '', :description, '')";
+	$sql="insert into feedback (sender, receiver, feedbackdata) values (:user,:receiver,:description)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
@@ -49,7 +48,7 @@ else{
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Send Reply</title>
+	<title>Messages</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -67,9 +66,8 @@ else{
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
+  <style>
 
-	<script type= "text/javascript" src="../vendor/countries.js"></script>
-	<style>
 	.errorWrap {
     padding: 10px;
     margin: 0 0 20px 0;
@@ -86,61 +84,88 @@ else{
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-	</style>
 
+		</style>
 
 </head>
 
 <body>
-	<?php
-		$sender=$_SESSION['alogin'];
-		$sql = "SELECT * FROM feedback WHERE sender = '$sender' AND receiver = '$replyto';";
-		$query = $dbh -> prepare($sql);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
-		$cnt=1;	
-	?>
-	
-	<?php include('includes/header.php');?>
+	<?php include('includes/header-students.php');?>
+
 	<div class="ts-main-content">
-	<?php include('includes/leftbar.php');?>
+		<?php include('includes/leftbar-guest.php');?>
 		<div class="content-wrapper">
 			<div class="container-fluid">
+
 				<div class="row">
 					<div class="col-md-12">
-						<div class="row">
-							<div class="col-md-12">
-                            <h2>Reply Feedback</h2>
-								<div class="panel panel-default">
-									<div class="panel-heading">Send Reply</div>
-<?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-<div class="panel-body">
-<form method="post" class="form-horizontal" enctype="multipart/form-data">
+						<h2 class="page-title">Messages for Course: ITF25019-1 22V Datasikkerhet i utvikling og drift</h2>
 
-<input type="hidden" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
+						<!-- Zero Configuration Table -->
+						<div class="panel panel-default">
+							<div class="panel-heading">List Users</div>
+							<div class="panel-body">
+							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
+				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
+								<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+									<thead>
+										<tr>
+										       <th>#</th>
+												<th>User</th>
+												<th>Message</th>
+										</tr>
+									</thead>
+									
+									<tbody>
 
-<div class="form-group">
-	<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
-	<div class="col-sm-6">
-		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
-	</div>
+<?php 
+$receiver = $_SESSION['alogin'];
+$sql = "SELECT * from  feedback where receiver = (:receiver)";
+$query = $dbh -> prepare($sql);
+$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+$cnt=1;
+if($query->rowCount() > 0)
+{
+foreach($results as $result)
+{				?>	
+										<tr>
+											<td><?php echo htmlentities($cnt);?></td>
+                                            <td><?php echo htmlentities($result->sender);?></td>
+											<td><?php echo htmlentities($result->feedbackdata);?></td>
+										</tr>
+										<?php $cnt=$cnt+1; }} ?>
+										
+									</tbody>
+								</table>
+<div>
+<h2>Reply to form</h2>
+                    </div>
+                    <p>Please fill this form and submit to reply</p>
+                    <form action="guest-messages.php" method="post">
+                        <div class="form-group">
+                            <label>User to reply</label>
+                            <input type="user" name="user" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <input type="message" name="message" class="form-control">
+                        </div>
+                        <input type="submit" class="btn btn-primary" name="submit" value="Submit">
+                    </form>
 </div>
 
-<div class="form-group">
-	<div class="col-sm-8 col-sm-offset-2">
-		<button class="btn btn-primary" name="submit" type="submit" >Send Reply</button>
-	</div>
-</div>
 
-</form>
-									</div>
-								</div>
+
+
+
 							</div>
 						</div>
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -161,7 +186,7 @@ else{
 						$('.succWrap').slideUp("slow");
 					}, 3000);
 					});
-	</script>
+		</script>
 </body>
 </html>
 <?php } ?>
