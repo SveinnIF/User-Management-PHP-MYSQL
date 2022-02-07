@@ -29,7 +29,7 @@ $querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
 $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
 $querynoti->execute();    
     
-$sql ="INSERT INTO lecturers(name, email, password, course, image, status) VALUES(:name, :email, :password, :course, :image, 1)";
+$sql ="INSERT INTO lecturers(name, email, password, course, image, status) VALUES(:name, :email, :password, :course, :image, 0)";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':name', $name, PDO::PARAM_STR);
 $query-> bindParam(':email', $email, PDO::PARAM_STR);
