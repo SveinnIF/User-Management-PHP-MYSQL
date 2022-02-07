@@ -12,14 +12,14 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
   $request = $stmt->fetch();
   if (is_array($request)) {
     if ($request["reset_hash"] != $_GET["h"]) { $result = "Invalid request"; }
-  } else { $result = "Invalid request"; }
+  } else { $result = "<p>Invalid request.</p>"; }
   
   // (C) CHECK EXPIRED
  $prvalid = 400;
   if ($result=="") {
     $now = strtotime("now");
     $expire = strtotime($request["reset_time"]) + $prvalid;
-    if ($now >= $expire) { $result = "Request expired"; }
+    if ($now >= $expire) { $result = "<p>Request expired</p>"; }
   }
 
 
@@ -41,16 +41,16 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
     $chngpwd1-> bindParam(':id', $id, PDO::PARAM_STR);
     $chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
     $chngpwd1->execute();
-    $msg="Your Password succesfully changed";
+    $msg="<p>Your Password succesfully changed.</p>";
     }
   else {
-    $error="Enter password."; 
+    $error="<p>Enter password.</p>"; 
   }
   }
 }
  
 // (E) INVALID REQUEST
-else { $result = "Invalid request"; }
+else { $result = "<p>Invalid request</p>"; }
  
 // (F) OUTPUT RESULTS
 ?>

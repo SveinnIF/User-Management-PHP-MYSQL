@@ -12,30 +12,38 @@ else{
 	{
 	$replyto=$_GET['reply'];
 	}   
-	
 
 	if(isset($_POST['submit']))
   {	
 	$receiver=$_POST['email'];
     $message=$_POST['message'];
+	$course=$_POST['course'];
 	$notitype='Send Message';
 	$sender=$_SESSION['alogin'];
 	
-    $sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
+    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
     $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
     $querynoti->execute();
 
-	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, '', '', :description, '')";
+	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata, attachment) VALUES (:user,:receiver, :course, '', :description, '')";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+	$query-> bindParam(':course', $course, PDO::PARAM_STR);
 	$query-> bindParam(':description', $message, PDO::PARAM_STR);
     $query->execute(); 
 	$msg="Feedback Send";
-  }
+	// sender feedback og redirecter tilbake til oversikten over meldinger
+	?>
+	<script type="text/javascript">
+	window.location = "feedback-lecturers.php";
+	</script>      
+		<?php
+	//
+	}
 ?>
 
 <!doctype html>
@@ -86,12 +94,32 @@ else{
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-	</style>
+		</style>
 
 
 </head>
 
 <body>
+<?php
+		$user = $_SESSION['alogin'];
+		$sql = "SELECT course FROM lecturers WHERE email = (:user)";
+		$query = $dbh -> prepare($sql);
+		$query-> bindParam(':user', $user, PDO::PARAM_STR);
+		$query->execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);	
+		$course = ($result->course);
+		
+		$sql = "SELECT * from students, feedback WHERE course = (:course);";
+		$query = $dbh -> prepare($sql);
+		$query-> bindParam(':course', $course, PDO::PARAM_STR);
+		$query->execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);
+		$cnt=1;	
+		// henter det som er i URL
+		$url=$_SERVER['QUERY_STRING'];
+		$url = str_replace("reply=", "", $url);
+		//
+?>
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
 	<?php include('includes/leftbar.php');?>
@@ -107,21 +135,35 @@ else{
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-<div class="panel-body">
+									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
 <input type="hidden" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
 
 <div class="form-group">
+	<label class="col-sm-2 control-label">Reply to<span style="color:red">*</span></label> <!-- byttet "Title" til "Reply to" --> 
+	<div class="col-sm-4">
+	<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($url);?>"> <!-- byttet "result->title" til "url" --> 
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
+	<div class="col-sm-4">
+	<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
+	</div>
+</div>
+
+<div class="form-group">
 	<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
 	<div class="col-sm-6">
-		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
+	<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
 	</div>
 </div>
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
-		<button class="btn btn-primary" name="submit" type="submit" >Send Reply</button>
+		<button class="btn btn-primary" name="submit" type="submit" href="feedback-lecturers.php" >Send Reply</button>
 	</div>
 </div>
 

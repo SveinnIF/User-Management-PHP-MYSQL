@@ -24,21 +24,37 @@ if(isset($_POST['submit']))
     	$notitype='Send Feedback';
     	$attachment=' ';
 
+	// la til kode på linje 28 til 34
+	$sender = $_SESSION['alogin'];
+	$sql = "SELECT * FROM  students where email = '$sender'";
+	$query = $dbh -> prepare($sql);
+	$query->execute();
+	$result=$query->fetch(PDO::FETCH_OBJ);
+	$cnt=1;	
+	$anon= ($result->id);
+	//
+
 	if(move_uploaded_file($file_loc,$folder.$final_file))
 		{
 			$attachment=$final_file;
 		}
 	$notireceiver = 'Admin';
-    	$sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
+    	$sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
     	$querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver', $notireceiver, PDO::PARAM_STR);
     	$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-   	$querynoti->execute();
+    	$querynoti->execute();
 
-	$sql="INSERT INTO feedback (sender,receiver,course,title,feedbackdata,attachment) VALUES (:user,:receiver,:course,:title,:description,:attachment)";
+	$sql="INSERT INTO feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
 	$query = $dbh->prepare($sql);
-	$query-> bindParam(':user', $user, PDO::PARAM_STR);
+	// la til if statement
+	if ($_POST['anon'] == 'anonymous') {
+		$query-> bindParam(':user', $anon, PDO::PARAM_STR);
+	} else {
+		$query-> bindParam(':user', $user, PDO::PARAM_STR);
+	  } 
+	//$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 	$query-> bindParam(':course', $course, PDO::PARAM_STR);
 	$query-> bindParam(':title', $title, PDO::PARAM_STR);
@@ -80,6 +96,7 @@ if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/style.css">
 
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
+	
 	<style>
 	.errorWrap {
     	padding: 10px;
@@ -87,15 +104,15 @@ if(isset($_POST['submit']))
 	background: #dd3d36;
 	color:#fff;
     	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-   	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-.succWrap{
-   	padding: 10px;
+	.succWrap{
+    	padding: 10px;
     	margin: 0 0 20px 0;
 	background: #5cb85c;
 	color:#fff;
     	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-   	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 	</style>
 
@@ -104,11 +121,11 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-	$sql = "SELECT *, lecturers.image FROM students, lecturers;";
-	$query = $dbh -> prepare($sql);
-	$query->execute();
-	$result=$query->fetch(PDO::FETCH_OBJ);
-	$cnt=1;	
+		$sql = "SELECT *, lecturers.image FROM students, lecturers;";
+		$query = $dbh -> prepare($sql);
+		$query->execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);
+		$cnt=1;	
 ?>
 	<?php include('includes/header-students.php');?>
 	<div class="ts-main-content">
@@ -161,16 +178,25 @@ if(isset($_POST['submit']))
 
 	<label class="col-sm-1 control-label">Attachment<span style="color:red"></span></label>
 	<div class="col-sm-4">
-		<input type="file" name="attachment" class="form-control">
+	<input type="file" name="attachment" class="form-control">
 	</div>
 </div>
 
 <div class="form-group">
 	<label class="col-sm-2 control-label">Description<span style="color:red">*</span></label>
 	<div class="col-sm-10">
-		<textarea class="form-control" rows="5" name="description"></textarea>
+	<textarea class="form-control" rows="5" name="description"></textarea>
 	</div>
 </div>
+
+<!-- checkbox anonym  -->
+<div class="form-group">
+	<div class="col-sm-8 col-sm-offset-2">
+		<input type="checkbox" name="anon" value="anonymous">
+  		<label for="anonymous"> Hide your name from lecturer </label><br>
+	</div>
+</div>
+<!-- checkbox anonym  -->
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
