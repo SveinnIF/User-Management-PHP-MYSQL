@@ -86,6 +86,7 @@ else{
 										<tr>
 											<th>#</th>
 											<th>Lecturer</th>
+											<th>Course</th>
 											<th>Message</th>
 										</tr>
 									</thead>
@@ -93,10 +94,25 @@ else{
 									<tbody>
 
 <?php 
+
+// henter ut id til student og legger den til variabelen "anon" 
 $receiver = $_SESSION['alogin'];
-$sql = "SELECT * FROM lecturers, feedback WHERE receiver = (:receiver) GROUP BY feedback.id";
+$sql = "SELECT id FROM students WHERE email = (:receiver)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+$query->execute();
+$result=$query->fetch(PDO::FETCH_OBJ);
+$cnt=1;	
+$anon = ($result->id);
+//echo "<script type='text/javascript'>alert('$anon');</script>";
+// ----------------
+
+$receiver = $_SESSION['alogin'];
+// $sql = "SELECT * FROM lecturers, feedback WHERE receiver = (:receiver) GROUP BY feedback.id"; // orginal kode 
+$sql = "SELECT * FROM lecturers, feedback WHERE receiver = (:receiver) OR receiver = (:anon) GROUP BY feedback.id"; // min kode
+$query = $dbh -> prepare($sql);
+$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR); // orginal kode 
+$query-> bindParam(':anon', $anon, PDO::PARAM_STR); // min kode
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -113,6 +129,7 @@ foreach($results as $result)
 												<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
 												<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
 											</td>
+											<td><?php echo htmlentities($result->course);?></td>
 											<td><?php echo htmlentities($result->feedbackdata);?></td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
