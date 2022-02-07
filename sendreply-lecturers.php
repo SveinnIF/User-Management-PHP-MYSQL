@@ -92,6 +92,15 @@ else{
 </head>
 
 <body>
+	<?php
+		$sender=$_SESSION['alogin'];
+		$sql = "SELECT * FROM feedback WHERE sender = '$sender' AND receiver = '$replyto';";
+		$query = $dbh -> prepare($sql);
+		$query->execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);
+		$cnt=1;	
+	?>
+	
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
 	<?php include('includes/leftbar.php');?>
