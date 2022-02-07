@@ -17,12 +17,12 @@ if(isset($_POST['submit']))
 	$final_file=str_replace(' ','-',$new_file_name);
 	
 	$title=$_POST['title'];
-    $description=$_POST['description'];
+    	$description=$_POST['description'];
 	$course=$_POST['course'];
 	$user=$_SESSION['alogin'];
 	$receiver='Lecturers' AND 'Admin';
-    $notitype='Send Feedback';
-    $attachment=' ';
+    	$notitype='Send Feedback';
+    	$attachment=' ';
 
 	// la til kode på linje 28 til 34
 	$sender = $_SESSION['alogin'];
@@ -38,13 +38,13 @@ if(isset($_POST['submit']))
 		{
 			$attachment=$final_file;
 		}
-	$notireceiver = 'Lecturers' AND 'Admin';
-    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
-    $querynoti = $dbh->prepare($sqlnoti);
+	$notireceiver = 'Admin';
+    	$sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
+    	$querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver', $notireceiver, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    $querynoti->execute();
+    	$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+    	$querynoti->execute();
 
 	$sql="INSERT INTO feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
 	$query = $dbh->prepare($sql);
@@ -60,7 +60,7 @@ if(isset($_POST['submit']))
 	$query-> bindParam(':title', $title, PDO::PARAM_STR);
 	$query-> bindParam(':description', $description, PDO::PARAM_STR);
 	$query-> bindParam(':attachment', $attachment, PDO::PARAM_STR);
-    $query->execute(); 
+    	$query->execute(); 
 	$msg="Feedback Send";
 }    
 ?>
@@ -96,24 +96,25 @@ if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/style.css">
 
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
+	
 	<style>
 	.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
+    	padding: 10px;
+    	margin: 0 0 20px 0;
 	background: #dd3d36;
 	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
+	.succWrap{
+    	padding: 10px;
+    	margin: 0 0 20px 0;
 	background: #5cb85c;
 	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-		</style>
+	</style>
 
 
 </head>
@@ -165,13 +166,13 @@ if(isset($_POST['submit']))
     <label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
     <div class="col-sm-4">
 	<select name="course" class="form-control" required>
-    <option value="">Select</option>
-    <option value=".NET">.NET</option>
-	<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-	<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-	<option value="Bildeanalyse">Bildeanalyse</option>
-	<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-	<option value="Autonome kjøretøy">Autonome kjøretøy</option>
+    		<option value="">Select</option>
+    		<option value=".NET">.NET</option>
+		<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
+		<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
+		<option value="Bildeanalyse">Bildeanalyse</option>
+		<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
+		<option value="Autonome kjøretøy">Autonome kjøretøy</option>
 	</select>
 	</div>  
 
