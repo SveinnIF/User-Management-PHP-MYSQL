@@ -101,8 +101,17 @@ else{
 
 <body>
 <?php
-		$sql = "SELECT * from students, feedback;";
+		$user = $_SESSION['alogin'];
+		$sql = "SELECT course FROM lecturers WHERE email = (:user)";
 		$query = $dbh -> prepare($sql);
+		$query-> bindParam(':user', $user, PDO::PARAM_STR);
+		$query->execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);	
+		$course = ($result->course);
+		
+		$sql = "SELECT * from students, feedback WHERE course = (:course);";
+		$query = $dbh -> prepare($sql);
+		$query-> bindParam(':course', $course, PDO::PARAM_STR);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
 		$cnt=1;	
