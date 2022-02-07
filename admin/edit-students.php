@@ -22,7 +22,7 @@ if(isset($_POST['submit']))
 	$class=$_POST['class'];
 	$idedit=$_POST['idedit'];
 
-	$sql="UPDATE students SET name=(:name), email=(:email), fieldofstudy=(:fieldofstudy), class=(:class), WHERE id=(:idedit)";
+	$sql="UPDATE students SET name=(:name), email=(:email), fieldofstudy=(:fieldofstudy), class=(:class) WHERE id=(:idedit)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':name', $name, PDO::PARAM_STR);
 	$query-> bindParam(':email', $email, PDO::PARAM_STR);
@@ -109,41 +109,45 @@ if(isset($_POST['submit']))
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-									<div class="panel-body">
-<form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
-<div class="form-group">
-<label class="col-sm-2 control-label">Name<span style="color:red">*</span></label>
-<div class="col-sm-4">
-<input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->name);?>">
-</div>
-<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
-<div class="col-sm-4">
-<input type="email" name="email" class="form-control" required value="<?php echo htmlentities($result->email);?>">
-</div>
+<div class="panel-body">
+
+	<form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Name<span style="color:red">*</span></label>
+			<div class="col-sm-4">
+				<input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->name);?>">
+			</div>
+
+			<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
+			<div class="col-sm-4">
+				<input type="email" name="email" class="form-control" required value="<?php echo htmlentities($result->email);?>">
+			</div>
 </div>
 
-<div class="form-group">
-<label class="col-sm-2 control-label">Field of Study<span style="color:red">*</span></label>
-<div class="col-sm-4">
-<input type="text" name="fieldofstudy" class="form-control" required value="<?php echo htmlentities($result->fieldofstudy);?>">
-</div>
-<label class="col-sm-2 control-label">Class<span style="color:red">*</span></label>
-<div class="col-sm-4">
-<select name="class" class="form-control" required value="<?php echo htmlentities($result->class);?>">
-<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
-                            <option value="">Select</option>
-                            <option value="19/20">19/20</option>
-                            <option value="20/21">20/21</option>
-			    <option value="21/22">21/22</option>
-</select>
-</div>
-</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Field of Study<span style="color:red">*</span></label>
+			<div class="col-sm-4">
+				<input type="text" name="fieldofstudy" class="form-control" required value="<?php echo htmlentities($result->fieldofstudy);?>">
+			</div>
+			
+			<label class="col-sm-2 control-label">Class<span style="color:red">*</span></label>
+			<div class="col-sm-4">
+				<select name="class" class="form-control" required value="<?php echo htmlentities($result->class);?>">
+					<option value="">Select</option>
+					<option value="19/20">19/20</option>
+					<option value="20/21">20/21</option>
+					<option value="21/22">21/22</option>
+				</select>
+			</div>
+		</div>
 
-
-<div class="form-group">
-	<div class="col-sm-8 col-sm-offset-2">
-		<button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
-	</div>
+		<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
+		
+		<div class="form-group">
+			<div class="col-sm-8 col-sm-offset-2">
+				<button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
+			</div>
+		</div>
 </div>
 
 </form>

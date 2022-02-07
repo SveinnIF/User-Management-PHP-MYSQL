@@ -17,26 +17,26 @@ if(isset($_POST['submit']))
 	$final_file=str_replace(' ','-',$new_file_name);
 	
 	$title=$_POST['title'];
-    $description=$_POST['description'];
+    	$description=$_POST['description'];
 	$course=$_POST['course'];
 	$user=$_SESSION['alogin'];
 	$receiver='Lecturers' AND 'Admin';
-    $notitype='Send Feedback';
-    $attachment=' ';
+    	$notitype='Send Feedback';
+    	$attachment=' ';
 
 	if(move_uploaded_file($file_loc,$folder.$final_file))
 		{
 			$attachment=$final_file;
 		}
-	$notireceiver = 'Lecturers' AND 'Admin';
-    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
-    $querynoti = $dbh->prepare($sqlnoti);
+	$notireceiver = 'Admin';
+    	$sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
+    	$querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver', $notireceiver, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    $querynoti->execute();
+    	$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+   	$querynoti->execute();
 
-	$sql="insert into feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
+	$sql="INSERT INTO feedback (sender,receiver,course,title,feedbackdata,attachment) VALUES (:user,:receiver,:course,:title,:description,:attachment)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
@@ -44,7 +44,7 @@ if(isset($_POST['submit']))
 	$query-> bindParam(':title', $title, PDO::PARAM_STR);
 	$query-> bindParam(':description', $description, PDO::PARAM_STR);
 	$query-> bindParam(':attachment', $attachment, PDO::PARAM_STR);
-    $query->execute(); 
+    	$query->execute(); 
 	$msg="Feedback Send";
 }    
 ?>
@@ -82,33 +82,33 @@ if(isset($_POST['submit']))
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
 	<style>
 	.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
+    	padding: 10px;
+    	margin: 0 0 20px 0;
 	background: #dd3d36;
 	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+   	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 .succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
+   	padding: 10px;
+    	margin: 0 0 20px 0;
 	background: #5cb85c;
 	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+   	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-		</style>
+	</style>
 
 
 </head>
 
 <body>
 <?php
-		$sql = "SELECT *, lecturers.image FROM students, lecturers;";
-		$query = $dbh -> prepare($sql);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
-		$cnt=1;	
+	$sql = "SELECT *, lecturers.image FROM students, lecturers;";
+	$query = $dbh -> prepare($sql);
+	$query->execute();
+	$result=$query->fetch(PDO::FETCH_OBJ);
+	$cnt=1;	
 ?>
 	<?php include('includes/header-students.php');?>
 	<div class="ts-main-content">
@@ -132,7 +132,7 @@ if(isset($_POST['submit']))
 <div class="form-group">
 	<label class="col-sm-2 control-label">Lecturer<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-		<img src="../images/<?php echo htmlentities($result->image);?>" width="150px"/>
+		<img src="images/<?php echo htmlentities($result->image);?>" width="150px"/>
 		<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
 		<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
 	</div>
@@ -149,26 +149,26 @@ if(isset($_POST['submit']))
     <label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
     <div class="col-sm-4">
 	<select name="course" class="form-control" required>
-    <option value="">Select</option>
-    <option value=".NET">.NET</option>
-	<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-	<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-	<option value="Bildeanalyse">Bildeanalyse</option>
-	<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-	<option value="Autonome kjøretøy">Autonome kjøretøy</option>
+    		<option value="">Select</option>
+    		<option value=".NET">.NET</option>
+		<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
+		<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
+		<option value="Bildeanalyse">Bildeanalyse</option>
+		<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
+		<option value="Autonome kjøretøy">Autonome kjøretøy</option>
 	</select>
 	</div>  
 
 	<label class="col-sm-1 control-label">Attachment<span style="color:red"></span></label>
 	<div class="col-sm-4">
-	<input type="file" name="attachment" class="form-control">
+		<input type="file" name="attachment" class="form-control">
 	</div>
 </div>
 
 <div class="form-group">
 	<label class="col-sm-2 control-label">Description<span style="color:red">*</span></label>
 	<div class="col-sm-10">
-	<textarea class="form-control" rows="5" name="description"></textarea>
+		<textarea class="form-control" rows="5" name="description"></textarea>
 	</div>
 </div>
 

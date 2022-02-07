@@ -12,6 +12,7 @@ else{
 	{
 	$replyto=$_GET['reply'];
 	}   
+	
 
 	if(isset($_POST['submit']))
   {	
@@ -20,7 +21,7 @@ else{
 	$notitype='Send Message';
 	$sender=$_SESSION['alogin'];
 	
-    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
+    $sqlnoti="INSERT INTO notification (notiuser,notireceiver,notitype) VALUES (:notiuser,:notireceiver,:notitype)";
     $querynoti = $dbh->prepare($sqlnoti);
 	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
 	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
@@ -85,19 +86,12 @@ else{
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-		</style>
+	</style>
 
 
 </head>
 
 <body>
-<?php
-		$sql = "SELECT * from students;";
-		$query = $dbh -> prepare($sql);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
-		$cnt=1;	
-?>
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
 	<?php include('includes/leftbar.php');?>
@@ -109,28 +103,21 @@ else{
 							<div class="col-md-12">
                             <h2>Reply Feedback</h2>
 								<div class="panel panel-default">
-									<div class="panel-heading">Edit Info</div>
+									<div class="panel-heading">Send Reply</div>
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-									<div class="panel-body">
+<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
-<div class="form-group">
-	<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
-	<div class="col-sm-4">
-	<input type="text" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
-	</div>
-</div>
+<input type="hidden" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
 
 <div class="form-group">
 	<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
 	<div class="col-sm-6">
-	<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
+		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
 	</div>
 </div>
-
-<input type="hidden" name="editid" class="form-control" required value="<?php echo htmlentities($result->id);?>">
 
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
