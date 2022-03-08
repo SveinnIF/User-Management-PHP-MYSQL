@@ -1,14 +1,28 @@
 <?php
+require __DIR__ . '/vendor/autoload.php';
+use Monolog\Handler\GelfHandler;
+use Gelf\Message;
+use Monolog\Formatter\GelfMessageFormatter;
+use Monolog\Logger;
+$logger = new Logger('sikkerhet');
+$transport = new Gelf\Transport\UdpTransport("127.0.0.1", 12201 /*,
+Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN*/);
+$publisher = new Gelf\Publisher($transport);
+$handler = new GelfHandler($publisher,Logger::DEBUG);
+$logger->pushHandler($handler);
+
 include('includes/config.php');
 if(isset($_POST['submit']))
 {
 
 $file = $_FILES['image']['name'];
 $file_loc = $_FILES['image']['tmp_name'];
-$folder="images/"; 
+$folder="/../../../../home/datasikkerhet/images/"; 
 $new_file_name = strtolower($file);
 $final_file=str_replace(' ','-',$new_file_name);
-
+echo $file_loc;
+echo $folder;
+echo  $final_file;
 $name=$_POST['name'];
 $email=$_POST['email'];
 $password=md5($_POST['password']);
@@ -17,7 +31,7 @@ $course=$_POST['course'];
 if(move_uploaded_file($file_loc,$folder.$final_file))
 	{
 		$image=$final_file;
-    }
+        }
 $notitype='Create Account';
 $receiver='Admin';
 $sender=$email;

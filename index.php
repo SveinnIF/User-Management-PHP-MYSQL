@@ -1,5 +1,17 @@
 <?php
 session_start();
+require __DIR__ . '/vendor/autoload.php';
+use Monolog\Handler\GelfHandler;
+use Gelf\Message;
+use Monolog\Formatter\GelfMessageFormatter;
+use Monolog\Logger;
+$logger = new Logger('sikkerhet');
+$transport = new Gelf\Transport\UdpTransport("127.0.0.1", 12201 /*,
+Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN*/);
+$publisher = new Gelf\Publisher($transport);
+$handler = new GelfHandler($publisher,Logger::DEBUG);
+$logger->pushHandler($handler);
+$logger->error('test');
 include('includes/config.php');
 if(isset($_POST['login']))
 {
@@ -18,7 +30,7 @@ if($query->rowCount() > 0)
 $_SESSION['alogin']=$_POST['username'];
 echo "<script type='text/javascript'> document.location = 'feedback-students.php'; </script>";
 } else{
-  
+$logger->info('User login failed');
   echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
 
 }
@@ -69,7 +81,7 @@ echo "<script type='text/javascript'> document.location = 'feedback-students.php
 								<br>
 								<p>Don't Have an Account? <a href="register-students.php" >Signup</a></p>
 								<p>Are You A Lecturer? <a href="lecturers-login.php" >Click here</a></p>
-								</br>
+								<p>Guest loggin <a href="Guest.php"> here </a></p>
 							</div>
 						</div>
 					</div>
