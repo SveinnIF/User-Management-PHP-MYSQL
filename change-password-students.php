@@ -22,9 +22,18 @@ else{
 // Code for change password	
 if(isset($_POST['submit']))
 	{
-$password=md5($_POST['password']);
-$newpassword=md5($_POST['newpassword']);
+
 $username=$_SESSION['alogin'];
+
+$sql = "SELECT password FROM students WHERE email = (:username)";
+$query = $dbh -> prepare($sql);
+$query-> bindParam(':username', $username, PDO::PARAM_STR);
+$query->execute();
+$result=$query->fetch(PDO::FETCH_OBJ);	
+$password = ($result->password);  
+		
+$newpassword=password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
+
 $sql ="SELECT Password FROM students WHERE email=:username and password=:password";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':username', $username, PDO::PARAM_STR);
