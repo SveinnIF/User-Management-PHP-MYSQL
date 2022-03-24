@@ -15,9 +15,11 @@ include('includes/config.php');
 if(isset($_POST['submit']))
 {
 
+$id=uniqid();
 $name=$_POST['name'];
 $email=$_POST['email'];
-$password=md5($_POST['password']);
+// steg 2, et sikrere passord 
+$password=password_hash($_POST['password'], PASSWORD_DEFAULT);
 $fieldofstudy=$_POST['fieldofstudy'];
 $class=$_POST['class'];
 
@@ -32,8 +34,9 @@ $querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
 $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
 $querynoti->execute();    
     
-$sql ="INSERT INTO students(name, email, password, fieldofstudy, class, status) VALUES(:name, :email, :password, :fieldofstudy, :class, 1)";
+$sql ="INSERT INTO students(id, name, email, password, fieldofstudy, class, status) VALUES(:id, :name, :email, :password, :fieldofstudy, :class, 1)";
 $query= $dbh -> prepare($sql);
+$query-> bindParam(':id', $id, PDO::PARAM_STR);
 $query-> bindParam(':name', $name, PDO::PARAM_STR);
 $query-> bindParam(':email', $email, PDO::PARAM_STR);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);

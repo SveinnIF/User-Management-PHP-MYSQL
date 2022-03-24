@@ -15,9 +15,19 @@ include('includes/config.php');
 $pw_error_ms = "";
 if(isset($_POST['login']))
 {
-$status='1';
+// $status='1';
 $email=$_POST['username'];
-$password=md5($_POST['password']);
+
+// steg 2, et sikrere passord 
+$sql = "SELECT password FROM lecturers WHERE email = (:email)";
+$query = $dbh -> prepare($sql);
+$query-> bindParam(':email', $email, PDO::PARAM_STR);
+$query->execute();
+$result=$query->fetch(PDO::FETCH_OBJ);	
+$pwd = ($result->password);  
+$password=password_verify($_POST['password'], $pwd);
+
+/* $password=md5($_POST['password']);
 $sql ="SELECT email,password FROM lecturers WHERE email=:email and password=:password and status=(:status)";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':email', $email, PDO::PARAM_STR);
@@ -25,7 +35,9 @@ $query-> bindParam(':password', $password, PDO::PARAM_STR);
 $query-> bindParam(':status', $status, PDO::PARAM_STR);
 $query-> execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
-if($query->rowCount() > 0)
+if($query->rowCount() > 0) */
+
+if(password_verify($_POST['password'], $pwd))
 {
 $_SESSION['alogin']=$_POST['username'];
 echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";

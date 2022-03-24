@@ -25,7 +25,8 @@ echo $folder;
 echo  $final_file;
 $name=$_POST['name'];
 $email=$_POST['email'];
-$password=md5($_POST['password']);
+//steg 2
+$password=password_hash($_POST['password'], PASSWORD_DEFAULT);
 $course=$_POST['course'];
 
 if(move_uploaded_file($file_loc,$folder.$final_file))
