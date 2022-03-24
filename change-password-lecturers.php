@@ -30,7 +30,8 @@ $query = $dbh -> prepare($sql);
 $query-> bindParam(':username', $username, PDO::PARAM_STR);
 $query->execute();
 $result=$query->fetch(PDO::FETCH_OBJ);	
-$password = ($result->password);  
+$pwd = ($result->password);  
+$password=password_verify($_POST['password'], $pwd); 
 		
 $newpassword=password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
 		
@@ -40,7 +41,8 @@ $query-> bindParam(':username', $username, PDO::PARAM_STR);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);
 $query-> execute();
 $results = $query -> fetchAll(PDO::FETCH_OBJ);
-if($query -> rowCount() > 0)
+//if($query -> rowCount() > 0)
+if($password) // sjekker om passordet er samme som i DB (if true)
 {
 $con="update lecturers set password=:newpassword where email=:username";
 $chngpwd1 = $dbh->prepare($con);
