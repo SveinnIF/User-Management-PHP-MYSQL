@@ -11,10 +11,10 @@ $publisher = new Gelf\Publisher($transport);
 $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
+error_reporting(0);
 include('includes/config.php');
 if(isset($_POST['submit']))
 {
-
 $id=uniqid();
 $name=$_POST['name'];
 $email=$_POST['email'];
@@ -22,12 +22,9 @@ $email=$_POST['email'];
 $password=password_hash($_POST['password'], PASSWORD_DEFAULT);
 $fieldofstudy=$_POST['fieldofstudy'];
 $class=$_POST['class'];
-
-$notitype='Create Account';
 $receiver='Admin';
-$sender=$email;
-    
-$sql ="INSERT INTO students(id, name, email, password, fieldofstudy, class, status) VALUES(:id, :name, :email, :password, :fieldofstudy, :class, '1')";
+
+$sql ="CALL studentRegistrationInfo(:id, :name, :email, :password, :fieldofstudy, :class, '1')";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':id', $id, PDO::PARAM_STR);
 $query-> bindParam(':name', $name, PDO::PARAM_STR);
@@ -36,8 +33,8 @@ $query-> bindParam(':password', $password, PDO::PARAM_STR);
 $query-> bindParam(':fieldofstudy', $fieldofstudy, PDO::PARAM_STR);
 $query-> bindParam(':class', $class, PDO::PARAM_STR);
 $query->execute();
-$lastInsertId = $dbh->lastInsertId();
-if($lastInsertId)
+
+if('success')
 {
 echo "<script type='text/javascript'>alert('Registration Successful!');</script>";
 echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
@@ -79,58 +76,54 @@ $error="Something went wrong. Please try again";
 				<div class="row">
 					<div class="col-md-12">
 						<h1 class="text-center text-bold mt-2x">Student Registration</h1>
-                        			<div class="hr-dashed"></div>
+                        <div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
-							
-                            <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" onSubmit="return validate();">
+                         <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" onSubmit="return validate();">
                             <div class="form-group">
-                            
-			    <label class="col-sm-1 control-label">Name<span style="color:red">*</span></label>
+                            <label class="col-sm-1 control-label">Name<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            	<input type="text" name="name" class="form-control" required>
+                            <input type="text" name="name" class="form-control" required>
                             </div>
-                            
-			    <label class="col-sm-1 control-label">Email<span style="color:red">*</span></label>
+                            <label class="col-sm-1 control-label">Email<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            	<input type="text" name="email" class="form-control" required>
+                            <input type="text" name="email" class="form-control" required>
                             </div>
                             </div>
 
                             <div class="form-group">
                             <label class="col-sm-1 control-label">Password<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            	<input type="password" name="password" class="form-control" id="password" required >
+                            <input type="password" name="password" class="form-control" id="password" required >
                             </div>
 
                             <label class="col-sm-1 control-label">Field of study<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            	<input type="text" name="fieldofstudy" class="form-control" required>
+                            <input type="text" name="fieldofstudy" class="form-control" required>
                             </div>
                             </div>
 							
-			    <div class="form-group">
+							<div class="form-group">
                             <label class="col-sm-1 control-label">Class<span style="color:red">*</span></label>
                             <div class="col-sm-5">
                             <select name="class" class="form-control" required>
-                            	<option value="">Select</option>
-                            	<option value="19/20">19/20</option>
-                            	<option value="20/21">20/21</option>
-				<option value="21/22">21/22</option>
+                            <option value="">Select</option>
+                            <option value="19/20">19/20</option>
+                            <option value="20/21">20/21</option>
+							<option value="21/22">21/22</option>
                             </select>
                             </div>
-			    </div>
+							</div>
 
 
-			    <br>
-			    <button class="btn btn-primary" name="submit" type="submit">Register</button>
-                            </form>
-                            <br>
-                            <br>
-		            <p>Already Have An Account? <a href="index.php" >Signin</a></p>
-			    <p>Are You A Lecturer? <a href="register-lecturers.php" >Signup as lecturer</a></p>
-							
+								<br>
+                                <button class="btn btn-primary" name="submit" type="submit">Register</button>
+                                </form>
+                                <br>
+                                <br>
+								<p>Already Have An Account? <a href="index.php" >Signin</a></p>
+								<p>Are You A Lecturer? <a href="register-lecturers.php" >Signup as lecturer</a></p>
+							</div>
 						</div>
-					</div>
 				</div>
 			</div>
 		</div>
