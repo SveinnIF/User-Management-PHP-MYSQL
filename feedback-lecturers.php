@@ -88,7 +88,7 @@ else{
 
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading">List Students</div>
+							<div class="panel-heading">Feedback</div>
 						</div>
 							
 							<div class="panel-body">
@@ -110,9 +110,10 @@ else{
 <?php
 $receiver = 'Lecturers';
 $emailforcourse = $_SESSION['alogin'];
-$sql = "SELECT feedback.*, lecturers.course FROM feedback LEFT OUTER JOIN lecturers ON feedback.course = lecturers.course WHERE email = '$emailforcourse' AND receiver = (:receiver)";
+$sql = "CALL lecturerFeedbackInfo(:emailforcourse, :receiver)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+$query-> bindParam(':emailforcourse', $emailforcourse, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
