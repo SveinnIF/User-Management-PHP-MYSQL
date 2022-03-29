@@ -66,35 +66,18 @@ CREATE TABLE `feedback` (
   `receiver` varchar(50) NOT NULL,
   `course` varchar(50) NOT NULL,
   `title` varchar(100) NOT NULL,
-  `feedbackdata` varchar(500) NOT NULL,
-  `attachment` varchar(50) NOT NULL
+  `feedbackdata` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `notification`
---
-
-CREATE TABLE `notification` (
-  `id` int(11) NOT NULL,
-  `notiuser` varchar(50) NOT NULL,
-  `notireceiver` varchar(50) NOT NULL,
-  `notitype` varchar(50) NOT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `students`
 --
 
 CREATE TABLE `students` (
-  `id` int(11) NOT NULL,
+  `id` VARCHAR(13) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(100) NOT NULL,
   `fieldofstudy` varchar(50) NOT NULL,
   `class` varchar(50) NOT NULL,
   `status` int(10) NOT NULL
@@ -112,7 +95,7 @@ CREATE TABLE `lecturers` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(100) NOT NULL,
   `course` varchar(50) NOT NULL,
   `image` varchar(50) NOT NULL,
   `status` int(10) NOT NULL
@@ -144,12 +127,6 @@ ALTER TABLE `deleteduser`
 -- Indexes for table `feedback`
 --
 ALTER TABLE `feedback`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `notification`
---
-ALTER TABLE `notification`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -185,19 +162,6 @@ ALTER TABLE `deleteduser`
 --
 ALTER TABLE `feedback`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
-
---
--- AUTO_INCREMENT for table `notification`
---
-ALTER TABLE `notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
-
---
--- AUTO_INCREMENT for table `students`
---
-ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-COMMIT;
 
 --
 -- AUTO_INCREMENT for table `lecturers`
