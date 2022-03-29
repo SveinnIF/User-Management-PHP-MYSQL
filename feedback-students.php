@@ -22,57 +22,29 @@ else{
 	
 if(isset($_POST['submit']))
   {	
-	$file = $_FILES['attachment']['name'];
-	$file_loc = $_FILES['attachment']['tmp_name'];
-	$folder="attachment/";
-	$new_file_name = strtolower($file);
-	$final_file=str_replace(' ','-',$new_file_name);
-	
 	$title=$_POST['title'];
-    	$description=$_POST['description'];
+	$description=$_POST['description'];
 	$course=$_POST['course'];
 	$user=$_SESSION['alogin'];
 	$receiver='Lecturers' AND 'Admin';
-    	$notitype='Send Feedback';
-    	$attachment=' ';
 
-	// la til kode på linje 28 til 34
-	$sender = $_SESSION['alogin'];
-	$sql = "SELECT * FROM  students where email = '$sender'";
-	$query = $dbh -> prepare($sql);
+	$query=$dbh->prepare("CALL studentFeedbackSender(:user)");
+	$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	$query->execute();
 	$result=$query->fetch(PDO::FETCH_OBJ);
-	$cnt=1;	
 	$anon= ($result->id);
-	//
-
-	if(move_uploaded_file($file_loc,$folder.$final_file))
-		{
-			$attachment=$final_file;
-		}
-	$notireceiver = 'Admin';
-    	$sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
-    	$querynoti = $dbh->prepare($sqlnoti);
-	$querynoti-> bindParam(':notiuser', $user, PDO::PARAM_STR);
-	$querynoti-> bindParam(':notireceiver', $notireceiver, PDO::PARAM_STR);
-    	$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    	$querynoti->execute();
-
-	$sql="INSERT INTO feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
-	$query = $dbh->prepare($sql);
-	// la til if statement
+	
+	$query=$dbh->prepare("CALL studentFeedbackInfo(:user, :receiver, :course, :title, :description)");
 	if ($_POST['anon'] == 'anonymous') {
 		$query-> bindParam(':user', $anon, PDO::PARAM_STR);
 	} else {
 		$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	  } 
-	//$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 	$query-> bindParam(':course', $course, PDO::PARAM_STR);
 	$query-> bindParam(':title', $title, PDO::PARAM_STR);
 	$query-> bindParam(':description', $description, PDO::PARAM_STR);
-	$query-> bindParam(':attachment', $attachment, PDO::PARAM_STR);
-    	$query->execute(); 
+	$query->execute(); 
 	$msg="Feedback Send";
 }    
 ?>
@@ -133,11 +105,29 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-		$sql = "SELECT *, lecturers.image FROM students, lecturers;";
-		$query = $dbh -> prepare($sql);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
-		$cnt=1;	
+	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('.NET')");
+	$query->execute();
+	$dotNET=$query->fetch(PDO::FETCH_OBJ);
+
+	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Algoritmer og datastrukturer')");
+	$query->execute();
+	$algoritmer=$query->fetch(PDO::FETCH_OBJ);
+
+	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Datasikkerhet i utvikling og drift')");
+	$query->execute();
+	$datasikkerhet=$query->fetch(PDO::FETCH_OBJ);
+
+	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Bildeanalyse')");
+	$query->execute();
+	$bildeanalyse=$query->fetch(PDO::FETCH_OBJ);
+
+	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Lineær algebra og integraltransformer')");
+	$query->execute();
+	$algebra=$query->fetch(PDO::FETCH_OBJ);
+
+	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Autonome kjøretøy')");
+	$query->execute();
+	$autonome=$query->fetch(PDO::FETCH_OBJ);
 ?>
 	<?php include('includes/header-students.php');?>
 	<div class="ts-main-content">
@@ -151,7 +141,7 @@ if(isset($_POST['submit']))
 							<div class="col-md-12">
                             <h2>Give us Feedback</h2>
 								<div class="panel panel-default">
-									<div class="panel-heading">Edit Info</div>
+									<div class="panel-heading">Feedback</div>
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
@@ -159,46 +149,32 @@ if(isset($_POST['submit']))
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Lecturer<span style="color:red">*</span></label>
-	<div class="col-sm-4">
-		<img src="images/<?php echo htmlentities($result->image);?>" width="150px"/>
-		<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
-		<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
-	</div>
-
-    <input type="hidden" name="user" value="<?php echo htmlentities($result->email); ?>">
-	<label class="col-sm-1 control-label">Title<span style="color:red">*</span></label>
-	<div class="col-sm-4">
-	<input type="text" name="title" class="form-control" required>
-	</div>
+	<label class="col-sm-2 control-label">Title<span style="color:red">*</span></label>
+		<div class="col-sm-4">
+			<input type="text" name="title" class="form-control" required>
+		</div>
 </div>
-	
 	
 <div class="form-group">
     <label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
-    <div class="col-sm-4">
-	<select name="course" class="form-control" required>
-    		<option value="">Select</option>
-    		<option value=".NET">.NET</option>
-		<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-		<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-		<option value="Bildeanalyse">Bildeanalyse</option>
-		<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-		<option value="Autonome kjøretøy">Autonome kjøretøy</option>
-	</select>
-	</div>  
-
-	<label class="col-sm-1 control-label">Attachment<span style="color:red"></span></label>
-	<div class="col-sm-4">
-	<input type="file" name="attachment" class="form-control">
-	</div>
+		<div class="col-sm-4">
+			<select name="course" class="form-control" required>
+				<option value="">Select</option>
+				<option value=".NET">.NET</option>
+				<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
+				<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
+				<option value="Bildeanalyse">Bildeanalyse</option>
+				<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
+				<option value="Autonome kjøretøy">Autonome kjøretøy</option>
+			</select>
+		</div>  
 </div>
 
 <div class="form-group">
 	<label class="col-sm-2 control-label">Description<span style="color:red">*</span></label>
-	<div class="col-sm-10">
-	<textarea class="form-control" rows="5" name="description"></textarea>
-	</div>
+		<div class="col-sm-10">
+			<textarea class="form-control" rows="5" name="description"></textarea>
+		</div>
 </div>
 
 <!-- checkbox anonym  -->
@@ -213,6 +189,57 @@ if(isset($_POST['submit']))
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
 		<button class="btn btn-primary" name="submit" type="submit">Send</button>
+	</div>
+</div>
+
+
+<h2 class="page-title">Lecturers</h2>
+
+<div class="form-group">
+	<div class="col-sm-8 col-sm-offset-2">
+		<h3>.NET</h3>
+			<img src="images/<?php echo htmlentities($dotNET->image);?>" width="150px"/>
+			<?php echo str_repeat('&nbsp;', 3), htmlentities($dotNET->name);?>
+	</div>
+</div>
+
+<div class="form-group">
+	<div class="col-sm-8 col-sm-offset-2">
+		<h3>Algoritmer og datastrukturer</h3>
+			<img src="images/<?php echo htmlentities($algoritmer->image);?>" width="150px"/>
+			<?php echo str_repeat('&nbsp;', 3), htmlentities($algoritmer->name);?>
+	</div>
+</div>
+
+<div class="form-group">	
+	<div class="col-sm-8 col-sm-offset-2">
+		<h3>Datasikkerhet i utvikling og drift</h3>
+			<img src="images/<?php echo htmlentities($datasikkerhet->image);?>" width="150px"/>
+			<?php echo str_repeat('&nbsp;', 3), htmlentities($datasikkerhet->name);?>
+	</div>
+</div>
+
+<div class="form-group">	
+	<div class="col-sm-8 col-sm-offset-2">
+		<h3>Bildeanalyse</h3>
+			<img src="images/<?php echo htmlentities($bildeanalyse->image);?>" width="150px"/>
+			<?php echo str_repeat('&nbsp;', 3), htmlentities($bildeanalyse->name);?>
+	</div>
+</div>
+
+<div class="form-group">	
+	<div class="col-sm-8 col-sm-offset-2">
+		<h3>Lineær algebra og integraltransformer</h3>
+			<img src="images/<?php echo htmlentities($algebra->image);?>" width="150px"/>
+			<?php echo str_repeat('&nbsp;', 3), htmlentities($algebra->name);?>
+	</div>
+</div>
+
+<div class="form-group">	
+	<div class="col-sm-8 col-sm-offset-2">
+		<h3>Autonome kjøretøy</h3>
+			<img src="images/<?php echo htmlentities($autonome->image);?>" width="150px"/>
+			<?php echo str_repeat('&nbsp;', 3), htmlentities($autonome->name);?>
 	</div>
 </div>
 
