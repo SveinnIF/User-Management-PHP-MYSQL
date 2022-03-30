@@ -30,19 +30,11 @@ else{
 	$receiver=$_POST['email'];
     $message=$_POST['message'];
 	$course=$_POST['course'];
-	$notitype='Send Message';
 	$sender=$_SESSION['alogin'];
-	
-    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
-    $querynoti = $dbh->prepare($sqlnoti);
-	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
-	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    $querynoti->execute();
 
-	$sql = "INSERT INTO feedback (sender, receiver, course, title, feedbackdata) VALUES (:user,:receiver, :course, '', :description)";
+	$sql = "CALL lecturerSendreplyInfo(:sender, :receiver, :course, :description)";
 	$query = $dbh->prepare($sql);
-	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
+	$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 	$query-> bindParam(':course', $course, PDO::PARAM_STR);
 	$query-> bindParam(':description', $message, PDO::PARAM_STR);
@@ -114,19 +106,13 @@ else{
 <body>
 <?php
 		$user = $_SESSION['alogin'];
-		$sql = "SELECT course FROM lecturers WHERE email = (:user)";
+		$sql = "CALL lecturerCourse(:user)";
 		$query = $dbh -> prepare($sql);
 		$query-> bindParam(':user', $user, PDO::PARAM_STR);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);	
 		$course = ($result->course);
-		
-		$sql = "SELECT * from students, feedback WHERE course = (:course);";
-		$query = $dbh -> prepare($sql);
-		$query-> bindParam(':course', $course, PDO::PARAM_STR);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
-		$cnt=1;	
+			
 		// henter det som er i URL
 		$url=$_SERVER['QUERY_STRING'];
 		$url = str_replace("reply=", "", $url);
