@@ -12,8 +12,6 @@ if(isset($_GET['edit']))
 	{
 		$editid=$_GET['edit'];
 	}
-
-
 	
 if(isset($_POST['submit']))
   {
@@ -28,21 +26,53 @@ if(isset($_POST['submit']))
 	$course=$_POST['course'];
 	$idedit=$_POST['idedit'];
 	$image=$_POST['image'];
-
-	if(move_uploaded_file($file_loc,$folder.$final_file))
-		{
+	
+    $allowed_image_extension = array(
+        "jpg",
+        "jpeg"
+    );
+    
+    // Get image file extension
+    $file_extension = pathinfo($file, PATHINFO_EXTENSION);
+    
+    // Check that the image input is not empty
+    if (! file_exists($file_loc)) {
+        $response = array(
+            "type" => "error",
+            "message" => "Choose image file to upload."
+        );
+    }    // Check that the image has the valid extension
+    else if (! in_array($file_extension, $allowed_image_extension)) {
+        $response = array(
+            "type" => "error",
+            "message" => "Image must be .JPG or .JPEG."
+        ); 
+        
+    }    // Check if file size is lower than the set size
+    else if (($_FILES["image"]["size"] > 2000000)) {
+        $response = array(
+            "type" => "error",
+            "message" => "Image size exceeds 2MB"
+        );
+    } else {
+        if (move_uploaded_file($file_loc, $folder.$final_file)) {
 			$image=$final_file;
+			$msg="Information Updated Successfully";
+			$sql="UPDATE lecturers SET name=(:name), email=(:email), course=(:course), Image=(:image) WHERE id=(:idedit)";
+			$query = $dbh->prepare($sql);
+			$query-> bindParam(':name', $name, PDO::PARAM_STR);
+			$query-> bindParam(':email', $email, PDO::PARAM_STR);
+			$query-> bindParam(':course', $course, PDO::PARAM_STR);
+			$query-> bindParam(':image', $image, PDO::PARAM_STR);
+			$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
+			$query->execute();
+        } else {
+            $response = array(
+                "type" => "error",
+                "message" => "Error uploading image."
+            );
 		}
-
-	$sql="UPDATE lecturers SET name=(:name), email=(:email), course=(:course), Image=(:image) WHERE id=(:idedit)";
-	$query = $dbh->prepare($sql);
-	$query-> bindParam(':name', $name, PDO::PARAM_STR);
-	$query-> bindParam(':email', $email, PDO::PARAM_STR);
-	$query-> bindParam(':course', $course, PDO::PARAM_STR);
-	$query-> bindParam(':image', $image, PDO::PARAM_STR);
-	$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
-	$query->execute();
-	$msg="Information Updated Successfully";
+    }
 }    
 ?>
 
@@ -99,7 +129,7 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-		$sql = "SELECT * from lecturers where id = :editid";
+		$sql = "CALL editLecturerInfo(:editid)";
 		$query = $dbh -> prepare($sql);
 		$query->bindParam(':editid',$editid,PDO::PARAM_INT);
 		$query->execute();
@@ -113,7 +143,7 @@ if(isset($_POST['submit']))
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="page-title">Edit User : <?php echo htmlentities($result->name); ?></h3>
+						<h3 class="page-title">Edit Lecturer: <?php echo htmlentities($result->name); ?></h3>
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-default">
@@ -121,7 +151,7 @@ if(isset($_POST['submit']))
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-									<div class="panel-body">
+<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
 
 <div class="form-group">
@@ -160,8 +190,9 @@ if(isset($_POST['submit']))
 		<img src="../images/<?php echo htmlentities($result->image);?>" width="150px"/>
 		<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
 		<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
+	</div>
 </div>
-</div>
+
 
 
 <div class="form-group">
@@ -171,7 +202,15 @@ if(isset($_POST['submit']))
 </div>
 
 </form>
-									</div>
+
+<?php if(!empty($response)) { ?>
+<div class="response <?php echo $response["type"]; ?>
+">
+<?php echo $response["message"]; ?>
+</div>
+<?php }?>
+
+								</div>
 								</div>
 							</div>
 						</div>
