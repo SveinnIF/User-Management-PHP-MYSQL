@@ -18,22 +18,13 @@ if(isset($_POST['login']))
 $email=$_POST['username'];
 
 // steg 2, et sikrere passord 
-$sql = "SELECT password FROM students WHERE email = (:email)";
+$sql = "CALL studentLoginCheck(:email)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':email', $email, PDO::PARAM_STR);
 $query->execute();
 $result=$query->fetch(PDO::FETCH_OBJ);	
 $pwd = ($result->password);  
 $password=password_verify($_POST['password'], $pwd);
-
-/* $sql ="SELECT email, password FROM students WHERE email=:email and password=:password and status=(:status)";
-$query= $dbh -> prepare($sql);
-$query-> bindParam(':email', $email, PDO::PARAM_STR);
-$query-> bindParam(':password', $pwd, PDO::PARAM_STR);
-$query-> bindParam(':status', $status, PDO::PARAM_STR);
-$query-> execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-if($query->rowCount() > 0) */
 
 if(password_verify($_POST['password'], $pwd))
 {
