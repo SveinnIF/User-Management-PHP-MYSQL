@@ -12,12 +12,12 @@ if(isset($_GET['del']) && isset($_GET['name']))
 $id=$_GET['del'];
 $name=$_GET['name'];
 
-$sql = "delete from lecturers WHERE id=:id";
+$sql = "CALL deleteLecturer(:id)";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
 
-$sql2 = "insert into deleteduser (email) values (:name)";
+$sql2 = "CALL insertDeletedLecturerInfo(:name)";
 $query2 = $dbh->prepare($sql2);
 $query2 -> bindParam(':name',$name, PDO::PARAM_STR);
 $query2 -> execute();
@@ -29,7 +29,7 @@ if(isset($_REQUEST['unconfirm']))
 	{
 	$aeid=intval($_GET['unconfirm']);
 	$memstatus=1;
-	$sql = "UPDATE lecturers SET status=:status WHERE  id=:aeid";
+	$sql = "UPDATE lecturers SET status=:status WHERE id=:aeid";
 	$query = $dbh->prepare($sql);
 	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
 	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
@@ -41,7 +41,7 @@ if(isset($_REQUEST['unconfirm']))
 	{
 	$aeid=intval($_GET['confirm']);
 	$memstatus=0;
-	$sql = "UPDATE lecturers SET status=:status WHERE  id=:aeid";
+	$sql = "CALL unconfirmLecturer(:status, :aeid)";
 	$query = $dbh->prepare($sql);
 	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
 	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
@@ -137,7 +137,7 @@ if(isset($_REQUEST['unconfirm']))
 									
 									<tbody>
 
-<?php $sql = "SELECT * from  lecturers ";
+<?php $sql = "CALL lecturerListInfo()";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -156,9 +156,9 @@ foreach($results as $result)
                                             
                                             <?php if($result->status == 1)
                                                     {?>
-                                                    <a href="lecturers-list.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
+                                                    <a href="list-lecturers.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
                                                     <?php } else {?>
-                                                    <a href="lecturers-list.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
+                                                    <a href="list-lecturers.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
                                                     <?php } ?>
 </td>
                                             </td>
