@@ -32,7 +32,7 @@ CREATE TABLE `admin` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(100) NOT NULL
+  `password` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -77,7 +77,7 @@ CREATE TABLE `students` (
   `id` VARCHAR(13) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(100) NOT NULL,
+  `password` varchar(60) NOT NULL,
   `fieldofstudy` varchar(50) NOT NULL,
   `class` varchar(50) NOT NULL,
   `status` int(10) NOT NULL
@@ -95,7 +95,7 @@ CREATE TABLE `lecturers` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(100) NOT NULL,
+  `password` varchar(60) NOT NULL,
   `course` varchar(50) NOT NULL,
   `image` varchar(50) NOT NULL,
   `status` int(10) NOT NULL
