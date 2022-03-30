@@ -55,39 +55,59 @@ else{
 						<div class="row">
 							<div class="col-md-12">
 								<div class="row">
+								
+									<!-- Kode for student-boksen -->
+									<div class="col-md-3">
+										<div class="panel panel-default">
+											<div class="panel-body bk-info text-light">
+												<div class="stat-panel text-center">
+<?php 
+$query = $dbh -> prepare("CALL dashboardStudentCount()");
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+$studcnt=$query->rowCount();
+?>
+													<div class="stat-panel-number h1 "><?php echo htmlentities($studcnt);?></div>
+													<div class="stat-panel-title text-uppercase">Total students</div>
+												</div>
+											</div>
+											<a href="list-students.php" class="block-anchor panel-footer">Full Detail <i class="fa fa-arrow-right"></i></a>
+										</div>
+									</div>
+									
+									<!-- Kode for lecturer-boksen -->
 									<div class="col-md-3">
 										<div class="panel panel-default">
 											<div class="panel-body bk-primary text-light">
 												<div class="stat-panel text-center">
+												
 <?php 
-$sql ="SELECT id from students";
-$query = $dbh -> prepare($sql);
+$query = $dbh -> prepare("CALL dashboardLecturerCount()");
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
-$bg=$query->rowCount();
+$lectcnt=$query->rowCount();
 ?>
-													<div class="stat-panel-number h1 "><?php echo htmlentities($bg);?></div>
-													<div class="stat-panel-title text-uppercase">Total students</div>
+													<div class="stat-panel-number h1 "><?php echo htmlentities($lectcnt);?></div>
+													<div class="stat-panel-title text-uppercase">Total lecturers</div>
 												</div>
 											</div>
-											<a href="userlist.php" class="block-anchor panel-footer">Full Detail <i class="fa fa-arrow-right"></i></a>
+											<a href="list-lecturers.php" class="block-anchor panel-footer">Full Detail <i class="fa fa-arrow-right"></i></a>
 										</div>
 									</div>
+									
+									<!-- Kode for feedback-boksen -->
 									<div class="col-md-3">
 										<div class="panel panel-default">
 											<div class="panel-body bk-success text-light">
 												<div class="stat-panel text-center">
 
 <?php 
-$receiver = 'Admin';
-$sql1 ="SELECT id from feedback where receiver = (:receiver)";
-$query1 = $dbh -> prepare($sql1);;
-$query1-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
-$query1->execute();
-$results1=$query1->fetchAll(PDO::FETCH_OBJ);
-$regbd=$query1->rowCount();
+$query = $dbh -> prepare("CALL dashboardFeedbackCount()");
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+$fbcnt=$query->rowCount();
 ?>
-													<div class="stat-panel-number h1 "><?php echo htmlentities($regbd);?></div>
+													<div class="stat-panel-number h1 "><?php echo htmlentities($fbcnt);?></div>
 													<div class="stat-panel-title text-uppercase">Feedback Messages</div>
 												</div>
 											</div>
@@ -95,40 +115,20 @@ $regbd=$query1->rowCount();
 										</div>
 									</div>
 
-													<div class="col-md-3">
+									
+									<!-- Kode for deleteduser-boksen -->
+									<div class="col-md-3">
 										<div class="panel panel-default">
 											<div class="panel-body bk-danger text-light">
 												<div class="stat-panel text-center">
-
 <?php 
-$receiver = 'Admin';
-$sql12 ="SELECT id from notification where notireceiver = (:receiver)";
-$query12 = $dbh -> prepare($sql12);;
-$query12-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
-$query12->execute();
-$results12=$query12->fetchAll(PDO::FETCH_OBJ);
-$regbd2=$query12->rowCount();
+$query = $dbh -> prepare("CALL dashboardDeletedStudentCount()");
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+$delcnt=$query->rowCount();
 ?>
-													<div class="stat-panel-number h1 "><?php echo htmlentities($regbd2);?></div>
-													<div class="stat-panel-title text-uppercase">Notifications</div>
-												</div>
-											</div>
-											<a href="notification.php" class="block-anchor panel-footer text-center">Full Detail &nbsp; <i class="fa fa-arrow-right"></i></a>
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="panel panel-default">
-											<div class="panel-body bk-info text-light">
-												<div class="stat-panel text-center">
-												<?php 
-$sql6 ="SELECT id from deleteduser ";
-$query6 = $dbh -> prepare($sql6);;
-$query6->execute();
-$results6=$query6->fetchAll(PDO::FETCH_OBJ);
-$query=$query6->rowCount();
-?>
-													<div class="stat-panel-number h1 "><?php echo htmlentities($query);?></div>
-													<div class="stat-panel-title text-uppercase">Deleted students</div>
+													<div class="stat-panel-number h1 "><?php echo htmlentities($delcnt);?></div>
+													<div class="stat-panel-title text-uppercase">Deleted Users</div>
 												</div>
 											</div>
 											<a href="deleteduser.php" class="block-anchor panel-footer text-center">Full Detail &nbsp; <i class="fa fa-arrow-right"></i></a>
@@ -140,18 +140,6 @@ $query=$query6->rowCount();
 						</div>
 					</div>
 				</div>
-
-
-
-
-
-
-
-
-
-
-
-
 			</div>
 		</div>
 	</div>
