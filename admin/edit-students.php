@@ -87,12 +87,11 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-		$sql = "SELECT * from students where id = :editid";
+		$sql = "CALL editStudentInfo(:editid)";
 		$query = $dbh -> prepare($sql);
 		$query->bindParam(':editid',$editid,PDO::PARAM_INT);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
-		$cnt=1;	
 ?>
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
