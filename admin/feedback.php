@@ -10,7 +10,7 @@ else{
 if(isset($_GET['del']))
 {
 $id=$_GET['del'];
-$sql = "delete from feedback WHERE id=:id";
+$sql = "CALL deleteFeedbackAdmin(:id)";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
@@ -97,7 +97,6 @@ $msg="Data Deleted successfully";
 											<th>User Email</th>
 											<th>Title</th>
                                             <th>Feedback</th>
-											<th>Attachment</th>
 											<th>Action</th>	
 										</tr>
 									</thead>
@@ -105,10 +104,8 @@ $msg="Data Deleted successfully";
 									<tbody>
 
 <?php 
-$receiver = 'Lecturers' AND 'Admin';
-$sql = "SELECT * from  feedback where receiver = (:receiver)";
+$sql = "CALL adminFeedbackInfo()";
 $query = $dbh -> prepare($sql);
-$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -122,7 +119,6 @@ foreach($results as $result)
                                             <td><?php echo htmlentities($result->sender);?></td>
 											<td><?php echo htmlentities($result->title);?></td>
                                             <td><?php echo htmlentities($result->feedbackdata);?></td>
-                                            <td><a href="../attachment/<?php echo htmlentities($result->attachment);?>" ><?php echo htmlentities($result->attachment);?></a></td>
 <td>
 <a href="sendreply.php?reply=<?php echo $result->sender;?>">&nbsp; <i class="fa fa-mail-reply"></i></a>&nbsp;&nbsp;
 <a href="feedback.php?del=<?php echo $result->id;?>&name=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
