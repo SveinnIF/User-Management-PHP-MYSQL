@@ -109,22 +109,20 @@ else{
 
 // henter ut id til student og legger den til variabelen "anon" 
 $receiver = $_SESSION['alogin'];
-$sql = "SELECT id FROM students WHERE email = (:receiver)";
+$sql = "CALL anonStudentMessage(:receiver)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
-$result=$query->fetch(PDO::FETCH_OBJ);
-$cnt=1;	
+$result=$query->fetch(PDO::FETCH_OBJ);	
 $anon = ($result->id);
 //echo "<script type='text/javascript'>alert('$anon');</script>";
 // ----------------
 
 $receiver = $_SESSION['alogin'];
-// $sql = "SELECT * FROM lecturers, feedback WHERE receiver = (:receiver) GROUP BY feedback.id"; // orginal kode 
-$sql = "SELECT * FROM lecturers, feedback WHERE receiver = (:receiver) OR receiver = (:anon) GROUP BY feedback.id"; // min kode
+$sql = "CALL studentMessageTable(:receiver, :anon)";
 $query = $dbh -> prepare($sql);
-$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR); // orginal kode 
-$query-> bindParam(':anon', $anon, PDO::PARAM_STR); // min kode
+$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR); 
+$query-> bindParam(':anon', $anon, PDO::PARAM_STR); 
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -137,9 +135,7 @@ foreach($results as $result)
 											<td>
 												<img src="images/<?php echo htmlentities($result->image);?>" width="150px"/>
 												<?php echo str_repeat('&nbsp;', 3);?>
-												<?php echo htmlentities($result->sender);?>
-												<input type="hidden" name="image" value="<?php echo htmlentities($result->image);?>" >
-												<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
+												<?php echo htmlentities($result->name);?>
 											</td>
 											<td><?php echo htmlentities($result->course);?></td>
 											<td><?php echo htmlentities($result->feedbackdata);?></td>
