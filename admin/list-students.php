@@ -12,12 +12,12 @@ if(isset($_GET['del']) && isset($_GET['name']))
 $id=$_GET['del'];
 $name=$_GET['name'];
 
-$sql = "delete from students WHERE id=:id";
+$sql = "CALL deleteStudent(:id)";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
 
-$sql2 = "insert into deleteduser (email) values (:name)";
+$sql2 = "CALL insertDeletedStudentInfo(:name)";
 $query2 = $dbh->prepare($sql2);
 $query2 -> bindParam(':name',$name, PDO::PARAM_STR);
 $query2 -> execute();
@@ -27,32 +27,27 @@ $msg="Data Deleted successfully";
 
 if(isset($_REQUEST['unconfirm']))
 	{
-	$aeid=intval($_GET['unconfirm']);
+	$aeid=$_GET['unconfirm'];
 	$memstatus=1;
-	$sql = "UPDATE students SET status=:status WHERE  id=:aeid";
+	$sql = "CALL unconfirmStudent(:status, :aeid)";
 	$query = $dbh->prepare($sql);
 	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
-	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+	$query -> bindParam(':aeid',$aeid, PDO::PARAM_STR);
 	$query -> execute();
 	$msg="Changes Sucessfully";
 	}
 
 	if(isset($_REQUEST['confirm']))
 	{
-	$aeid=intval($_GET['confirm']);
+	$aeid=$_GET['confirm'];
 	$memstatus=0;
-	$sql = "UPDATE students SET status=:status WHERE  id=:aeid";
+	$sql = "CALL confirmStudent(:status, :aeid)";
 	$query = $dbh->prepare($sql);
 	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
-	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+	$query -> bindParam(':aeid',$aeid, PDO::PARAM_STR);
 	$query -> execute();
 	$msg="Changes Sucessfully";
 	}
-
-
-
-
-
  ?>
 
 <!doctype html>
@@ -84,7 +79,7 @@ if(isset($_REQUEST['unconfirm']))
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
-  <style>
+	<style>
 
 	.errorWrap {
     padding: 10px;
@@ -102,8 +97,7 @@ if(isset($_REQUEST['unconfirm']))
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-
-		</style>
+	</style>
 
 </head>
 
@@ -135,13 +129,14 @@ if(isset($_REQUEST['unconfirm']))
                                                 <th>Field of study</th>
 												<th>Class</th>
                                                 <th>Account</th>
-											<th>Action</th>	
+												<th>Action</th>	
 										</tr>
 									</thead>
 									
 									<tbody>
 
-<?php $sql = "SELECT * from  students ";
+<?php 
+$sql = "CALL studentListInfo()";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -160,11 +155,11 @@ foreach($results as $result)
                                             
                                             <?php if($result->status == 1)
                                                     {?>
-                                                    <a href="students-list.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
+                                                    <a href="list-students.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
                                                     <?php } else {?>
-                                                    <a href="students-list.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
+                                                    <a href="list-students.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
                                                     <?php } ?>
-</td>
+											</td>
                                             </td>
 											
 <td>
@@ -180,7 +175,6 @@ foreach($results as $result)
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
