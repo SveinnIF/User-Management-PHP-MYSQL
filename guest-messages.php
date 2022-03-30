@@ -29,19 +29,11 @@ else{
   {	
 	$receiver=$_POST['email'];
     $message=$_POST['message'];
-	$notitype='Send Message';
 	$sender='Lecturers';
-	
-    $sqlnoti="insert into notification (notiuser,notireceiver,notitype) values (:notiuser,:notireceiver,:notitype)";
-    $querynoti = $dbh->prepare($sqlnoti);
-	$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
-	$querynoti-> bindParam(':notireceiver',$receiver, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    $querynoti->execute();
 
-	$sql="insert into feedback (sender, receiver, feedbackdata) values (:user,:receiver,:description)";
+	$sql="CALL guestMessageInfo(:sender, :receiver, :description)";
 	$query = $dbh->prepare($sql);
-	$query-> bindParam(':user', $sender, PDO::PARAM_STR);
+	$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
 	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 	$query-> bindParam(':description', $message, PDO::PARAM_STR);
     $query->execute(); 
@@ -78,7 +70,7 @@ else{
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
-  <style>
+	<style>
 
 	.errorWrap {
     padding: 10px;
@@ -133,7 +125,7 @@ else{
 
 <?php 
 $receiver = $_SESSION['alogin'];
-$sql = "SELECT * from  feedback where receiver = (:receiver)";
+$sql = "CALL guestMessageTable(:receiver)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
