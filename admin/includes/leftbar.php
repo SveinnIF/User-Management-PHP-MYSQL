@@ -12,8 +12,6 @@
 			</li>
 			<li><a href="feedback.php"><i class="fa fa-envelope"></i> &nbsp;Feedback</a>
 			</li>
-			<li><a href="notification.php"><i class="fa fa-bell"></i> &nbsp;Notification <sup style="color:red">*</sup></a>
-			</li>
 			<li><a href="deleteduser.php"><i class="fa fa-user-times"></i> &nbsp;Deleted Users</a>
 			</li>
 			</ul>
