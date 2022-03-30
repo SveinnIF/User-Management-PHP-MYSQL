@@ -92,7 +92,7 @@ else{
 									
 									<tbody>
 
-<?php $sql = "SELECT * from  deleteduser";
+<?php $sql = "CALL deleteduserInfo()";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
