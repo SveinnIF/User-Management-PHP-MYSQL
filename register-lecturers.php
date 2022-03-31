@@ -97,28 +97,7 @@ $name=$_POST['name'];
 	<link rel="stylesheet" href="css/fileinput.min.css">
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<link rel="stylesheet" href="css/style.css">
-    	<script type="text/javascript">
-
-	function validate()
-        {
-            var extensions = new Array("jpg","jpeg");
-            var image_file = document.regform.image.value;
-            var image_length = document.regform.image.value.length;
-            var pos = image_file.lastIndexOf('.') + 1;
-            var ext = image_file.substring(pos, image_length);
-            var final_ext = ext.toLowerCase();
-            for (i = 0; i < extensions.length; i++)
-            {
-                if(extensions[i] == final_ext)
-                {
-                return true;
-                
-                }
-            }
-            alert("Image Extension Not Valid (Use Jpg,jpeg)");
-            return false;
-        }
-        
+    	<script type="text/javascript">      
 </script>
 </head>
 
@@ -175,6 +154,15 @@ $name=$_POST['name'];
 			    <br>
                             <button class="btn btn-primary" name="submit" type="submit">Register</button>
                             </form>
+			    
+			    <br>
+			    <?php if(!empty($response)) { ?>
+			    <div class="response <?php echo $response["type"]; ?>
+			    ">
+			    <?php echo $response["message"]; ?>
+			    </div>
+			    <?php }?>
+							
                             <br>
                             <br>
 			    <p>Already Have Account? <a href="lecturers-login.php" >Signin</a></p>
