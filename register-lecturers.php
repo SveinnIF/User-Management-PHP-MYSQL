@@ -110,7 +110,7 @@ $name=$_POST['name'];
 						<h1 class="text-center text-bold mt-2x">Lecturer Registration</h1>
 						<div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
-                         <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" onSubmit="return validate();">
+                            <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" onSubmit="return validate();">
                             <div class="form-group">
 				    
                             <label class="col-sm-1 control-label">Name<span style="color:red">*</span></label>
@@ -148,21 +148,21 @@ $name=$_POST['name'];
                             <label class="col-sm-1 control-label">Picture<span style="color:red">*</span></label>
                             <div class="col-sm-5">
                             <div><input type="file" name="image" class="form-control"></div>
+				   
+			    <?php if(!empty($response)) { ?>
+			    <div class="response <?php echo $response["type"]; ?>
+			    ">
+			    <?php echo $response["message"]; ?>
+					    
+			    </div>
+			    <?php }?>
                             </div>
 			    </div>
                             
 			    <br>
                             <button class="btn btn-primary" name="submit" type="submit">Register</button>
                             </form>
-			    
-			    <br>
-			    <?php if(!empty($response)) { ?>
-			    <div class="response <?php echo $response["type"]; ?>
-			    ">
-			    <?php echo $response["message"]; ?>
-			    </div>
-			    <?php }?>
-							
+			  			
                             <br>
                             <br>
 			    <p>Already Have Account? <a href="lecturers-login.php" >Signin</a></p>
