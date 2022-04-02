@@ -36,8 +36,6 @@ echo "<script type='text/javascript'> document.location = 'feedback-students.php
 
 }
 
-}
-
 ?>
 <!doctype html>
 <html lang="en" class="no-js">
