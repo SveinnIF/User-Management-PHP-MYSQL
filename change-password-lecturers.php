@@ -40,7 +40,7 @@ $cnfpassword=$_POST['confirmpassword'];
 $chpwvali="";
 $uppercase    = preg_match('@[A-Z ÆØÅ]@', $newpassword);
 $lowercase    = preg_match('@[a-z æøå]@', $newpassword);
-$number    	  = preg_match('@[0-9]@', $newpassword);
+$number       = preg_match('@[0-9]@', $newpassword);
 $specialChars = preg_match('@[^\w]@', $newpassword);
 
 	if(!$password) // sjekker om current pw er riktig med password_verify
@@ -180,8 +180,7 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 														<br>
 														<br>
 														<?php if(!empty($pwdResponse)) { ?>
-														<div class="response <?php echo $pwdResponse["type"]; ?>
-														">
+														<div class="response <?php echo $pwdResponse["type"]; ?> " color=red>
 														<?php echo $pwdResponse["message"]; ?>
 														</div>
 														<?php }?>
