@@ -120,7 +120,6 @@ foreach($results as $result)
 											<td><?php echo htmlentities($result->title);?></td>
                                             <td><?php echo htmlentities($result->feedbackdata);?></td>
 <td>
-<a href="sendreply.php?reply=<?php echo $result->sender;?>">&nbsp; <i class="fa fa-mail-reply"></i></a>&nbsp;&nbsp;
 <a href="feedback.php?del=<?php echo $result->id;?>&name=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
 </td>
 										</tr>
