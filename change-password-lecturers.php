@@ -21,8 +21,7 @@ header('location:index.php');
 else{
 // Code for change password	
 if(isset($_POST['submit']))
-	{
-
+{
 $username=$_SESSION['alogin'];
 
 $sql = "SELECT password FROM lecturers WHERE email = (:username)";
@@ -37,10 +36,9 @@ $newpassword=$_POST['newpassword'];
 $cnfpassword=$_POST['confirmpassword'];
 
 // validation
-$chpwvali="";
 $uppercase    = preg_match('@[A-Z ÆØÅ]@', $newpassword);
 $lowercase    = preg_match('@[a-z æøå]@', $newpassword);
-$number       = preg_match('@[0-9]@', $newpassword);
+$number    	  = preg_match('@[0-9]@', $newpassword);
 $specialChars = preg_match('@[^\w]@', $newpassword);
 
 	if(!$password) // sjekker om current pw er riktig med password_verify
@@ -73,7 +71,7 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 		$query-> execute();
 		$results = $query -> fetchAll(PDO::FETCH_OBJ);
 		
-		$con="UPDATE LECTURERS SET password=:newpassword WHERE email=:username";
+		$con="UPDATE lecturers SET password=:newpassword WHERE email=:username";
 		$chngpwd1 = $dbh->prepare($con);
 		$chngpwd1-> bindParam(':username', $username, PDO::PARAM_STR);
 		$chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
@@ -117,16 +115,16 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 .errorWrap {
     padding: 10px;
     margin: 0 0 20px 0;
-	background: #dd3d36;
-	color:#fff;
+    background: #dd3d36;
+    color:#fff;
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
 .succWrap{
     padding: 10px;
     margin: 0 0 20px 0;
-	background: #5cb85c;
-	color:#fff;
+    background: #5cb85c;
+    color:#fff;
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
@@ -180,7 +178,8 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 														<br>
 														<br>
 														<?php if(!empty($pwdResponse)) { ?>
-														<div class="response <?php echo $pwdResponse["type"]; ?> " color=red>
+														<div class="response <?php echo $pwdResponse["type"]; ?>
+														">
 														<?php echo $pwdResponse["message"]; ?>
 														</div>
 														<?php }?>
