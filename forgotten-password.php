@@ -15,54 +15,59 @@ $logger->pushHandler($handler);
 error_reporting(0);
 include('includes/config.php');
 if (isset($_POST["email"])) {
-  // (B2) CHECK IF VALID USER
-  $stmt = $dbh->prepare("SELECT * FROM `lecturers` WHERE `email`=?");
-  $stmt->execute([$_POST["email"]]);
-  $user = $stmt->fetch();
-  $result =is_array($user)
-          ? "" 
-          : $_POST["email"] . " is not registered." ;
+	$email=$_POST["email"];
+	
+	// email validation		
+	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		// (B2) CHECK IF VALID USER
+		$stmt = $dbh->prepare("SELECT * FROM `lecturers` WHERE `email`=?");
+		$stmt->execute([$_POST["email"]]);
+		$user = $stmt->fetch();
+		$result =is_array($user)
+			? "" 
+			: $_POST["email"] . " is not registered." ;
  
-  // (B3) CHECK PREVIOUS REQUEST (PREVENT SPAM)
-  if ($result == "") {
-    $stmt = $dbh->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
-    $stmt->execute([$user["id"]]);
-    $request = $stmt->fetch();
-    $now = strtotime("now");
-    $prvalid = 400;
-    if (is_array($request)) {
-      $expire = strtotime($request["reset_time"]) + $prvalid;
-      if ($now < $expire) { $result = "Please try again later"; }
-    }
-  }
+	// (B3) CHECK PREVIOUS REQUEST (PREVENT SPAM)
+	if ($result == "") {
+		$stmt = $dbh->prepare("SELECT * FROM `password_reset` WHERE `id`=?");
+		$stmt->execute([$user["id"]]);
+		$request = $stmt->fetch();
+		$now = strtotime("now");
+		$prvalid = 400;
+		if (is_array($request)) {
+		$expire = strtotime($request["reset_time"]) + $prvalid;
+		if ($now < $expire) { $result = "Please try again later"; }
+		}
+	}
  
-  // (B4) CHECKS OK - CREATE NEW RESET REQUEST
-  if ($result == "") {
-    // RANDOM HASH
-    $hash = md5($user["email"] . $now);
+	// (B4) CHECKS OK - CREATE NEW RESET REQUEST
+	if ($result == "") {
+		// RANDOM HASH
+		$hash = md5($user["email"] . $now);
  
-    // DATABASE ENTRY
-    $stmt = $dbh->prepare("REPLACE INTO `password_reset` VALUES (?,?,?)");
-    $stmt->execute([$user["id"], $hash, date("Y-m-d H:i:s")]);
+		// DATABASE ENTRY
+		$stmt = $dbh->prepare("REPLACE INTO `password_reset` VALUES (?,?,?)");
+		$stmt->execute([$user["id"], $hash, date("Y-m-d H:i:s")]);
  
-    // SEND EMAIL - CHANGE TO YOUR OWN!
-    $from = "admin <sveinnif@hiof.no>";
-    $subject = "Password reset";
-    $header = implode("\r\n", [
-      "From: $from",
-      "MIME-Version: 1.0",
-      "Content-type: text/html; charset=utf-8"
-    ]);
-    $link = "http://158.39.188.201/steg1/reset.php?i=".$user["id"]."&h=".$hash;
-    $message = "<a href='$link'>Click here to reset password</a>";
-    if (!@mail($user["email"], $subject, $message, $header)) {
-      $result = "Failed to send email! - Contact administrator";
-    }
-  }
+		// SEND EMAIL - CHANGE TO YOUR OWN!
+		$from = "admin <sveinnif@hiof.no>";
+		$subject = "Password reset";
+		$header = implode("\r\n", [
+			"From: $from",
+			"MIME-Version: 1.0",
+			"Content-type: text/html; charset=utf-8"
+		]);
+		$link = "http://158.39.188.201/steg1/reset.php?i=".$user["id"]."&h=".$hash;
+		$message = "<a href='$link'>Click here to reset password</a>";
+		if (!@mail($user["email"], $subject, $message, $header)) {
+			$result = "Failed to send email! - Contact administrator";
+		}
+	}
  
-  // (B5) RESULTS
-  if ($result=="") { $result = "Email has been sent - Please click on the link in the email to confirm."; }
-  #echo "<div> $result </div>";
+	// (B5) RESULTS
+	if ($result=="") { $result = "Email has been sent - Please click on the link in the email to confirm."; }
+	#echo "<div> $result </div>";
+	}
 }
 ?>
 
