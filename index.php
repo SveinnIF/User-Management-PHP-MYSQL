@@ -12,29 +12,46 @@ $publisher = new Gelf\Publisher($transport);
 $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
+error_reporting(0);
 include('includes/config.php');
 if(isset($_POST['login'])) {
-// $status='1';
 $email=$_POST['username'];
+$vlchk="";
 
-// steg 2, et sikrere passord 
-$sql = "CALL studentLoginCheck(:email)";
-$query = $dbh -> prepare($sql);
-$query-> bindParam(':email', $email, PDO::PARAM_STR);
-$query->execute();
-$result=$query->fetch(PDO::FETCH_OBJ);	
-$pwd = ($result->password);  
-$password=password_verify($_POST['password'], $pwd);
+	// email validation		
+	if (empty($email)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Invalid Details Or Account Not Confirmed"
+		);
+	}
+	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Invalid Details Or Account Not Confirmed"
+		);
+	}
+	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$sql = "CALL studentLoginCheck(:email)";
+		$query = $dbh -> prepare($sql);
+		$query-> bindParam(':email', $email, PDO::PARAM_STR);
+		$query->execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);	
+		$pwd = ($result->password);  
+		$password=password_verify($_POST['password'], $pwd);
 
-if(password_verify($_POST['password'], $pwd))
-{
-$_SESSION['alogin']=$_POST['username'];
-echo "<script type='text/javascript'> document.location = 'feedback-students.php'; </script>";
-} else{
-  
-  echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
-
-}
+		if($password)
+		{
+			$_SESSION['alogin']=$_POST['username'];
+			echo "<script type='text/javascript'> document.location = 'feedback-students.php'; </script>";
+		} 
+		else{
+			$emailResponse = array(
+				"type" => "emailError",
+				"message" => "Invalid Details Or Account Not Confirmed"
+			);
+		}
+	}
 }
 ?>
 <!doctype html>
@@ -46,7 +63,8 @@ echo "<script type='text/javascript'> document.location = 'feedback-students.php
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="">
-<title>Student Sign-in</title>
+	
+	<title>Student Sign-in</title>
 	
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -72,11 +90,21 @@ echo "<script type='text/javascript'> document.location = 'feedback-students.php
 
 									<label for="" class="text-uppercase text-sm">Your Email</label>
 									<input type="text" placeholder="Email" name="username" class="form-control mb" required>
+										
 
 									<label for="" class="text-uppercase text-sm">Password</label>
 									<input type="password" placeholder="Password" name="password" class="form-control mb" required>
+									
+										<?php if(!empty($emailResponse)) { ?>
+										<div class="response <?php echo $emailResponse["type"]; ?> " color=red>
+										<?php echo $emailResponse["message"]; ?>
+										</div>
+										<?php }?>
+										<br>
+										
 									<button class="btn btn-primary btn-block" name="login" type="submit">LOGIN</button>
 								</form>
+										
 								<br>
 								<p>Don't Have an Account? <a href="register-students.php" >Signup</a></p>
 								<p>Are You A Lecturer? <a href="lecturers-login.php" >Click here</a></p>
