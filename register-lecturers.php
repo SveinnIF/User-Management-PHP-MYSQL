@@ -129,13 +129,13 @@ $specialChars = preg_match('@[^\w]@', $password);
 		    "message" => "Course is required"
 		);
 	}    
-	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
 		$courseResponse = array(
 		    "type" => "courseError",
 		    "message" => "Invalid course"
 		); 
 	    } 
-	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
 		$checkvali .="crse";
 	}
 	
