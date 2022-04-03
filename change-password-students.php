@@ -178,8 +178,7 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 														<br>
 														<br>
 														<?php if(!empty($pwdResponse)) { ?>
-														<div class="response <?php echo $pwdResponse["type"]; ?>
-														">
+														<div class="response <?php echo $pwdResponse["type"]; ?> " color=red>
 														<?php echo $pwdResponse["message"]; ?>
 														</div>
 														<?php }?>
