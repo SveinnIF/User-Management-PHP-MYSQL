@@ -53,13 +53,13 @@ else{
 			"message" => "This field cannot be changed"
 		);
 	}
-	else if (!in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+	else if (!in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
 		$courseResponse = array(
 			"type" => "courseError",
 			"message" => "This field cannot be changed"
 		);
 	}
-	else if (in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+	else if (in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
 		$ckvl .= "cre";
 	}
 	
