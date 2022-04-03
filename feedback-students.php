@@ -34,18 +34,75 @@ if(isset($_POST['submit']))
 	$result=$query->fetch(PDO::FETCH_OBJ);
 	$anon= ($result->id);
 	
-	$query=$dbh->prepare("CALL studentFeedbackInfo(:user, :receiver, :course, :title, :description)");
-	if ($_POST['anon'] == 'anonymous') {
-		$query-> bindParam(':user', $anon, PDO::PARAM_STR);
-	} else {
-		$query-> bindParam(':user', $user, PDO::PARAM_STR);
-	  } 
-	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
-	$query-> bindParam(':course', $course, PDO::PARAM_STR);
-	$query-> bindParam(':title', $title, PDO::PARAM_STR);
-	$query-> bindParam(':description', $description, PDO::PARAM_STR);
-	$query->execute(); 
-	$msg="Feedback Send";
+	// validation
+	$chkval="";
+	
+	// name validation
+    if (empty($title)) {
+        $titleResponse = array(
+            "type" => "titleError",
+            "message" => "Title is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
+        $titleResponse = array(
+            "type" => "titleError",
+            "message" => "Invalid title"
+        ); 
+    } 
+	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
+		$chkval="ttl";
+	}
+
+	// course validation
+	if(isset($_REQUEST['course']) && $_REQUEST['course'] == "0") { 
+        $courseResponse = array(
+            "type" => "courseError",
+            "message" => "Course is required"
+        );
+    }    
+    else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+        $courseResponse = array(
+            "type" => "courseError",
+            "message" => "Invalid course"
+        ); 
+    } 
+	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+		$chkval .="crs";
+	}
+	
+	// name validation
+    if (empty($description)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Message is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $description)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Invalid message"
+        ); 
+    } 
+	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $description)) {
+		$chkval .= "dsc";
+	}
+	
+	// Sender informasjonen til databasen om alle validations er suksessfulle
+	if($chkval == "ttlcrsdsc") {
+		$query=$dbh->prepare("CALL studentFeedbackInfo(:user, :receiver, :course, :title, :description)");
+		if ($_POST['anon'] == 'anonymous') {
+			$query-> bindParam(':user', $anon, PDO::PARAM_STR);
+		} else {
+			$query-> bindParam(':user', $user, PDO::PARAM_STR);
+		  } 
+		$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+		$query-> bindParam(':course', $course, PDO::PARAM_STR);
+		$query-> bindParam(':title', $title, PDO::PARAM_STR);
+		$query-> bindParam(':description', $description, PDO::PARAM_STR);
+		$query->execute(); 
+		$msg="Feedback Send";
+	}
 }    
 ?>
 
@@ -105,30 +162,31 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('.NET')");
-	$query->execute();
-	$dotNET=$query->fetch(PDO::FETCH_OBJ);
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('.NET')");
+$query->execute();
+$dotNET=$query->fetch(PDO::FETCH_OBJ);
 
-	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Algoritmer og datastrukturer')");
-	$query->execute();
-	$algoritmer=$query->fetch(PDO::FETCH_OBJ);
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('aod')");
+$query->execute();
+$algoritmer=$query->fetch(PDO::FETCH_OBJ);
 
-	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Datasikkerhet i utvikling og drift')");
-	$query->execute();
-	$datasikkerhet=$query->fetch(PDO::FETCH_OBJ);
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('dioud')");
+$query->execute();
+$datasikkerhet=$query->fetch(PDO::FETCH_OBJ);
 
-	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Bildeanalyse')");
-	$query->execute();
-	$bildeanalyse=$query->fetch(PDO::FETCH_OBJ);
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('blyse')");
+$query->execute();
+$bildeanalyse=$query->fetch(PDO::FETCH_OBJ);
 
-	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Lineær algebra og integraltransformer')");
-	$query->execute();
-	$algebra=$query->fetch(PDO::FETCH_OBJ);
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('laoi')");
+$query->execute();
+$algebra=$query->fetch(PDO::FETCH_OBJ);
 
-	$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('Autonome kjøretøy')");
-	$query->execute();
-	$autonome=$query->fetch(PDO::FETCH_OBJ);
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('ak')");
+$query->execute();
+$autonome=$query->fetch(PDO::FETCH_OBJ);
 ?>
+	
 	<?php include('includes/header-students.php');?>
 	<div class="ts-main-content">
 	<?php include('includes/leftbar-students.php');?>
@@ -152,6 +210,12 @@ if(isset($_POST['submit']))
 	<label class="col-sm-2 control-label">Title<span style="color:red">*</span></label>
 		<div class="col-sm-4">
 			<input type="text" name="title" class="form-control" required>
+				<?php if(!empty($titleResponse)) { ?>
+				<div class="response <?php echo $titleResponse["type"]; ?>
+				">
+				<?php echo $titleResponse["message"]; ?>
+				</div>
+				<?php }?>
 		</div>
 </div>
 	
@@ -159,14 +223,20 @@ if(isset($_POST['submit']))
     <label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
 		<div class="col-sm-4">
 			<select name="course" class="form-control" required>
-				<option value="">Select</option>
+				<option value="0">Select</option>
 				<option value=".NET">.NET</option>
-				<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-				<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-				<option value="Bildeanalyse">Bildeanalyse</option>
-				<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-				<option value="Autonome kjøretøy">Autonome kjøretøy</option>
+				<option value="aod">Algoritmer og datastrukturer</option>
+				<option value="dioud">Datasikkerhet i utvikling og drift</option>
+				<option value="blyse">Bildeanalyse</option>
+				<option value="laoi">Lineær algebra og integraltransformer</option>
+				<option value="ak">Autonome kjøretøy</option>
 			</select>
+				<?php if(!empty($courseResponse)) { ?>
+				<div class="response <?php echo $courseResponse["type"]; ?>
+				">
+				<?php echo $courseResponse["message"]; ?>
+				</div>
+				<?php }?>
 		</div>  
 </div>
 
@@ -174,6 +244,12 @@ if(isset($_POST['submit']))
 	<label class="col-sm-2 control-label">Description<span style="color:red">*</span></label>
 		<div class="col-sm-10">
 			<textarea class="form-control" rows="5" name="description"></textarea>
+				<?php if(!empty($msgResponse)) { ?>
+				<div class="response <?php echo $msgResponse["type"]; ?>
+				">
+				<?php echo $msgResponse["message"]; ?>
+				</div>
+				<?php }?>
 		</div>
 </div>
 
