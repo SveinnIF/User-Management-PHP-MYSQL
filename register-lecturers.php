@@ -195,8 +195,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 						<div class="col-sm-5">
                             				<input type="text" name="name" class="form-control" required>
 								<?php if(!empty($nameResponse)) { ?>
-								<div class="response <?php echo $nameResponse["type"]; ?>
-								">
+								<div class="response <?php echo $nameResponse["type"]; ?> " color=red>
 								<?php echo $nameResponse["message"]; ?>
 								</div>
 								<?php }?>
@@ -206,8 +205,7 @@ $specialChars = preg_match('@[^\w]@', $password);
                            			<div class="col-sm-5">
                             				<input type="text" name="email" class="form-control" required>
 								<?php if(!empty($emailResponse)) { ?>
-								<div class="response <?php echo $emailResponse["type"]; ?>
-								">
+								<div class="response <?php echo $emailResponse["type"]; ?> " color=red>
 								<?php echo $emailResponse["message"]; ?>
 								</div>
 								<?php }?>
@@ -219,8 +217,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 				    		<div class="col-sm-5">
 							<input type="password" name="password" class="form-control" id="password" required >
 								<?php if(!empty($pwdResponse)) { ?>
-								<div class="response <?php echo $pwdResponse["type"]; ?>
-								">
+								<div class="response <?php echo $pwdResponse["type"]; ?> " color=red>
 								<?php echo $pwdResponse["message"]; ?>
 								</div>
 								<?php }?>
@@ -238,8 +235,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 								<option value="ak">Autonome kjøretøy</option>
 							</select>
 								<?php if(!empty($courseResponse)) { ?>
-								<div class="response <?php echo $courseResponse["type"]; ?>
-								">
+								<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
 								<?php echo $courseResponse["message"]; ?>
 								</div>
 								<?php }?>
@@ -251,8 +247,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 						<div class="col-sm-5">
 						<div><input type="file" name="image" class="form-control"></div>
 							<?php if(!empty($response)) { ?>
-							<div class="response <?php echo $response["type"]; ?>
-							">
+							<div class="response <?php echo $response["type"]; ?> " color=red>
 							<?php echo $response["message"]; ?>
 							</div>
 							<?php }?>
