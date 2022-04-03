@@ -166,8 +166,7 @@ $specialChars = preg_match('@[^\w]@', $password);
                             				<div class="col-sm-5">
 								<input type="text" name="name" class="form-control" required>
 									<?php if(!empty($nameResponse)) { ?>
-									<div class="response <?php echo $nameResponse["type"]; ?>
-									">
+									<div class="response <?php echo $nameResponse["type"]; ?> " color=red>
 									<?php echo $nameResponse["message"]; ?>
 									</div>
 									<?php }?>
@@ -177,8 +176,7 @@ $specialChars = preg_match('@[^\w]@', $password);
                             				<div class="col-sm-5">
 								<input type="text" name="email" class="form-control" required>
 									<?php if(!empty($emailResponse)) { ?>
-									<div class="response <?php echo $emailResponse["type"]; ?>
-									">
+									<div class="response <?php echo $emailResponse["type"]; ?> " color=red>
 									<?php echo $emailResponse["message"]; ?>
 									</div>
 									<?php }?>
@@ -190,8 +188,7 @@ $specialChars = preg_match('@[^\w]@', $password);
                             				<div class="col-sm-5">
 								<input type="password" name="password" class="form-control" id="password"  >
 									<?php if(!empty($pwdResponse)) { ?>
-									<div class="response <?php echo $pwdResponse["type"]; ?>
-									">
+									<div class="response <?php echo $pwdResponse["type"]; ?> " color=red> 
 									<?php echo $pwdResponse["message"]; ?>
 									</div>
 									<?php }?>
@@ -201,8 +198,7 @@ $specialChars = preg_match('@[^\w]@', $password);
                            			 	<div class="col-sm-5">
 								<input type="text" name="fieldofstudy" class="form-control" required>
 									<?php if(!empty($fosResponse)) { ?>
-									<div class="response <?php echo $fosResponse["type"]; ?>
-									">
+									<div class="response <?php echo $fosResponse["type"]; ?> " color=red>
 									<?php echo $fosResponse["message"]; ?>
 									</div>
 									<?php }?>
@@ -219,8 +215,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 									<option value="21/22">21/22</option>
 								</select>
 									<?php if(!empty($classResponse)) { ?>
-									<div class="response <?php echo $classResponse["type"]; ?>
-									">
+									<div class="response <?php echo $classResponse["type"]; ?> " color=red>
 									<?php echo $classResponse["message"]; ?>
 									</div>
 									<?php }?>
