@@ -201,8 +201,7 @@ else{
 	<div class="col-sm-4">
 		<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($url);?>"> <!-- byttet "result->title" til "url" -->
 			<?php if(!empty($replytoResponse)) { ?>
-			<div class="response <?php echo $replytoResponse["type"]; ?>
-			">
+			<div class="response <?php echo $replytoResponse["type"]; ?> " color=red>
 			<?php echo $replytoResponse["message"]; ?>
 			</div>
 			<?php }?>		
@@ -214,8 +213,7 @@ else{
 	<div class="col-sm-4">
 		<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
 			<?php if(!empty($courseResponse)) { ?>
-			<div class="response <?php echo $courseResponse["type"]; ?>
-			">
+			<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
 			<?php echo $courseResponse["message"]; ?>
 			</div>
 			<?php }?>	
@@ -227,8 +225,7 @@ else{
 	<div class="col-sm-6">
 		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
 			<?php if(!empty($msgResponse)) { ?>
-			<div class="response <?php echo $msgResponse["type"]; ?>
-			">
+			<div class="response <?php echo $msgResponse["type"]; ?> " color=red>
 			<?php echo $msgResponse["message"]; ?>
 			</div>
 			<?php }?>	
