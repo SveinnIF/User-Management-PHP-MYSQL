@@ -38,52 +38,52 @@ if(isset($_POST['submit']))
 	$chkval="";
 	
 	// name validation
-    if (empty($title)) {
-        $titleResponse = array(
-            "type" => "titleError",
-            "message" => "Title is required"
-        );
-    }    
-    else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
-        $titleResponse = array(
-            "type" => "titleError",
-            "message" => "Invalid title"
-        ); 
-    } 
+    	if (empty($title)) {
+		$titleResponse = array(
+		    "type" => "titleError",
+		    "message" => "Title is required"
+		);
+   	 }    
+    	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
+		$titleResponse = array(
+		    "type" => "titleError",
+		    "message" => "Invalid title"
+		); 
+    	} 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
 		$chkval="ttl";
 	}
 
 	// course validation
 	if(isset($_REQUEST['course']) && $_REQUEST['course'] == "0") { 
-        $courseResponse = array(
-            "type" => "courseError",
-            "message" => "Course is required"
-        );
-    }    
-    else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
-        $courseResponse = array(
-            "type" => "courseError",
-            "message" => "Invalid course"
-        ); 
-    } 
+		$courseResponse = array(
+		    "type" => "courseError",
+		    "message" => "Course is required"
+		);
+    	}    
+    	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+		$courseResponse = array(
+		    "type" => "courseError",
+		    "message" => "Invalid course"
+		); 
+   	} 
 	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
 		$chkval .="crs";
 	}
 	
-	// name validation
-    if (empty($description)) {
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Message is required"
-        );
-    }    
-    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $description)) {
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Invalid message"
-        ); 
-    } 
+	// message validation
+    	if (empty($description)) {
+		$msgResponse = array(
+		    "type" => "msgError",
+		    "message" => "Message is required"
+		);
+    	}    
+    	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $description)) {
+		$msgResponse = array(
+		    "type" => "msgError",
+		    "message" => "Invalid message"
+		); 
+   	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $description)) {
 		$chkval .= "dsc";
 	}
