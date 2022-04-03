@@ -16,7 +16,6 @@ error_reporting(0);
 include('includes/config.php');
 if(isset($_POST['login'])) {
 $email=$_POST['username'];
-$vlchk="";
 
 	// email validation		
 	if (empty($email)) {
