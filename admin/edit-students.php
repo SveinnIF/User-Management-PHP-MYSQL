@@ -13,7 +13,6 @@ if(isset($_GET['edit']))
 		$editid=$_GET['edit'];
 	}
 
-	
 if(isset($_POST['submit']))
   {
 	$name=$_POST['name'];
@@ -21,16 +20,90 @@ if(isset($_POST['submit']))
 	$fieldofstudy=$_POST['fieldofstudy'];
 	$class=$_POST['class'];
 	$idedit=$_POST['idedit'];
+	
+	if (empty($name)) {
+        $nameResponse = array(
+            "type" => "nameError",
+            "message" => "Name is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+        $nameResponse = array(
+            "type" => "nameError",
+            "message" => "Invalid name"
+        ); 
+    } 
+	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+		$validacheck="ednm";
+	}
+           
+	// email validation		
+	if (empty($email)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Email is required"
+		);
+	}
+	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Invalid email"
+		);
+	}
+	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$validacheck .= "edem";
+	}
+	
+	
+	// field of study validation
+    if (empty($fieldofstudy)) {
+        $fosResponse = array(
+            "type" => "fosError",
+            "message" => "Field of study is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $fieldofstudy)) {
+        $fosResponse = array(
+            "type" => "fosError",
+            "message" => "Invalid field of study"
+        ); 
+    } 
+	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $fieldofstudy)) {
+		$validacheck .="edfos";
+	}
 
-	$sql="UPDATE students SET name=(:name), email=(:email), fieldofstudy=(:fieldofstudy), class=(:class) WHERE id=(:idedit)";
-	$query = $dbh->prepare($sql);
-	$query-> bindParam(':name', $name, PDO::PARAM_STR);
-	$query-> bindParam(':email', $email, PDO::PARAM_STR);
-	$query-> bindParam(':fieldofstudy', $fieldofstudy, PDO::PARAM_STR);
-	$query-> bindParam(':class', $class, PDO::PARAM_STR);
-	$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
-	$query->execute();
-	$msg="Information Updated Successfully";
+	// class validation
+	if(isset($_REQUEST['class']) && $_REQUEST['class'] == "0") { 
+        $classResponse = array(
+            "type" => "classError",
+            "message" => "Class is required"
+        );
+    }    
+    else if(isset($_REQUEST['class']) &&  !in_array($_REQUEST['class'], ["19/20", "20/21", "21/22"], true)) {
+        $classResponse = array(
+            "type" => "classError",
+            "message" => "Invalid class"
+        ); 
+    } 
+	else if(isset($_REQUEST['class']) &&  in_array($_REQUEST['class'], ["19/20", "20/21", "21/22"], true)) {
+		$validacheck .="edcls";
+	}
+	
+	// Sender informasjonen til databasen om alle validations er suksessfulle
+	if($validacheck == "ednmedemedfosedcls") {
+		$sql="UPDATE students SET name=(:name), email=(:email), fieldofstudy=(:fieldofstudy), class=(:class) WHERE id=(:idedit)";
+		$query = $dbh->prepare($sql);
+		$query-> bindParam(':name', $name, PDO::PARAM_STR);
+		$query-> bindParam(':email', $email, PDO::PARAM_STR);
+		$query-> bindParam(':fieldofstudy', $fieldofstudy, PDO::PARAM_STR);
+		$query-> bindParam(':class', $class, PDO::PARAM_STR);
+		$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
+		$query->execute();
+		$msg="Information Updated Successfully";
+		
+		echo "<script type='text/javascript'>alert('Editing Successful!');</script>";
+		echo "<script type='text/javascript'> document.location = 'list-students.php'; </script>";
+	}
 }    
 ?>
 
@@ -87,11 +160,11 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-		$sql = "CALL editStudentInfo(:editid)";
-		$query = $dbh -> prepare($sql);
-		$query->bindParam(':editid',$editid,PDO::PARAM_INT);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
+$sql = "CALL editStudentInfo(:editid)";
+$query = $dbh -> prepare($sql);
+$query->bindParam(':editid',$editid,PDO::PARAM_INT);
+$query->execute();
+$result=$query->fetch(PDO::FETCH_OBJ);
 ?>
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
@@ -100,7 +173,7 @@ if(isset($_POST['submit']))
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="page-title">Edit User : <?php echo htmlentities($result->name); ?></h3>
+						<h3 class="page-title">Edit Student : <?php echo htmlentities($result->name); ?></h3>
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-default">
@@ -112,34 +185,55 @@ if(isset($_POST['submit']))
 
 	<form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
 		<div class="form-group">
+		
 			<label class="col-sm-2 control-label">Name<span style="color:red">*</span></label>
 			<div class="col-sm-4">
 				<input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->name);?>">
+					<?php if(!empty($nameResponse)) { ?>
+					<div class="response <?php echo $nameResponse["type"]; ?> " color=red>
+					<?php echo $nameResponse["message"]; ?>
+					</div>
+					<?php }?>
 			</div>
 
 			<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
 			<div class="col-sm-4">
 				<input type="email" name="email" class="form-control" required value="<?php echo htmlentities($result->email);?>">
+				<?php if(!empty($emailResponse)) { ?>
+				<div class="response <?php echo $emailResponse["type"]; ?> " color=red>
+				<?php echo $emailResponse["message"]; ?>
+				</div>
+				<?php }?>
 			</div>
-</div>
+		</div>
 
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Field of Study<span style="color:red">*</span></label>
 			<div class="col-sm-4">
 				<input type="text" name="fieldofstudy" class="form-control" required value="<?php echo htmlentities($result->fieldofstudy);?>">
+				<?php if(!empty($fosResponse)) { ?>
+				<div class="response <?php echo $fosResponse["type"]; ?> " color=red>
+				<?php echo $fosResponse["message"]; ?>
+				</div>
+				<?php }?>
 			</div>
 			
 			<label class="col-sm-2 control-label">Class<span style="color:red">*</span></label>
 			<div class="col-sm-4">
 				<select name="class" class="form-control" required value="<?php echo htmlentities($result->class);?>">
-					<option value="">Select</option>
+					<option value="0">Select</option>
 					<option value="19/20">19/20</option>
 					<option value="20/21">20/21</option>
 					<option value="21/22">21/22</option>
 				</select>
+					<?php if(!empty($classResponse)) { ?>
+					<div class="response <?php echo $classResponse["type"]; ?> " color=red>
+					<?php echo $classResponse["message"]; ?>
+					</div>
+					<?php }?>
 			</div>
 		</div>
-
+	
 		<input type="hidden" name="idedit" value="<?php echo htmlentities($result->id);?>" >
 		
 		<div class="form-group">
