@@ -47,7 +47,7 @@ $email=$_POST['username'];
 			echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
 		} 
 		else{
-		  $pw_error_ms = "<p style='color:red;'>Invalid Details Or Account Not Confirmed.</p><p>Forgot your password? <a href='forgotten-password2.php' >Change password</a></p>";
+		  $pw_error_ms = "<p style='color:red;'>Invalid Details Or Account Not Confirmed.</p><p>Forgot your password? <a href='forgotten-password.php' >Change password</a></p>";
 		  #echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
 		}
 	}
