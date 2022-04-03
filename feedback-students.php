@@ -170,7 +170,7 @@ $query=$dbh->prepare("CALL lecturerInfoStudentFeedback('aod')");
 $query->execute();
 $algoritmer=$query->fetch(PDO::FETCH_OBJ);
 
-$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('dioud')");
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('diuod')");
 $query->execute();
 $datasikkerhet=$query->fetch(PDO::FETCH_OBJ);
 
@@ -226,7 +226,7 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 				<option value="0">Select</option>
 				<option value=".NET">.NET</option>
 				<option value="aod">Algoritmer og datastrukturer</option>
-				<option value="dioud">Datasikkerhet i utvikling og drift</option>
+				<option value="diuod">Datasikkerhet i utvikling og drift</option>
 				<option value="blyse">Bildeanalyse</option>
 				<option value="laoi">Lineær algebra og integraltransformer</option>
 				<option value="ak">Autonome kjøretøy</option>
