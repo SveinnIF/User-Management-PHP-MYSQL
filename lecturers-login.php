@@ -19,26 +19,38 @@ if(isset($_POST['login']))
 {
 $email=$_POST['username'];
 
-// steg 2, et sikrere passord 
-$sql = "CALL lecturerLoginCheck(:email)";
-$query = $dbh -> prepare($sql);
-$query-> bindParam(':email', $email, PDO::PARAM_STR);
-$query->execute();
-$result=$query->fetch(PDO::FETCH_OBJ);	
-$pwd = ($result->password);  
-$password=password_verify($_POST['password'], $pwd);
+	// email validation		
+	if (empty($email)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Invalid Details Or Account Not Confirmed"
+		);
+	}
+	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Invalid Details Or Account Not Confirmed"
+		);
+	}
+	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$sql = "CALL lecturerLoginCheck(:email)";
+		$query = $dbh -> prepare($sql);
+		$query-> bindParam(':email', $email, PDO::PARAM_STR);
+		$query->execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);	
+		$pwd = ($result->password);  
+		$password=password_verify($_POST['password'], $pwd);
 
-
-if(password_verify($_POST['password'], $pwd))
-{
-$_SESSION['alogin']=$_POST['username'];
-echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
-} else{
-  $pw_error_ms = "<p style='color:red;'>Invalid Details Or Account Not Confirmed.</p><p>Forgot your password? <a href='forgotten-password2.php' >Change password</a></p>";
-  #echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
-
-}
-
+		if($password)
+		{
+			$_SESSION['alogin']=$_POST['username'];
+			echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
+		} 
+		else{
+		  $pw_error_ms = "<p style='color:red;'>Invalid Details Or Account Not Confirmed.</p><p>Forgot your password? <a href='forgotten-password2.php' >Change password</a></p>";
+		  #echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
+		}
+	}
 }
 
 ?>
@@ -82,11 +94,19 @@ echo "<script type='text/javascript'> document.location = 'feedback-lecturers.ph
 									<input type="password" placeholder="Password" name="password" class="form-control mb" required>
 									<button class="btn btn-primary btn-block" name="login" type="submit">LOGIN</button>
 								</form>
+								
 								<br>
+								<?php if(!empty($emailResponse)) { ?>
+								<div class="response <?php echo $emailResponse["type"]; ?> " color=red>
+								<?php echo $emailResponse["message"]; ?>
+								</div>
+								<?php }?>
+								
 								<?=$pw_error_ms?>
+								<br>
+								
 								<p>Don't Have an Account? <a href="register-lecturers.php" >Signup</a></p>
 								<p>Are You A Student? <a href="index.php" >Click Here</a></p>
-								</br>
 							</div>
 						</div>
 					</div>
