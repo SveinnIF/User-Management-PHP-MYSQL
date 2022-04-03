@@ -132,7 +132,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
 		$courseResponse = array(
 		    "type" => "courseError",
-		    "message" => "Invalid class"
+		    "message" => "Invalid course"
 		); 
 	    } 
 	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
