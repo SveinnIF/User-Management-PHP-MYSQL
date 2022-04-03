@@ -28,26 +28,78 @@ else{
 	if(isset($_POST['submit']))
   {	
 	$receiver=$_POST['email'];
-    $message=$_POST['message'];
+    	$message=$_POST['message'];
 	$course=$_POST['course'];
 	$sender=$_SESSION['alogin'];
+	
+	// validation
+	$ckvl="";
 
-	$sql = "CALL lecturerSendreplyInfo(:sender, :receiver, :course, :description)";
-	$query = $dbh->prepare($sql);
-	$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
-	$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
-	$query-> bindParam(':course', $course, PDO::PARAM_STR);
-	$query-> bindParam(':description', $message, PDO::PARAM_STR);
-    $query->execute(); 
-	$msg="Feedback Send";
-	// sender feedback og redirecter tilbake til oversikten over meldinger
-	?>
-	<script type="text/javascript">
-	window.location = "feedback-lecturers.php";
-	</script>      
-		<?php
+	// name validation
+    	if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $url)) {
+		$replytoResponse = array(
+		    "type" => "replytoError",
+		    "message" => "This field cannot be changed"
+		); 
+    	} 
+	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $url)) {
+		$ckvl="rplto";
+	}
+           
+	// email validation		
+	if (empty($course)) {
+		$courseResponse = array(
+			"type" => "courseError",
+			"message" => "This field cannot be changed"
+		);
+	}
+	else if (!in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+		$courseResponse = array(
+			"type" => "courseError",
+			"message" => "This field cannot be changed"
+		);
+	}
+	else if (in_array($_REQUEST['course'], [".NET", "aod", "dioud", "blyse", "laoi", "ak"], true)) {
+		$ckvl .= "cre";
+	}
+	
+	// message validation
+   	if (empty($message)) {
+		$msgResponse = array(
+		    "type" => "msgError",
+		    "message" => "Message is required"
+		);
+    	}    
+    	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+		$msgResponse = array(
+		    "type" => "msgError",
+		    "message" => "Invalid message"
+		); 
+    	} 
+	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+		$ckvl .= "msge";
+	}
+	
+	// Sender informasjonen til databasen om alle validations er suksessfulle
+	if($ckvl == "rpltocremsge") {
+		$sql = "CALL lecturerSendreplyInfo(:sender, :receiver, :course, :message)";
+		$query = $dbh->prepare($sql);
+		$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
+		$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+		$query-> bindParam(':course', $course, PDO::PARAM_STR);
+		$query-> bindParam(':message', $message, PDO::PARAM_STR);
+		$query->execute(); 
+		$msg="Feedback Sent";
+		
+		// sender feedback og redirecter tilbake til oversikten over meldinger
+		?>
+		<script type="text/javascript">
+			window.location = "feedback-lecturers.php";
+		</script>      
+	<?php
 	//
 	}
+}
 ?>
 
 <!doctype html>
@@ -98,7 +150,7 @@ else{
     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
-		</style>
+	</style>
 
 
 </head>
@@ -139,23 +191,41 @@ else{
 <input type="hidden" name="email" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>">
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Reply to<span style="color:red">*</span></label> <!-- byttet "Title" til "Reply to" --> 
+		<label class="col-sm-2 control-label">Reply to<span style="color:red">*</span></label> <!-- byttet "Title" til "Reply to" --> 
 	<div class="col-sm-4">
-	<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($url);?>"> <!-- byttet "result->title" til "url" --> 
+		<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($url);?>"> <!-- byttet "result->title" til "url" -->
+			<?php if(!empty($replytoResponse)) { ?>
+			<div class="response <?php echo $replytoResponse["type"]; ?>
+			">
+			<?php echo $replytoResponse["message"]; ?>
+			</div>
+			<?php }?>		
 	</div>
 </div>
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
+		<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-	<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
+		<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
+			<?php if(!empty($courseResponse)) { ?>
+			<div class="response <?php echo $courseResponse["type"]; ?>
+			">
+			<?php echo $courseResponse["message"]; ?>
+			</div>
+			<?php }?>	
 	</div>
 </div>
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
+		<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
 	<div class="col-sm-6">
-	<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
+		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
+			<?php if(!empty($msgResponse)) { ?>
+			<div class="response <?php echo $msgResponse["type"]; ?>
+			">
+			<?php echo $msgResponse["message"]; ?>
+			</div>
+			<?php }?>	
 	</div>
 </div>
 
