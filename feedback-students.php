@@ -101,7 +101,7 @@ if(isset($_POST['submit']))
 		$query-> bindParam(':title', $title, PDO::PARAM_STR);
 		$query-> bindParam(':description', $description, PDO::PARAM_STR);
 		$query->execute(); 
-		$msg="Feedback Send";
+		$msg="Feedback Sent";
 	}
 }    
 ?>
