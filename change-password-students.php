@@ -56,13 +56,13 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 			"message" => "New Password and Confirm Password fields do not match"
 		);
 	}
-	else if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($newpassword) < 8) {
+	else if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($newpassword) <= 8) {
 		$pwdResponse = array(
 			"type" => "passwordError",
 			"message" => "New password must be at least 8 characters long and must include at least one upper case letter, one lower case letter, one number, and one special character."
 		);
 	}
-	else if ($uppercase && $lowercase && $number && $specialChars && strlen($newpassword) > 8){
+	else if ($uppercase && $lowercase && $number && $specialChars && strlen($newpassword) >= 8){
 		$newpassword=password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
 		$cnfpassword=password_hash($_POST['confirmpassword'], PASSWORD_DEFAULT);
 		
