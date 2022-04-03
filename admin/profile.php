@@ -12,13 +12,51 @@ if(isset($_POST['submit']))
   {	
 	$name=$_POST['name'];
 	$email=$_POST['email'];
+	
+	// name validation
+    if (empty($name)) {
+        $nameResponse = array(
+            "type" => "nameError",
+            "message" => "Name is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+        $nameResponse = array(
+            "type" => "nameError",
+            "message" => "Invalid name"
+        ); 
+    } 
+	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+		$profvalck="profnm";
+	}
+           
+	// email validation		
+	if (empty($email)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Email is required"
+		);
+	}
+	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Invalid email"
+		);
+	}
+	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$profvalck .= "emiprof";
+	}
+	
+	if($profvalck = "profnmemiprof") {
+		$sql="UPDATE admin SET username=(:name), email=(:email)";
+		$query = $dbh->prepare($sql);
+		$query-> bindParam(':name', $name, PDO::PARAM_STR);
+		$query-> bindParam(':email', $email, PDO::PARAM_STR);
+		$query->execute();
+		$msg="Information Updated Successfully";
+	}
 
-	$sql="UPDATE admin SET username=(:name), email=(:email)";
-	$query = $dbh->prepare($sql);
-	$query-> bindParam(':name', $name, PDO::PARAM_STR);
-	$query-> bindParam(':email', $email, PDO::PARAM_STR);
-	$query->execute();
-	$msg="Information Updated Successfully";
+	
 }    
 ?>
 
