@@ -162,7 +162,7 @@ if(isset($_POST['submit']))
 <?php
 $sql = "CALL editStudentInfo(:editid)";
 $query = $dbh -> prepare($sql);
-$query->bindParam(':editid',$editid,PDO::PARAM_INT);
+$query->bindParam(':editid',$editid,PDO::PARAM_STR);
 $query->execute();
 $result=$query->fetch(PDO::FETCH_OBJ);
 ?>
