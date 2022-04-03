@@ -57,15 +57,7 @@ if(isset($_POST['submit']))
     } else {
         if (move_uploaded_file($file_loc, $folder.$final_file)) {
 			$image=$final_file;
-			$msg="Information Updated Successfully";
-			$sql="UPDATE lecturers SET name=(:name), email=(:email), course=(:course), Image=(:image) WHERE id=(:idedit)";
-			$query = $dbh->prepare($sql);
-			$query-> bindParam(':name', $name, PDO::PARAM_STR);
-			$query-> bindParam(':email', $email, PDO::PARAM_STR);
-			$query-> bindParam(':course', $course, PDO::PARAM_STR);
-			$query-> bindParam(':image', $image, PDO::PARAM_STR);
-			$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
-			$query->execute();
+			$edvalchk="edimg";
         } else {
             $response = array(
                 "type" => "error",
@@ -73,6 +65,72 @@ if(isset($_POST['submit']))
             );
 		}
     }
+	// name validation
+    if(empty($name)) {
+        $nameResponse = array(
+            "type" => "nameError",
+            "message" => "Name is required"
+        );
+    }    
+    else if(!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+        $nameResponse = array(
+            "type" => "nameError",
+            "message" => "Invalid name"
+        ); 
+    } 
+	else if(preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+		$edvalchk .= "ednam";
+	}
+           
+	// email validation		
+	if(empty($email)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Email is required"
+		);
+	}
+	else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Invalid email"
+		);
+	}
+	else if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$edvalchk .= "edeml";
+	}
+
+	// course validation
+	if(isset($_REQUEST['course']) && $_REQUEST['course'] == "0") { 
+        $courseResponse = array(
+            "type" => "courseError",
+            "message" => "Course is required"
+        );
+    }    
+    else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+        $courseResponse = array(
+            "type" => "courseError",
+            "message" => "Invalid course"
+        ); 
+    } 
+	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+		$edvalchk .= "edcrse";
+	}
+	
+	// Sender informasjonen til databasen om alle validations er suksessfulle
+	if($edvalchk == "edimgednamedemledcrse") {
+		$sql="UPDATE lecturers SET name=(:name), email=(:email), course=(:course), Image=(:image) WHERE id=(:idedit)";
+		$query = $dbh->prepare($sql);
+		$query-> bindParam(':name', $name, PDO::PARAM_STR);
+		$query-> bindParam(':email', $email, PDO::PARAM_STR);
+		$query-> bindParam(':course', $course, PDO::PARAM_STR);
+		$query-> bindParam(':image', $image, PDO::PARAM_STR);
+		$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
+		$query->execute();
+		$msg="Information Updated Successfully";
+		
+		echo "<script type='text/javascript'>alert('Editing Successful!');</script>";
+		echo "<script type='text/javascript'> document.location = 'list-lecturers.php'; </script>";
+	}
 }    
 ?>
 
@@ -142,7 +200,7 @@ $result=$query->fetch(PDO::FETCH_OBJ);
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="page-title">Edit Lecturer: <?php echo htmlentities($result->name); ?></h3>
+						<h3 class="page-title">Edit Lecturer: <?php echo htmlentities($result->name); ?> <?php echo $edvalchk?></h3>
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-default">
@@ -157,11 +215,21 @@ $result=$query->fetch(PDO::FETCH_OBJ);
 			<label class="col-sm-2 control-label">Name<span style="color:red">*</span></label>
 			<div class="col-sm-4">
 				<input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->name);?>">
+					<?php if(!empty($nameResponse)) { ?>
+					<div class="response <?php echo $nameResponse["type"]; ?> " color=red>
+					<?php echo $nameResponse["message"]; ?>
+					</div>
+					<?php }?>
 			</div>
 
 			<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
 			<div class="col-sm-4">
 				<input type="email" name="email" class="form-control" required value="<?php echo htmlentities($result->email);?>">
+					<?php if(!empty($emailResponse)) { ?>
+					<div class="response <?php echo $emailResponse["type"]; ?> " color=red>
+					<?php echo $emailResponse["message"]; ?>
+					</div>
+					<?php }?>
 			</div>
 			</div>
 
@@ -169,6 +237,12 @@ $result=$query->fetch(PDO::FETCH_OBJ);
 			<label class="col-sm-2 control-label">Image<span style="color:red">*</span></label>
 			<div class="col-sm-4">
 				<input type="file" name="image" class="form-control">
+					<?php if(!empty($response)) { ?>
+					<div class="response <?php echo $response["type"]; ?>
+					">
+					<?php echo $response["message"]; ?>
+					</div>
+					<?php }?>
 			</div>
 
 			<label class="col-sm-2 control-label">Course<span style="color:red">*</span></label>
@@ -176,12 +250,17 @@ $result=$query->fetch(PDO::FETCH_OBJ);
 				<select name="course" class="form-control" required>
 					<option value="">Select</option>
 					<option value=".NET">.NET</option>
-					<option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-					<option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-					<option value="Bildeanalyse">Bildeanalyse</option>
-					<option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-					<option value="Autonome kjøretøy">Autonome kjøretøy</option>
+					<option value="aod">Algoritmer og datastrukturer</option>
+					<option value="diuod">Datasikkerhet i utvikling og drift</option>
+					<option value="blyse">Bildeanalyse</option>
+					<option value="laoi">Lineær algebra og integraltransformer</option>
+					<option value="ak">Autonome kjøretøy</option>
 				</select>
+					<?php if(!empty($courseResponse)) { ?>
+					<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
+					<?php echo $courseResponse["message"]; ?>
+					</div>
+					<?php }?>
 			</div>
 			</div>
 
@@ -202,12 +281,7 @@ $result=$query->fetch(PDO::FETCH_OBJ);
 			</form>
 			
 			<br>
-			<?php if(!empty($response)) { ?>
-			<div class="response <?php echo $response["type"]; ?>
-			">
-			<?php echo $response["message"]; ?>
-			</div>
-			<?php }?>
+			
 
 			
 
