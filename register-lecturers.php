@@ -215,7 +215,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 						</div>
 
 				    		<div class="form-group">
-							<label class="col-sm-1 control-label">Password<?php echo $checkvali?><span style="color:red">*</span></label>
+							<label class="col-sm-1 control-label">Password<span style="color:red">*</span></label>
 				    		<div class="col-sm-5">
 							<input type="password" name="password" class="form-control" id="password" required >
 								<?php if(!empty($pwdResponse)) { ?>
