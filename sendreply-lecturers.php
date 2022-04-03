@@ -28,25 +28,31 @@ else{
 	if(isset($_POST['submit']))
   {	
 	$receiver=$_POST['email'];
-    	$message=$_POST['message'];
+    $message=$_POST['message'];
 	$course=$_POST['course'];
 	$sender=$_SESSION['alogin'];
 	
 	// validation
 	$ckvl="";
 
-	// name validation
-    	if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $url)) {
-		$replytoResponse = array(
-		    "type" => "replytoError",
-		    "message" => "This field cannot be changed"
-		); 
-    	} 
-	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $url)) {
-		$ckvl="rplto";
+	// email validation		
+	if(empty($receiver)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "This field cannot be changed"
+		);
+	}
+	else if(!filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "This field cannot be changed"
+		);
+	}
+	else if(filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
+		$ckvl .= "rcvr";
 	}
            
-	// email validation		
+	// course validation		
 	if (empty($course)) {
 		$courseResponse = array(
 			"type" => "courseError",
@@ -64,24 +70,24 @@ else{
 	}
 	
 	// message validation
-   	if (empty($message)) {
-		$msgResponse = array(
-		    "type" => "msgError",
-		    "message" => "Message is required"
-		);
-    	}    
-    	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
-		$msgResponse = array(
-		    "type" => "msgError",
-		    "message" => "Invalid message"
-		); 
-    	} 
+    if (empty($message)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Message is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Invalid message"
+        ); 
+    } 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
 		$ckvl .= "msge";
 	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($ckvl == "rpltocremsge") {
+	if($ckvl == "rcvrcremsge") {
 		$sql = "CALL lecturerSendreplyInfo(:sender, :receiver, :course, :message)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
