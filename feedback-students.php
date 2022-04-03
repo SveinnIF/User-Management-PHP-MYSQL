@@ -211,8 +211,7 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 		<div class="col-sm-4">
 			<input type="text" name="title" class="form-control" required>
 				<?php if(!empty($titleResponse)) { ?>
-				<div class="response <?php echo $titleResponse["type"]; ?>
-				">
+				<div class="response <?php echo $titleResponse["type"]; ?> " color=red>
 				<?php echo $titleResponse["message"]; ?>
 				</div>
 				<?php }?>
@@ -232,8 +231,7 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 				<option value="ak">Autonome kjøretøy</option>
 			</select>
 				<?php if(!empty($courseResponse)) { ?>
-				<div class="response <?php echo $courseResponse["type"]; ?>
-				">
+				<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
 				<?php echo $courseResponse["message"]; ?>
 				</div>
 				<?php }?>
@@ -245,8 +243,7 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 		<div class="col-sm-10">
 			<textarea class="form-control" rows="5" name="description"></textarea>
 				<?php if(!empty($msgResponse)) { ?>
-				<div class="response <?php echo $msgResponse["type"]; ?>
-				">
+				<div class="response <?php echo $msgResponse["type"]; ?> " color=red>
 				<?php echo $msgResponse["message"]; ?>
 				</div>
 				<?php }?>
