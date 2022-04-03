@@ -13,7 +13,7 @@ $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
 include('includes/config.php');
-if(isset($_POST['login']))
+if(isset($_POST['login'])) {
 // $status='1';
 $email=$_POST['username'];
 
@@ -35,7 +35,7 @@ echo "<script type='text/javascript'> document.location = 'feedback-students.php
   echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
 
 }
-
+}
 ?>
 <!doctype html>
 <html lang="en" class="no-js">
