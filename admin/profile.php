@@ -12,6 +12,9 @@ if(isset($_POST['submit']))
   {	
 	$name=$_POST['name'];
 	$email=$_POST['email'];
+
+	// input validation
+	$inputValidation="";
 	
 	// name validation
     if (empty($name)) {
@@ -27,7 +30,7 @@ if(isset($_POST['submit']))
         ); 
     } 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
-		$profvalck="profnm";
+		$inputValidation="name";
 	}
            
 	// email validation		
@@ -44,10 +47,10 @@ if(isset($_POST['submit']))
 		);
 	}
 	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		$profvalck .= "emiprof";
+		$inputValidation .= "Email";
 	}
 	
-	if($profvalck = "profnmemiprof") {
+	if($inputValidation = "nameEmail") {
 		$sql="UPDATE admin SET username=(:name), email=(:email)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':name', $name, PDO::PARAM_STR);
@@ -91,24 +94,25 @@ if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/style.css">
 
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
+	
 	<style>
 	.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #dd3d36;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #5cb85c;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-		</style>
+    		padding: 10px;
+    		margin: 0 0 20px 0;
+		background: #dd3d36;
+		color:#fff;
+    		-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    		box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+	}
+	.succWrap{
+    		padding: 10px;
+   	 	margin: 0 0 20px 0;
+		background: #5cb85c;
+		color:#fff;
+    		-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+   	 	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+	}
+	</style>
 
 </head>
 
@@ -133,27 +137,29 @@ if(isset($_POST['submit']))
 								<div class="panel panel-default">
 									<div class="panel-heading">Edit Info</div>
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
+	else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-									<div class="panel-body">
+	<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
-<div class="form-group">
-<label class="col-sm-2 control-label">Username<span style="color:red">*</span></label>
-<div class="col-sm-4">
-<input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->username);?>">
-</div>
-<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
-<div class="col-sm-4">
-<input type="email" name="email" class="form-control" required value="<?php echo htmlentities($result->email);?>">
-</div>
-</div>
+	<div class="form-group">
+		
+		<label class="col-sm-2 control-label">Username<span style="color:red">*</span></label>
+	<div class="col-sm-4">
+		<input type="text" name="name" class="form-control" required value="<?php echo htmlentities($result->username);?>">
+	</div>
+		
+		<label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
+	<div class="col-sm-4">
+		<input type="email" name="email" class="form-control" required value="<?php echo htmlentities($result->email);?>">
+	</div>
+	</div>
 
 
-<div class="form-group">
+	<div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
 		<button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
 	</div>
-</div>
+	</div>
 
 </form>
 									</div>
