@@ -26,6 +26,9 @@ if(isset($_POST['submit']))
 	$course=$_POST['course'];
 	$idedit=$_POST['idedit'];
 	$image=$_POST['image'];
+
+	// input validation
+	$inputValidation="";
 	
     $allowed_image_extension = array(
         "jpg",
@@ -57,7 +60,7 @@ if(isset($_POST['submit']))
     } else {
         if (move_uploaded_file($file_loc, $folder.$final_file)) {
 			$image=$final_file;
-			$edvalchk="edimg";
+			$inputValidation="img";
         } else {
             $response = array(
                 "type" => "error",
@@ -79,7 +82,7 @@ if(isset($_POST['submit']))
         ); 
     } 
 	else if(preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
-		$edvalchk .= "ednam";
+		$inputValidation .= "Name";
 	}
            
 	// email validation		
@@ -96,7 +99,7 @@ if(isset($_POST['submit']))
 		);
 	}
 	else if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		$edvalchk .= "edeml";
+		$inputValidation .= "Email";
 	}
 
 	// course validation
@@ -113,11 +116,11 @@ if(isset($_POST['submit']))
         ); 
     } 
 	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
-		$edvalchk .= "edcrse";
+		$inputValidation .= "Course";
 	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($edvalchk == "edimgednamedemledcrse") {
+	if($inputValidation == "imgNameEmailCourse") {
 		$sql="UPDATE lecturers SET name=(:name), email=(:email), course=(:course), Image=(:image) WHERE id=(:idedit)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':name', $name, PDO::PARAM_STR);
@@ -200,7 +203,7 @@ $result=$query->fetch(PDO::FETCH_OBJ);
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="page-title">Edit Lecturer: <?php echo htmlentities($result->name); ?> <?php echo $edvalchk?></h3>
+						<h3 class="page-title">Edit Lecturer: <?php echo htmlentities($result->name); ?></h3>
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-default">
