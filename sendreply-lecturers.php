@@ -28,12 +28,12 @@ else{
 	if(isset($_POST['submit']))
   {	
 	$receiver=$_POST['email'];
-    $message=$_POST['message'];
+    	$message=$_POST['message'];
 	$course=$_POST['course'];
 	$sender=$_SESSION['alogin'];
 	
 	// validation
-	$ckvl="";
+	$inputValidation="";
 
 	// email validation		
 	if(empty($receiver)) {
@@ -42,14 +42,14 @@ else{
 			"message" => "This field cannot be changed"
 		);
 	}
-	else if(!filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
+	else if(!preg_match("/^[a-zA-Z0-9 \@\. æøåÆØÅ]*$/", $receiver)) {
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "This field cannot be changed"
 		);
 	}
-	else if(filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
-		$ckvl .= "rcvr";
+	else if(preg_match("/^[a-zA-Z0-9 \@\. æøåÆØÅ]*$/", $receiver)) {
+		$inputValidation = "receiver";
 	}
            
 	// course validation		
@@ -66,28 +66,28 @@ else{
 		);
 	}
 	else if (in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
-		$ckvl .= "cre";
+		$inputValidation .= "Course";
 	}
 	
 	// message validation
-    if (empty($message)) {
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Message is required"
-        );
-    }    
-    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Invalid message"
-        ); 
-    } 
+    	if (empty($message)) {
+		$msgResponse = array(
+		    "type" => "msgError",
+		    "message" => "Message is required"
+		);
+	}    
+	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+		$msgResponse = array(
+		    "type" => "msgError",
+		    "message" => "Invalid message"
+		); 
+    	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
-		$ckvl .= "msge";
+		$inputValidation .= "Msg";
 	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($ckvl == "rcvrcremsge") {
+	if($inputValidation == "receiverCourseMsg") {
 		$sql = "CALL lecturerSendreplyInfo(:sender, :receiver, :course, :message)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
@@ -95,13 +95,12 @@ else{
 		$query-> bindParam(':course', $course, PDO::PARAM_STR);
 		$query-> bindParam(':message', $message, PDO::PARAM_STR);
 		$query->execute(); 
-		$msg="Feedback Sent";
+		
+		echo "<script type='text/javascript'>alert('Reply Sent!');</script>";
+		echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
 		
 		// sender feedback og redirecter tilbake til oversikten over meldinger
 		?>
-		<script type="text/javascript">
-			window.location = "feedback-lecturers.php";
-		</script>      
 	<?php
 	//
 	}
@@ -140,22 +139,22 @@ else{
 
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
 	<style>
-	.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #dd3d36;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #5cb85c;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
+		.errorWrap {
+			padding: 10px;
+			margin: 0 0 20px 0;
+			background: #dd3d36;
+			color:#fff;
+			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+		}
+		.succWrap{
+    			padding: 10px;
+   			margin: 0 0 20px 0;
+			background: #5cb85c;
+			color:#fff;
+    			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+   			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+		}
 	</style>
 
 
@@ -185,11 +184,10 @@ else{
 					<div class="col-md-12">
 						<div class="row">
 							<div class="col-md-12">
-                            <h2>Reply Feedback</h2>
+                            					<h2>Reply Feedback</h2>
 								<div class="panel panel-default">
 									<div class="panel-heading">Send Reply</div>
-<?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
+
 
 									<div class="panel-body">
 <form method="post" class="form-horizontal" enctype="multipart/form-data">
@@ -201,7 +199,8 @@ else{
 	<div class="col-sm-4">
 		<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($url);?>"> <!-- byttet "result->title" til "url" -->
 			<?php if(!empty($replytoResponse)) { ?>
-			<div class="response <?php echo $replytoResponse["type"]; ?> " color=red>
+			<div class="response <?php echo $replytoResponse["type"]; ?>
+			">
 			<?php echo $replytoResponse["message"]; ?>
 			</div>
 			<?php }?>		
@@ -213,7 +212,8 @@ else{
 	<div class="col-sm-4">
 		<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
 			<?php if(!empty($courseResponse)) { ?>
-			<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
+			<div class="response <?php echo $courseResponse["type"]; ?>
+			">
 			<?php echo $courseResponse["message"]; ?>
 			</div>
 			<?php }?>	
@@ -225,7 +225,8 @@ else{
 	<div class="col-sm-6">
 		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
 			<?php if(!empty($msgResponse)) { ?>
-			<div class="response <?php echo $msgResponse["type"]; ?> " color=red>
+			<div class="response <?php echo $msgResponse["type"]; ?>
+			">
 			<?php echo $msgResponse["message"]; ?>
 			</div>
 			<?php }?>	
