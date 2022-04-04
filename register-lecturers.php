@@ -29,7 +29,7 @@ $new_file_name = strtolower($file);
 $final_file=str_replace(' ','-',$new_file_name);
 
 // validation
-$checkvali='';
+$inputValidation='';
 $uppercase    = preg_match('@[A-Z ÆØÅ]@', $password);
 $lowercase    = preg_match('@[a-z æøå]@', $password);
 $number    	  = preg_match('@[0-9]@', $password);
@@ -37,76 +37,76 @@ $specialChars = preg_match('@[^\w]@', $password);
     
 	// image validation
 	$allowed_image_extension = array(
-        	"jpg",
-        	"jpeg"
-	);
-
-	$file_extension = pathinfo($file, PATHINFO_EXTENSION);
-
-	if (! file_exists($file_loc)) {
+		"jpg",
+		"jpeg"
+    	);
+    
+    	$file_extension = pathinfo($file, PATHINFO_EXTENSION);
+    
+    	if(! file_exists($file_loc)) {
 		$response = array(
 		    "type" => "error",
 		    "message" => "Choose image file to upload."
 		);
-	 }    
-	 else if (! in_array($file_extension, $allowed_image_extension)) {
+    	}    
+    	else if(! in_array($file_extension, $allowed_image_extension)) {
 		$response = array(
 		    "type" => "error",
 		    "message" => "Image must be .JPG or .JPEG."
 		); 
-
-	 }    
-	 else if (($_FILES["image"]["size"] > 2000000)) {
+        
+    	}    
+    	else if($_FILES["image"]["size"] > 2000000) {
 		$response = array(
 		    "type" => "error",
 		    "message" => "Image size exceeds 2MB"
 		);
-	 } else {
-		if (move_uploaded_file($file_loc, $folder.$final_file)) {
+    	} else {
+        	if(move_uploaded_file($file_loc, $folder.$final_file)) {
 			$image=$final_file;   
-			$checkvali="img";	
+			$inputValidation="img";	
 			
-         } else {
-         	$response = array(
-               		"type" => "error",
-                	"message" => "Error uploading image."
-                ); 
-	 }	
-    	 }
+        	} else {
+            	$response = array(
+			"type" => "error",
+			"message" => "Error uploading image."
+            	); 
+		}	
+	}
 
 
 	// name validation
-    	if (empty($name)) {
+    	if(empty($name)) {
 		$nameResponse = array(
 		    "type" => "nameError",
 		    "message" => "Name is required"
 		);
     	}    
-    	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
-        $nameResponse = array(
-            "type" => "nameError",
-            "message" => "Invalid name"
-        ); 
+    	else if(!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+		$nameResponse = array(
+		    "type" => "nameError",
+		    "message" => "Invalid name"
+		); 
     	} 
-	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
-		$checkvali .= "nme";
+	else if(preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+		$inputValidation .= "Name";
 	}
            
 	// email validation		
-	if (empty($email)) {
+	if(empty($email)) {
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "Email is required"
 		);
 	}
-	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "Invalid email"
 		);
 	}
-	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		$checkvali .= "eml";
+	else if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$inputValidation .= "Email";
 	}
 	
 	// password validation
@@ -116,31 +116,31 @@ $specialChars = preg_match('@[^\w]@', $password);
 			"message" => "Password must be at least 8 characters long and must include at least one upper case letter, one lower case letter, one number, and one special character."
 		);
 	}
-	else if ($uppercase && $lowercase && $number && $specialChars && strlen($password) > 8){
-		$password=password_hash($_POST['password'], PASSWORD_DEFAULT);
-		$checkvali .= "psw";
+	else if($uppercase && $lowercase && $number && $specialChars && strlen($password) >= 8){
+		$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+		$inputValidation .= "Pw";
 	}
 	
 
 	// course validation
 	if(isset($_REQUEST['course']) && $_REQUEST['course'] == "0") { 
-		$courseResponse = array(
-		    "type" => "courseError",
-		    "message" => "Course is required"
-		);
-	}    
-	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+        $courseResponse = array(
+            "type" => "courseError",
+            "message" => "Course is required"
+        );
+    	}    
+    	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
 		$courseResponse = array(
 		    "type" => "courseError",
 		    "message" => "Invalid course"
 		); 
-	    } 
+    	} 
 	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
-		$checkvali .="crse";
+		$inputValidation .= "Course";
 	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($checkvali == "imgnmeemlpswcrse") {
+	if($inputValidation == "imgNameEmailPwCourse") {
 		$sql="CALL lecturerRegistrationInfo(:name, :email, :password, :course, :image, '0')";
 		$query= $dbh -> prepare($sql);
 		$query-> bindParam(':name', $name, PDO::PARAM_STR);
@@ -190,81 +190,81 @@ $specialChars = preg_match('@[^\w]@', $password);
 						<div class="well row pt-2x pb-3x bk-light text-center">
                          			<form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform" onSubmit="return validate();">
                             
-						<div class="form-group">
-							<label class="col-sm-1 control-label">Name<span style="color:red">*</span></label>
-						<div class="col-sm-5">
-                            				<input type="text" name="name" class="form-control" required>
-								<?php if(!empty($nameResponse)) { ?>
-								<div class="response <?php echo $nameResponse["type"]; ?> " color=red>
-								<?php echo $nameResponse["message"]; ?>
-								</div>
-								<?php }?>
-                           			</div>
+							<div class="form-group">
+								<label class="col-sm-1 control-label">Name<span style="color:red">*</span></label>
+							<div class="col-sm-5">
+                            					<input type="text" name="name" class="form-control" required>
+									<?php if(!empty($nameResponse)) { ?>
+									<div class="response <?php echo $nameResponse["type"]; ?> " color=red>
+									<?php echo $nameResponse["message"]; ?>
+									</div>
+									<?php }?>
+                            				</div>
 				    
-							<label class="col-sm-1 control-label">Email<span style="color:red">*</span></label>
-                           			<div class="col-sm-5">
-                            				<input type="text" name="email" class="form-control" required>
-								<?php if(!empty($emailResponse)) { ?>
-								<div class="response <?php echo $emailResponse["type"]; ?> " color=red>
-								<?php echo $emailResponse["message"]; ?>
-								</div>
-								<?php }?>
-						</div>
-						</div>
-
-				    		<div class="form-group">
-							<label class="col-sm-1 control-label">Password<span style="color:red">*</span></label>
-				    		<div class="col-sm-5">
-							<input type="password" name="password" class="form-control" id="password" required >
-								<?php if(!empty($pwdResponse)) { ?>
-								<div class="response <?php echo $pwdResponse["type"]; ?> " color=red>
-								<?php echo $pwdResponse["message"]; ?>
-								</div>
-								<?php }?>
-						</div>
-
-							<label class="col-sm-1 control-label">Course<span style="color:red">*</span></label>
-						<div class="col-sm-5">
-							<select name="course" class="form-control" required>
-								<option value="0">Select</option>
-								<option value=".NET">.NET</option>
-								<option value="aod">Algoritmer og datastrukturer</option>
-								<option value="diuod">Datasikkerhet i utvikling og drift</option>
-								<option value="blyse">Bildeanalyse</option>
-								<option value="laoi">Lineær algebra og integraltransformer</option>
-								<option value="ak">Autonome kjøretøy</option>
-							</select>
-								<?php if(!empty($courseResponse)) { ?>
-								<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
-								<?php echo $courseResponse["message"]; ?>
-								</div>
-								<?php }?>
-						</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-1 control-label">Picture<span style="color:red">*</span></label>
-						<div class="col-sm-5">
-						<div><input type="file" name="image" class="form-control"></div>
-							<?php if(!empty($response)) { ?>
-							<div class="response <?php echo $response["type"]; ?> " color=red>
-							<?php echo $response["message"]; ?>
+								<label class="col-sm-1 control-label">Email<span style="color:red">*</span></label>
+                            				<div class="col-sm-5">
+                            					<input type="text" name="email" class="form-control" required>
+									<?php if(!empty($emailResponse)) { ?>
+									<div class="response <?php echo $emailResponse["type"]; ?> " color=red>
+									<?php echo $emailResponse["message"]; ?>
+									</div>
+									<?php }?>
 							</div>
-							<?php }?>
-					    	</div>
-						</div>
-                            
-						<br>
+							</div>
+
+                            				<div class="form-group">
+								<label class="col-sm-1 control-label">Password<span style="color:red">*</span></label>
+                            				<div class="col-sm-5">
+                            					<input type="password" name="password" class="form-control" id="password" required >
+									<?php if(!empty($pwdResponse)) { ?>
+									<div class="response <?php echo $pwdResponse["type"]; ?> " color=red>
+									<?php echo $pwdResponse["message"]; ?>
+									</div>
+									<?php }?>
+                            				</div>
+
+								<label class="col-sm-1 control-label">Course<span style="color:red">*</span></label>
+                            				<div class="col-sm-5">
+								<select name="course" class="form-control" required>
+									<option value="0">Select</option>
+									<option value=".NET">.NET</option>
+									<option value="aod">Algoritmer og datastrukturer</option>
+									<option value="diuod">Datasikkerhet i utvikling og drift</option>
+									<option value="blyse">Bildeanalyse</option>
+									<option value="laoi">Lineær algebra og integraltransformer</option>
+									<option value="ak">Autonome kjøretøy</option>
+								</select>
+									<?php if(!empty($courseResponse)) { ?>
+									<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
+									<?php echo $courseResponse["message"]; ?>
+									</div>
+									<?php }?>
+							</div>
+							</div>
 							
-						<button class="btn btn-primary" name="submit" type="submit">Register</button>
-						</form>
+							<div class="form-group">
+								<label class="col-sm-1 control-label">Picture<span style="color:red">*</span></label>
+                            				<div class="col-sm-5">
+								<div><input type="file" name="image" class="form-control"></div>
+									<?php if(!empty($response)) { ?>
+									<div class="response <?php echo $response["type"]; ?> " color=red>
+									<?php echo $response["message"]; ?>
+									</div>
+									<?php }?>
+							</div>
+							</div>
+                            
+							<br>
+							
+                            				<button class="btn btn-primary" name="submit" type="submit">Register</button>
+                            			</form>
 			    
-						<br>
-						<br>
-						<br>
-						
-						<p>Already Have Account? <a href="lecturers-login.php" >Signin</a></p>
-						<p>Are You A Student? <a href="register-students.php" >Signup as student</a></p>
+							<br>
+							<br>
+							<br>
+							
+							<p>Already Have Account? <a href="lecturers-login.php" >Signin</a></p>
+							<p>Are You A Student? <a href="register-students.php" >Signup as student</a></p>
 							
 						</div>
 					</div>
