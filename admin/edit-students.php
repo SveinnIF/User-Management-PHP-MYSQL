@@ -20,7 +20,11 @@ if(isset($_POST['submit']))
 	$fieldofstudy=$_POST['fieldofstudy'];
 	$class=$_POST['class'];
 	$idedit=$_POST['idedit'];
-	
+
+	// input validation
+	$inputValidation="";
+
+	// name validation
 	if (empty($name)) {
         $nameResponse = array(
             "type" => "nameError",
@@ -34,7 +38,7 @@ if(isset($_POST['submit']))
         ); 
     } 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
-		$validacheck="ednm";
+		$inputValidation="name";
 	}
            
 	// email validation		
@@ -51,7 +55,7 @@ if(isset($_POST['submit']))
 		);
 	}
 	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		$validacheck .= "edem";
+		$inputValidation .= "Email";
 	}
 	
 	
@@ -69,7 +73,7 @@ if(isset($_POST['submit']))
         ); 
     } 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $fieldofstudy)) {
-		$validacheck .="edfos";
+		$inputValidation .="Fos";
 	}
 
 	// class validation
@@ -86,11 +90,11 @@ if(isset($_POST['submit']))
         ); 
     } 
 	else if(isset($_REQUEST['class']) &&  in_array($_REQUEST['class'], ["19/20", "20/21", "21/22"], true)) {
-		$validacheck .="edcls";
+		$inputValidation .="Class";
 	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($validacheck == "ednmedemedfosedcls") {
+	if($inputValidation == "nameEmailFosClass") {
 		$sql="UPDATE students SET name=(:name), email=(:email), fieldofstudy=(:fieldofstudy), class=(:class) WHERE id=(:idedit)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':name', $name, PDO::PARAM_STR);
