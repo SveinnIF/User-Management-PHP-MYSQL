@@ -37,7 +37,6 @@ $newpassword=$_POST['newpassword'];
 $cnfpassword=$_POST['confirmpassword'];
 
 // validation
-$chpwvali="";
 $uppercase    = preg_match('@[A-Z ÆØÅ]@', $newpassword);
 $lowercase    = preg_match('@[a-z æøå]@', $newpassword);
 $number    	  = preg_match('@[0-9]@', $newpassword);
