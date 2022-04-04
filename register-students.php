@@ -24,10 +24,10 @@ $class=$_POST['class'];
 $receiver='Admin';
 
 // validation
-$valicheck='';
+$inputValidation='';
 $uppercase    = preg_match('@[A-Z ÆØÅ]@', $password);
 $lowercase    = preg_match('@[a-z æøå]@', $password);
-$number       = preg_match('@[0-9]@', $password);
+$number    	  = preg_match('@[0-9]@', $password);
 $specialChars = preg_match('@[^\w]@', $password);
 
 	// name validation
@@ -44,7 +44,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 		); 
     	} 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
-		$valicheck="nm";
+		$inputValidation="name";
 	}
            
 	// email validation		
@@ -61,7 +61,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 		);
 	}
 	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		$valicheck .= "em";
+		$inputValidation .= "Email";
 	}
 	
 	// password validation
@@ -73,7 +73,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 	}
 	else if ($uppercase && $lowercase && $number && $specialChars && strlen($password) > 8){
 		$password=password_hash($_POST['password'], PASSWORD_DEFAULT);
-		$valicheck .= "pw";
+		$inputValidation .= "Pw";
 	}
 	
 	// field of study validation
@@ -82,23 +82,23 @@ $specialChars = preg_match('@[^\w]@', $password);
 		    "type" => "fosError",
 		    "message" => "Field of study is required"
 		);
-	}    
-	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $fieldofstudy)) {
-		$fosResponse = array(
-		    "type" => "fosError",
-		    "message" => "Invalid field of study"
-		); 
-	} 
+    	}    
+    	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $fieldofstudy)) {
+        	$fosResponse = array(
+            		"type" => "fosError",
+            		"message" => "Invalid field of study"
+        	); 
+    	} 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $fieldofstudy)) {
-		$valicheck .="fos";
+		$inputValidation .="Fos";
 	}
 
 	// class validation
 	if(isset($_REQUEST['class']) && $_REQUEST['class'] == "0") { 
-		$classResponse = array(
-		    "type" => "classError",
-		    "message" => "Class is required"
-		);
+        $classResponse = array(
+            "type" => "classError",
+            "message" => "Class is required"
+        );
     	}    
     	else if(isset($_REQUEST['class']) &&  !in_array($_REQUEST['class'], ["19/20", "20/21", "21/22"], true)) {
 		$classResponse = array(
@@ -107,11 +107,11 @@ $specialChars = preg_match('@[^\w]@', $password);
 		); 
     	} 
 	else if(isset($_REQUEST['class']) &&  in_array($_REQUEST['class'], ["19/20", "20/21", "21/22"], true)) {
-		$valicheck .="cls";
+		$inputValidation .="Class";
 	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($valicheck == "nmempwfoscls") {
+	if($inputValidation == "nameEmailPwFosClass") {
 		$sql ="CALL studentRegistrationInfo(:id, :name, :email, :password, :fieldofstudy, :class, '1')";
 		$query= $dbh -> prepare($sql);
 		$query-> bindParam(':id', $id, PDO::PARAM_STR);
@@ -159,7 +159,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 						<h1 class="text-center text-bold mt-2x">Student Registration</h1>
                         			<div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
-                         			 <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform">
+                         			<form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform">
                             
 							<div class="form-group">
 								<label class="col-sm-1 control-label">Name<span style="color:red">*</span></label>
@@ -183,31 +183,31 @@ $specialChars = preg_match('@[^\w]@', $password);
 							</div>
 							</div>
 
-                            				<div class="form-group">
+                           			 	<div class="form-group">
 								<label class="col-sm-1 control-label">Password<span style="color:red">*</span></label>
                             				<div class="col-sm-5">
 								<input type="password" name="password" class="form-control" id="password"  >
 									<?php if(!empty($pwdResponse)) { ?>
-									<div class="response <?php echo $pwdResponse["type"]; ?> " color=red> 
+									<div class="response <?php echo $pwdResponse["type"]; ?> " color=red>
 									<?php echo $pwdResponse["message"]; ?>
 									</div>
 									<?php }?>
                             				</div>
 
 								<label class="col-sm-1 control-label">Field of study<span style="color:red">*</span></label>
-                           			 	<div class="col-sm-5">
+                            				<div class="col-sm-5">
 								<input type="text" name="fieldofstudy" class="form-control" required>
 									<?php if(!empty($fosResponse)) { ?>
 									<div class="response <?php echo $fosResponse["type"]; ?> " color=red>
 									<?php echo $fosResponse["message"]; ?>
 									</div>
 									<?php }?>
-							</div>
-							</div>
+                            				</div>
+                            				</div>
 							
 							<div class="form-group">
 								<label class="col-sm-1 control-label">Class<span style="color:red">*</span></label>
-		    					<div class="col-sm-5">
+                            				<div class="col-sm-5">
 								<select name="class" class="form-control" required>
 									<option value="0">Select</option>
 									<option value="19/20">19/20</option>
@@ -225,8 +225,8 @@ $specialChars = preg_match('@[^\w]@', $password);
 
 							<br>
 							
-				 			<button class="btn btn-primary" name="submit" type="submit">Register</button>
-							</form>
+							<button class="btn btn-primary" name="submit" type="submit">Register</button>
+						</form>
 							
 							<br>
 							<br>
