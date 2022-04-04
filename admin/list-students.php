@@ -79,24 +79,24 @@ if(isset($_REQUEST['unconfirm']))
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
+	
 	<style>
-
-	.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #dd3d36;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #5cb85c;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
+		.errorWrap {
+			padding: 10px;
+			margin: 0 0 20px 0;
+			background: #dd3d36;
+			color:#fff;
+			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+		}
+		.succWrap{
+			padding: 10px;
+			margin: 0 0 20px 0;
+			background: #5cb85c;
+			color:#fff;
+			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+		}
 	</style>
 
 </head>
@@ -118,22 +118,24 @@ if(isset($_REQUEST['unconfirm']))
 						<div class="panel panel-default">
 							<div class="panel-heading">List students</div>
 							<div class="panel-body">
-							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
-				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
-								<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
-									<thead>
-										<tr>
-										<th>#</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Field of study</th>
-												<th>Class</th>
-                                                <th>Account</th>
-												<th>Action</th>	
-										</tr>
-									</thead>
-									
-									<tbody>
+								
+<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
+else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
+				
+					<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+					<thead>
+					<tr>
+						<th>#</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Field of study</th>
+						<th>Class</th>
+						<th>Account</th>
+						<th>Action</th>	
+					</tr>
+					</thead>
+
+					<tbody>
 
 <?php 
 $sql = "CALL studentListInfo()";
@@ -144,23 +146,22 @@ $cnt=1;
 if($query->rowCount() > 0)
 {
 foreach($results as $result)
-{				?>	
-										<tr>
-											<td><?php echo htmlentities($cnt);?></td>
-                                            <td><?php echo htmlentities($result->name);?></td>
-                                            <td><?php echo htmlentities($result->email);?></td>
-                                            <td><?php echo htmlentities($result->fieldofstudy);?></td>
-                                            <td><?php echo htmlentities($result->class);?></td>
-                                            <td>
-                                            
-                                            <?php if($result->status == 1)
-                                                    {?>
-                                                    <a href="list-students.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
-                                                    <?php } else {?>
-                                                    <a href="list-students.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
-                                                    <?php } ?>
-											</td>
-                                            </td>
+{				?>		
+					<tr>
+						<td><?php echo htmlentities($cnt);?></td>
+						<td><?php echo htmlentities($result->name);?></td>
+						<td><?php echo htmlentities($result->email);?></td>
+						<td><?php echo htmlentities($result->fieldofstudy);?></td>
+						<td><?php echo htmlentities($result->class);?></td>
+						<td>
+                                            		<?php if($result->status == 1)
+                                                    	{?>
+                                                    	<a href="list-students.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
+                                                    	<?php } else {?>
+                                                    	<a href="list-students.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
+                                                    	<?php } ?>
+						</td>
+                                            	</td>
 											
 <td>
 <a href="edit-students.php?edit=<?php echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
