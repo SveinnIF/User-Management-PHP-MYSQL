@@ -28,65 +28,70 @@ $folder="images/";
 $new_file_name = strtolower($file);
 $final_file=str_replace(' ','-',$new_file_name);
 
-// validation
+// input validation
 $inputValidation='';
 $uppercase    = preg_match('@[A-Z ÆØÅ]@', $password);
 $lowercase    = preg_match('@[a-z æøå]@', $password);
 $number    	  = preg_match('@[0-9]@', $password);
 $specialChars = preg_match('@[^\w]@', $password);
+
+// Check if email is in use
+$query = $dbh->prepare("SELECT email FROM lecturers WHERE email=?");
+$query->execute([$email]); 
+$emailCheck = $query->fetch();
     
 	// image validation
 	$allowed_image_extension = array(
-		"jpg",
-		"jpeg"
+        	"jpg",
+        	"jpeg"
     	);
     
-    	$file_extension = pathinfo($file, PATHINFO_EXTENSION);
+    $file_extension = pathinfo($file, PATHINFO_EXTENSION);
     
-    	if(! file_exists($file_loc)) {
-		$response = array(
-		    "type" => "error",
-		    "message" => "Choose image file to upload."
-		);
-    	}    
-    	else if(! in_array($file_extension, $allowed_image_extension)) {
-		$response = array(
-		    "type" => "error",
-		    "message" => "Image must be .JPG or .JPEG."
-		); 
+    if(! file_exists($file_loc)) {
+        $response = array(
+            "type" => "error",
+            "message" => "Choose image file to upload."
+        );
+    }    
+    else if(! in_array($file_extension, $allowed_image_extension)) {
+        $response = array(
+            "type" => "error",
+            "message" => "Image must be .JPG or .JPEG."
+        ); 
         
-    	}    
-    	else if($_FILES["image"]["size"] > 2000000) {
-		$response = array(
-		    "type" => "error",
-		    "message" => "Image size exceeds 2MB"
-		);
-    	} else {
-        	if(move_uploaded_file($file_loc, $folder.$final_file)) {
+    }    
+    else if($_FILES["image"]["size"] > 2000000) {
+        $response = array(
+            "type" => "error",
+            "message" => "Image size exceeds 2MB"
+        );
+    } else {
+        if(move_uploaded_file($file_loc, $folder.$final_file)) {
 			$image=$final_file;   
 			$inputValidation="img";	
 			
-        	} else {
-            	$response = array(
-			"type" => "error",
-			"message" => "Error uploading image."
-            	); 
+        } else {
+            $response = array(
+                "type" => "error",
+                "message" => "Error uploading image."
+            ); 
 		}	
-	}
+    	}
 
 
 	// name validation
     	if(empty($name)) {
-		$nameResponse = array(
-		    "type" => "nameError",
-		    "message" => "Name is required"
-		);
+        	$nameResponse = array(
+            		"type" => "nameError",
+            		"message" => "Name is required"
+        	);
     	}    
     	else if(!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
-		$nameResponse = array(
-		    "type" => "nameError",
-		    "message" => "Invalid name"
-		); 
+        	$nameResponse = array(
+            		"type" => "nameError",
+            		"message" => "Invalid name"
+        	); 
     	} 
 	else if(preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
 		$inputValidation .= "Name";
@@ -97,6 +102,12 @@ $specialChars = preg_match('@[^\w]@', $password);
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "Email is required"
+		);
+	}
+	else if ($emailCheck) {
+		$emailResponse = array(
+			"type" => "emailError",
+			"message" => "Invalid email"
 		);
 	}
 	else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -130,11 +141,11 @@ $specialChars = preg_match('@[^\w]@', $password);
         );
     	}    
     	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
-		$courseResponse = array(
-		    "type" => "courseError",
-		    "message" => "Invalid course"
-		); 
-    	} 
+        	$courseResponse = array(
+            		"type" => "courseError",
+            		"message" => "Invalid course"
+        	); 
+	} 
 	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
 		$inputValidation .= "Course";
 	}
@@ -199,7 +210,7 @@ $specialChars = preg_match('@[^\w]@', $password);
 									<?php echo $nameResponse["message"]; ?>
 									</div>
 									<?php }?>
-                            				</div>
+							</div>
 				    
 								<label class="col-sm-1 control-label">Email<span style="color:red">*</span></label>
                             				<div class="col-sm-5">
@@ -209,8 +220,8 @@ $specialChars = preg_match('@[^\w]@', $password);
 									<?php echo $emailResponse["message"]; ?>
 									</div>
 									<?php }?>
-							</div>
-							</div>
+                            				</div>
+                            				</div>
 
                             				<div class="form-group">
 								<label class="col-sm-1 control-label">Password<span style="color:red">*</span></label>
@@ -251,17 +262,19 @@ $specialChars = preg_match('@[^\w]@', $password);
 									<?php echo $response["message"]; ?>
 									</div>
 									<?php }?>
-							</div>
+                            				</div>
 							</div>
                             
 							<br>
 							
                             				<button class="btn btn-primary" name="submit" type="submit">Register</button>
-                            			</form>
+                           			</form>
 			    
 							<br>
-							<br>
-							<br>
+			    
+							
+                            				<br>
+                            				<br>
 							
 							<p>Already Have Account? <a href="lecturers-login.php" >Signin</a></p>
 							<p>Are You A Student? <a href="register-students.php" >Signup as student</a></p>
