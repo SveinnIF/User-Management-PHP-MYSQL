@@ -23,7 +23,7 @@ else{
 if(isset($_POST['submit']))
   {	
 	$title=$_POST['title'];
-	$description=$_POST['description'];
+	$message=$_POST['message'];
 	$course=$_POST['course'];
 	$user=$_SESSION['alogin'];
 	$receiver='Lecturers' AND 'Admin';
@@ -35,62 +35,62 @@ if(isset($_POST['submit']))
 	$anon= ($result->id);
 	
 	// validation
-	$chkval="";
+	$inputValidation="";
 	
 	// name validation
-    	if (empty($title)) {
-		$titleResponse = array(
-		    "type" => "titleError",
-		    "message" => "Title is required"
-		);
-   	 }    
-    	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
-		$titleResponse = array(
-		    "type" => "titleError",
-		    "message" => "Invalid title"
-		); 
-    	} 
+    if (empty($title)) {
+        $titleResponse = array(
+            "type" => "titleError",
+            "message" => "Title is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
+        $titleResponse = array(
+            "type" => "titleError",
+            "message" => "Invalid title"
+        ); 
+    } 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
-		$chkval="ttl";
+		$inputValidation="title";
 	}
 
 	// course validation
 	if(isset($_REQUEST['course']) && $_REQUEST['course'] == "0") { 
-		$courseResponse = array(
-		    "type" => "courseError",
-		    "message" => "Course is required"
-		);
-    	}    
-    	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
-		$courseResponse = array(
-		    "type" => "courseError",
-		    "message" => "Invalid course"
-		); 
-   	} 
+        $courseResponse = array(
+            "type" => "courseError",
+            "message" => "Course is required"
+        );
+    }    
+    else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+        $courseResponse = array(
+            "type" => "courseError",
+            "message" => "Invalid course"
+        ); 
+    } 
 	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
-		$chkval .="crs";
+		$inputValidation .="Course";
 	}
 	
 	// message validation
-    	if (empty($description)) {
-		$msgResponse = array(
-		    "type" => "msgError",
-		    "message" => "Message is required"
-		);
-    	}    
-    	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $description)) {
-		$msgResponse = array(
-		    "type" => "msgError",
-		    "message" => "Invalid message"
-		); 
-   	} 
-	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $description)) {
-		$chkval .= "dsc";
+    if (empty($message)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Message is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Invalid message"
+        ); 
+    } 
+	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+		$inputValidation .= "Msg";
 	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($chkval == "ttlcrsdsc") {
-		$query=$dbh->prepare("CALL studentFeedbackInfo(:user, :receiver, :course, :title, :description)");
+	if($inputValidation == "titleCourseMsg") {
+		$query=$dbh->prepare("CALL studentFeedbackInfo(:user, :receiver, :course, :title, :message)");
 		if ($_POST['anon'] == 'anonymous') {
 			$query-> bindParam(':user', $anon, PDO::PARAM_STR);
 		} else {
@@ -99,7 +99,7 @@ if(isset($_POST['submit']))
 		$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 		$query-> bindParam(':course', $course, PDO::PARAM_STR);
 		$query-> bindParam(':title', $title, PDO::PARAM_STR);
-		$query-> bindParam(':description', $description, PDO::PARAM_STR);
+		$query-> bindParam(':message', $message, PDO::PARAM_STR);
 		$query->execute(); 
 		$msg="Feedback Sent";
 	}
@@ -186,7 +186,6 @@ $query=$dbh->prepare("CALL lecturerInfoStudentFeedback('ak')");
 $query->execute();
 $autonome=$query->fetch(PDO::FETCH_OBJ);
 ?>
-	
 	<?php include('includes/header-students.php');?>
 	<div class="ts-main-content">
 	<?php include('includes/leftbar-students.php');?>
@@ -211,7 +210,8 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 		<div class="col-sm-4">
 			<input type="text" name="title" class="form-control" required>
 				<?php if(!empty($titleResponse)) { ?>
-				<div class="response <?php echo $titleResponse["type"]; ?> " color=red>
+				<div class="response <?php echo $titleResponse["type"]; ?>
+				">
 				<?php echo $titleResponse["message"]; ?>
 				</div>
 				<?php }?>
@@ -231,7 +231,8 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 				<option value="ak">Autonome kjøretøy</option>
 			</select>
 				<?php if(!empty($courseResponse)) { ?>
-				<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
+				<div class="response <?php echo $courseResponse["type"]; ?>
+				">
 				<?php echo $courseResponse["message"]; ?>
 				</div>
 				<?php }?>
@@ -239,11 +240,12 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 </div>
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">Description<span style="color:red">*</span></label>
+	<label class="col-sm-2 control-label">Message<span style="color:red">*</span></label>
 		<div class="col-sm-10">
-			<textarea class="form-control" rows="5" name="description"></textarea>
+			<textarea class="form-control" rows="5" name="message"></textarea>
 				<?php if(!empty($msgResponse)) { ?>
-				<div class="response <?php echo $msgResponse["type"]; ?> " color=red>
+				<div class="response <?php echo $msgResponse["type"]; ?>
+				">
 				<?php echo $msgResponse["message"]; ?>
 				</div>
 				<?php }?>
