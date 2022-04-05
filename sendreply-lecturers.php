@@ -28,12 +28,18 @@ else{
 	if(isset($_POST['submit']))
   {	
 	$receiver=$_POST['email'];
-    	$message=$_POST['message'];
+    $message=$_POST['message'];
 	$course=$_POST['course'];
 	$sender=$_SESSION['alogin'];
 	
+	
 	// validation
 	$inputValidation="";
+
+	// en reply per melding
+	$query = $dbh->prepare("SELECT sender, receiver FROM feedback WHERE sender=? AND receiver=?");
+	$query->execute([$sender, $receiver]); 
+	$uniqueCheck = $query->fetch();
 
 	// email validation		
 	if(empty($receiver)) {
@@ -70,24 +76,34 @@ else{
 	}
 	
 	// message validation
-    	if (empty($message)) {
-		$msgResponse = array(
-		    "type" => "msgError",
-		    "message" => "Message is required"
-		);
-	}    
-	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
-		$msgResponse = array(
-		    "type" => "msgError",
-		    "message" => "Invalid message"
-		); 
-    	} 
+    if (empty($message)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Message is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Invalid message"
+        ); 
+    } 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
 		$inputValidation .= "Msg";
 	}
+
+	if ($uniqueCheck) {
+		$uniqueResponse = array(
+			"type" => "uniqueError",
+			"message" => "Only one reply allowed per message"
+		);
+	} 
+	else {
+		$inputValidation .= "Uniq";
+	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($inputValidation == "receiverCourseMsg") {
+	if($inputValidation == "receiverCourseMsgUniq") {
 		$sql = "CALL lecturerSendreplyInfo(:sender, :receiver, :course, :message)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
@@ -139,22 +155,22 @@ else{
 
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
 	<style>
-		.errorWrap {
-			padding: 10px;
-			margin: 0 0 20px 0;
-			background: #dd3d36;
-			color:#fff;
-			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-		}
-		.succWrap{
-    			padding: 10px;
-   			margin: 0 0 20px 0;
-			background: #5cb85c;
-			color:#fff;
-    			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-   			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-		}
+	.errorWrap {
+    padding: 10px;
+    margin: 0 0 20px 0;
+	background: #dd3d36;
+	color:#fff;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+}
+.succWrap{
+    padding: 10px;
+    margin: 0 0 20px 0;
+	background: #5cb85c;
+	color:#fff;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+}
 	</style>
 
 
@@ -184,7 +200,7 @@ else{
 					<div class="col-md-12">
 						<div class="row">
 							<div class="col-md-12">
-                            					<h2>Reply Feedback</h2>
+                            <h2>Reply Feedback</h2>
 								<div class="panel panel-default">
 									<div class="panel-heading">Send Reply</div>
 
@@ -199,8 +215,7 @@ else{
 	<div class="col-sm-4">
 		<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($url);?>"> <!-- byttet "result->title" til "url" -->
 			<?php if(!empty($replytoResponse)) { ?>
-			<div class="response <?php echo $replytoResponse["type"]; ?>
-			">
+			<div class="response <?php echo $replytoResponse["type"]; ?> " color=red>
 			<?php echo $replytoResponse["message"]; ?>
 			</div>
 			<?php }?>		
@@ -212,8 +227,7 @@ else{
 	<div class="col-sm-4">
 		<input type="text" name="course" class="form-control" readonly required value="<?php echo htmlentities($result->course);?>">
 			<?php if(!empty($courseResponse)) { ?>
-			<div class="response <?php echo $courseResponse["type"]; ?>
-			">
+			<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
 			<?php echo $courseResponse["message"]; ?>
 			</div>
 			<?php }?>	
@@ -225,8 +239,7 @@ else{
 	<div class="col-sm-6">
 		<textarea name="message" class="form-control" cols="30" rows="10"></textarea>
 			<?php if(!empty($msgResponse)) { ?>
-			<div class="response <?php echo $msgResponse["type"]; ?>
-			">
+			<div class="response <?php echo $msgResponse["type"]; ?> " color=red>
 			<?php echo $msgResponse["message"]; ?>
 			</div>
 			<?php }?>	
@@ -236,6 +249,11 @@ else{
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
 		<button class="btn btn-primary" name="submit" type="submit" href="feedback-lecturers.php" >Send Reply</button>
+			<?php if(!empty($uniqueResponse)) { ?>
+			<div class="response <?php echo $uniqueResponse["type"]; ?> " color=red>
+			<?php echo $uniqueResponse["message"]; ?>
+			</div>
+			<?php }?>	
 	</div>
 </div>
 
