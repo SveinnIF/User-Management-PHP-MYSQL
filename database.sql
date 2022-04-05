@@ -61,12 +61,13 @@ CREATE TABLE `deleteduser` (
 --
 
 CREATE TABLE `feedback` (
-  `id` int(11) NOT NULL,
+  `id` varchar(13) NOT NULL,
   `sender` varchar(50) NOT NULL,
   `receiver` varchar(50) NOT NULL,
   `course` varchar(50) NOT NULL,
   `title` varchar(100) NOT NULL,
-  `feedbackdata` varchar(500) NOT NULL
+  `feedbackdata` varchar(500) NOT NULL,
+  `answered` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -156,12 +157,6 @@ ALTER TABLE `admin`
 --
 ALTER TABLE `deleteduser`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
-
---
--- AUTO_INCREMENT for table `feedback`
---
-ALTER TABLE `feedback`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `lecturers`
