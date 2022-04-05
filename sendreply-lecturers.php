@@ -20,15 +20,15 @@ header('location:index.php');
 }
 else{
 
-	if(isset($_GET['reply']))
-	{
+if(isset($_GET['reply']))
+{
 	$replyto=$_GET['reply'];
-	}   
+}   
 
-	if(isset($_POST['submit']))
-  {	
+if(isset($_POST['submit']))
+{	
 	$receiver=$_POST['email'];
-    $message=$_POST['message'];
+    	$message=$_POST['message'];
 	$course=$_POST['course'];
 	$sender=$_SESSION['alogin'];
 	
@@ -37,8 +37,8 @@ else{
 	$inputValidation="";
 
 	// en reply per melding
-	$query = $dbh->prepare("SELECT sender, receiver FROM feedback WHERE sender=? AND receiver=?");
-	$query->execute([$sender, $receiver]); 
+	$query = $dbh->prepare("SELECT sender, receiver FROM feedback WHERE sender=? AND receiver=? AND feedbackdata=?");
+	$query->execute([$sender, $receiver, $message]); 
 	$uniqueCheck = $query->fetch();
 
 	// email validation		
@@ -76,18 +76,18 @@ else{
 	}
 	
 	// message validation
-    if (empty($message)) {
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Message is required"
-        );
-    }    
-    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Invalid message"
-        ); 
-    } 
+    	if (empty($message)) {
+        	$msgResponse = array(
+            		"type" => "msgError",
+            		"message" => "Message is required"
+        	);
+    	}    
+    	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+        	$msgResponse = array(
+            		"type" => "msgError",
+            		"message" => "Invalid message"
+        	); 
+    	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
 		$inputValidation .= "Msg";
 	}
@@ -154,42 +154,41 @@ else{
 	<link rel="stylesheet" href="css/style.css">
 
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
+	
 	<style>
-	.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #dd3d36;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #5cb85c;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
+		.errorWrap {
+    			padding: 10px;
+    			margin: 0 0 20px 0;
+			background: #dd3d36;
+			color:#fff;
+    			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+		}
+		.succWrap{
+			padding: 10px;
+			margin: 0 0 20px 0;
+			background: #5cb85c;
+			color:#fff;
+			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+		}
 	</style>
-
-
 </head>
 
 <body>
 <?php
-		$user = $_SESSION['alogin'];
-		$sql = "CALL lecturerCourse(:user)";
-		$query = $dbh -> prepare($sql);
-		$query-> bindParam(':user', $user, PDO::PARAM_STR);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);	
-		$course = ($result->course);
-			
-		// henter det som er i URL
-		$url=$_SERVER['QUERY_STRING'];
-		$url = str_replace("reply=", "", $url);
-		//
+$user = $_SESSION['alogin'];
+$sql = "CALL lecturerCourse(:user)";
+$query = $dbh -> prepare($sql);
+$query-> bindParam(':user', $user, PDO::PARAM_STR);
+$query->execute();
+$result=$query->fetch(PDO::FETCH_OBJ);	
+$course = ($result->course);
+
+// henter det som er i URL
+$url=$_SERVER['QUERY_STRING'];
+$url = str_replace("reply=", "", $url);
+//
 ?>
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
