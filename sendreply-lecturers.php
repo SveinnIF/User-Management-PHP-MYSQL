@@ -20,23 +20,28 @@ header('location:index.php');
 }
 else{
 
-if(isset($_GET['reply']))
-{
-	$replyto=$_GET['reply'];
-}   
+	if(isset($_GET['reply']))
+	{
+		$replyto=$_GET['reply'];
+	}
+	
+	if(isset($_GET['id']))
+	{
+		$answerId=$_GET['id'];
+	}   
 
-if(isset($_POST['submit']))
-{	
+
+	if(isset($_POST['submit']))
+  {	
+	$id=uniqid();
 	$receiver=$_POST['email'];
-    	$message=$_POST['message'];
+    $message=$_POST['message'];
 	$course=$_POST['course'];
 	$sender=$_SESSION['alogin'];
 	
 	
 	// validation
 	$inputValidation="";
-
-
 
 	// email validation		
 	if(empty($receiver)) {
@@ -73,32 +78,39 @@ if(isset($_POST['submit']))
 	}
 	
 	// message validation
-    	if (empty($message)) {
-        	$msgResponse = array(
-            		"type" => "msgError",
-            		"message" => "Message is required"
-        	);
-    	}    
-    	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
-        	$msgResponse = array(
-            		"type" => "msgError",
-            		"message" => "Invalid message"
-        	); 
-    	} 
+    if (empty($message)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Message is required"
+        );
+    }    
+    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+        $msgResponse = array(
+            "type" => "msgError",
+            "message" => "Invalid message"
+        ); 
+    } 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
 		$inputValidation .= "Msg";
 	}
-
+	
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
 	if($inputValidation == "receiverCourseMsg") {
-		$sql = "CALL lecturerSendreplyInfo(:sender, :receiver, :course, :message)";
+		$sql = "CALL lecturerSendreplyInfo(:id, :sender, :receiver, :course, :message)";
 		$query = $dbh->prepare($sql);
+		$query-> bindParam(':id', $id, PDO::PARAM_STR);
 		$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
 		$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 		$query-> bindParam(':course', $course, PDO::PARAM_STR);
 		$query-> bindParam(':message', $message, PDO::PARAM_STR);
-		$query->execute(); 
+		$query->execute();
+		
+		$answerSql = "UPDATE feedback SET answered = '1' WHERE id=:answerId";
+		$answerQuery = $dbh->prepare($answerSql);
+		$answerQuery-> bindParam(':answerId', $answerId, PDO::PARAM_STR);
+		$answerQuery->execute();
+
 		
 		echo "<script type='text/javascript'>alert('Reply Sent!');</script>";
 		echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
@@ -142,41 +154,42 @@ if(isset($_POST['submit']))
 	<link rel="stylesheet" href="css/style.css">
 
 	<script type= "text/javascript" src="../vendor/countries.js"></script>
-	
 	<style>
-		.errorWrap {
-    			padding: 10px;
-    			margin: 0 0 20px 0;
-			background: #dd3d36;
-			color:#fff;
-    			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-		}
-		.succWrap{
-			padding: 10px;
-			margin: 0 0 20px 0;
-			background: #5cb85c;
-			color:#fff;
-			-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-			box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-		}
+	.errorWrap {
+    padding: 10px;
+    margin: 0 0 20px 0;
+	background: #dd3d36;
+	color:#fff;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+}
+.succWrap{
+    padding: 10px;
+    margin: 0 0 20px 0;
+	background: #5cb85c;
+	color:#fff;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+}
 	</style>
+
+
 </head>
 
 <body>
 <?php
-$user = $_SESSION['alogin'];
-$sql = "CALL lecturerCourse(:user)";
-$query = $dbh -> prepare($sql);
-$query-> bindParam(':user', $user, PDO::PARAM_STR);
-$query->execute();
-$result=$query->fetch(PDO::FETCH_OBJ);	
-$course = ($result->course);
-
-// henter det som er i URL
-$url=$_SERVER['QUERY_STRING'];
-$url = str_replace("reply=", "", $url);
-//
+		$user = $_SESSION['alogin'];
+		$sql = "CALL lecturerCourse(:user)";
+		$query = $dbh -> prepare($sql);
+		$query-> bindParam(':user', $user, PDO::PARAM_STR);
+		$query->execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);	
+		$course = ($result->course);
+			
+		// henter det som er i URL
+		$url=$_SERVER['QUERY_STRING'];
+		$url = str_replace("reply=", "", $url);
+		//
 ?>
 	<?php include('includes/header.php');?>
 	<div class="ts-main-content">
@@ -200,7 +213,7 @@ $url = str_replace("reply=", "", $url);
 <div class="form-group">
 		<label class="col-sm-2 control-label">Reply to<span style="color:red">*</span></label> <!-- byttet "Title" til "Reply to" --> 
 	<div class="col-sm-4">
-		<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($url);?>"> <!-- byttet "result->title" til "url" -->
+		<input type="text" name="title" class="form-control" readonly required value="<?php echo htmlentities($replyto);?>"> <!-- byttet "result->title" til "url" -->
 			<?php if(!empty($replytoResponse)) { ?>
 			<div class="response <?php echo $replytoResponse["type"]; ?> " color=red>
 			<?php echo $replytoResponse["message"]; ?>
@@ -236,11 +249,6 @@ $url = str_replace("reply=", "", $url);
 <div class="form-group">
 	<div class="col-sm-8 col-sm-offset-2">
 		<button class="btn btn-primary" name="submit" type="submit" href="feedback-lecturers.php" >Send Reply</button>
-			<?php if(!empty($uniqueResponse)) { ?>
-			<div class="response <?php echo $uniqueResponse["type"]; ?> " color=red>
-			<?php echo $uniqueResponse["message"]; ?>
-			</div>
-			<?php }?>	
 	</div>
 </div>
 
