@@ -104,16 +104,15 @@ else{
 											<th>Reply</th>	
 										</tr>
 									</thead>
-									
 									<tbody>
 
 <?php
-$receiver = 'Lecturers';
 $emailforcourse = $_SESSION['alogin'];
+$receiver = 'Lecturers';
 $sql = "CALL lecturerFeedbackInfo(:emailforcourse, :receiver)";
 $query = $dbh -> prepare($sql);
-$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query-> bindParam(':emailforcourse', $emailforcourse, PDO::PARAM_STR);
+$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -127,10 +126,18 @@ foreach($results as $result)
 											<td><?php echo htmlentities($result->course);?></td>
 											<td><?php echo htmlentities($result->title);?></td>
                                             <td><?php echo htmlentities($result->feedbackdata);?></td>
+											<td>
+										
+											<?php
+											if($result->answered == 0) {
+												echo '<a href=sendreply-lecturers.php?reply=';
+												echo htmlentities($result->sender);
+												echo '&id=';
+												echo htmlentities($result->id);
+												echo '>&nbsp; <i class="fa fa-mail-reply"></i></a>&nbsp;&nbsp;';
+											}?>
 											
-<td>
-<a href="sendreply-lecturers.php?reply=<?php echo $result->sender;?>">&nbsp; <i class="fa fa-mail-reply"></i></a>&nbsp;&nbsp;
-</td>
+											</td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
 										
