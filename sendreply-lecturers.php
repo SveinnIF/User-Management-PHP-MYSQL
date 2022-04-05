@@ -36,10 +36,7 @@ if(isset($_POST['submit']))
 	// validation
 	$inputValidation="";
 
-	// en reply per melding
-	$query = $dbh->prepare("SELECT sender, receiver FROM feedback WHERE sender=? AND receiver=? AND feedbackdata=?");
-	$query->execute([$sender, $receiver, $message]); 
-	$uniqueCheck = $query->fetch();
+
 
 	// email validation		
 	if(empty($receiver)) {
@@ -92,18 +89,9 @@ if(isset($_POST['submit']))
 		$inputValidation .= "Msg";
 	}
 
-	if ($uniqueCheck) {
-		$uniqueResponse = array(
-			"type" => "uniqueError",
-			"message" => "Only one reply allowed per message"
-		);
-	} 
-	else {
-		$inputValidation .= "Uniq";
-	}
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
-	if($inputValidation == "receiverCourseMsgUniq") {
+	if($inputValidation == "receiverCourseMsg") {
 		$sql = "CALL lecturerSendreplyInfo(:sender, :receiver, :course, :message)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':sender', $sender, PDO::PARAM_STR);
