@@ -22,12 +22,13 @@ else{
 	
 if(isset($_POST['submit']))
   {	
+	$id=uniqid();
 	$title=$_POST['title'];
 	$message=$_POST['message'];
 	$course=$_POST['course'];
 	$user=$_SESSION['alogin'];
 	$receiver='Lecturers' AND 'Admin';
-
+	
 	$query=$dbh->prepare("CALL studentFeedbackSender(:user)");
 	$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	$query->execute();
@@ -90,12 +91,13 @@ if(isset($_POST['submit']))
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
 	if($inputValidation == "titleCourseMsg") {
-		$query=$dbh->prepare("CALL studentFeedbackInfo(:user, :receiver, :course, :title, :message)");
+		$query=$dbh->prepare("CALL studentFeedbackInfo(:id, :user, :receiver, :course, :title, :message)");
 		if ($_POST['anon'] == 'anonymous') {
 			$query-> bindParam(':user', $anon, PDO::PARAM_STR);
 		} else {
 			$query-> bindParam(':user', $user, PDO::PARAM_STR);
-		  } 
+		  }
+		$query-> bindParam(':id', $id, PDO::PARAM_STR);  
 		$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 		$query-> bindParam(':course', $course, PDO::PARAM_STR);
 		$query-> bindParam(':title', $title, PDO::PARAM_STR);
