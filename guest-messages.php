@@ -136,8 +136,8 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {				?>	
 										<tr>
-											<td><?php echo htmlentities($cnt);?></td>
-                                            <td><?php echo htmlentities($result->sender);?></td>
+											<td><?php echo $cnt;?></td>
+                                            						<td><?php echo htmlentities($result->sender);?></td>
 											<td><?php echo htmlentities($result->feedbackdata);?></td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
