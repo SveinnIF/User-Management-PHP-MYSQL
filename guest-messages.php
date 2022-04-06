@@ -161,10 +161,6 @@ foreach($results as $result)
                     </form>
 </div>
 
-
-
-
-
 							</div>
 						</div>
 					</div>
