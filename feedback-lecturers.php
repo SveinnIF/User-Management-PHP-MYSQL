@@ -139,8 +139,7 @@ foreach($results as $result)
 											
 											</td>
 										</tr>
-										<?php $cnt=$cnt+1; }} ?>
-										
+											<?php $cnt=$cnt+1; }} ?>
 									</tbody>
 								</table>
 							</div>
