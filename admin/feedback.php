@@ -126,11 +126,11 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {				?>	
 										<tr>
-											<td><?php echo htmlentities($cnt);?></td>
+											<td><?php echo $cnt;?></td>
 											<td><?php echo htmlentities($result->course);?></td>
-                                            <td><?php echo htmlentities($result->sender);?></td>
+                                            						<td><?php echo htmlentities($result->sender);?></td>
 											<td><?php echo htmlentities($result->title);?></td>
-                                            <td><?php echo htmlentities($result->feedbackdata);?></td>
+                                            						<td><?php echo htmlentities($result->feedbackdata);?></td>
 <td>
 <a href="feedback.php?del=<?php echo $result->id;?>&name=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
 </td>
