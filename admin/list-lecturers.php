@@ -138,11 +138,11 @@ if(isset($_REQUEST['unconfirm']))
 									<thead>
 										<tr>
 										<th>#</th>
-												<th>Image</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Course</th>
-                                                <th>Account</th>
+											<th>Image</th>
+                                                					<th>Name</th>
+                                                					<th>Email</th>
+                                                					<th>Course</th>
+                                                					<th>Account</th>
 											<th>Action</th>	
 										</tr>
 									</thead>
@@ -158,29 +158,29 @@ if($query->rowCount() > 0)
 {
 foreach($results as $result)
 {				?>	
-										<tr>
-											<td><?php echo htmlentities($cnt);?></td>
-											<td><img src="../images/<?php echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>
-                                            <td><?php echo htmlentities($result->name);?></td>
-                                            <td><?php echo htmlentities($result->email);?></td>
-                                            <td><?php echo htmlentities($result->course);?></td>
-                                            <td>
+					<tr>
+						<td><?php echo $cnt;?></td>
+						<td><img src="../images/<?php echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>
+                                            	<td><?php echo htmlentities($result->name);?></td>
+                                            	<td><?php echo htmlentities($result->email);?></td>
+                                            	<td><?php echo htmlentities($result->course);?></td>
+                                            	<td>
                                             
-                                            <?php if($result->status == 1)
-                                                    {?>
-                                                    <a href="list-lecturers.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
-                                                    <?php } else {?>
-                                                    <a href="list-lecturers.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
-                                                    <?php } ?>
-</td>
-                                            </td>
+                                            	<?php if($result->status == 1)
+                                                    	{?>
+                                                    	<a href="list-lecturers.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
+                                                    	<?php } else {?>
+                                                    	<a href="list-lecturers.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
+                                                    	<?php } ?>
+					</td>
+					</td>
 											
 <td>
 <a href="edit-lecturers.php?edit=<?php echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 <a href="list-lecturers.php?del=<?php echo $result->id;?>&name=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
 </td>
-										</tr>
-										<?php $cnt=$cnt+1; }} ?>
+					</tr>
+					<?php $cnt=$cnt+1; }} ?>
 										
 									</tbody>
 								</table>
