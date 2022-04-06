@@ -231,8 +231,6 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 					}, 3000);
 					});
 	</script>
-
 </body>
-
 </html>
 <?php } ?>
