@@ -114,8 +114,8 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {				?>	
 										<tr>
-											<td><?php echo htmlentities($cnt);?></td>
-                                            <td><?php echo htmlentities($result->email);?></td>
+											<td><?php echo $cnt;?></td>
+                                            						<td><?php echo htmlentities($result->email);?></td>
 											<td><?php echo htmlentities($result->deltime);?></td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
