@@ -131,7 +131,7 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {				?>	
 										<tr>
-											<td><?php echo htmlentities($cnt);?></td>
+											<td><?php echo $cnt;?></td>
 											<td>
 												<img src="images/<?php echo htmlentities($result->image);?>" width="150px"/>
 												<?php echo str_repeat('&nbsp;', 3);?>
