@@ -122,7 +122,7 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {				?>	
 										<tr>
-											<td><?php echo htmlentities($cnt);?></td>
+											<td><?php echo $cnt;?></td>
 											<td><?php echo htmlentities($result->course);?></td>
 											<td><?php echo htmlentities($result->title);?></td>
                                             <td><?php echo htmlentities($result->feedbackdata);?></td>
