@@ -160,7 +160,7 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {				?>		
 					<tr>
-						<td><?php echo htmlentities($cnt);?></td>
+						<td><?php echo $cnt;?></td>
 						<td><?php echo htmlentities($result->name);?></td>
 						<td><?php echo htmlentities($result->email);?></td>
 						<td><?php echo htmlentities($result->fieldofstudy);?></td>
