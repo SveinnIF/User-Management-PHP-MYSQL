@@ -319,7 +319,6 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 			<?php echo str_repeat('&nbsp;', 3), htmlentities($autonome->name);?>
 	</div>
 </div>
-
 </form>
 									</div>
 								</div>
