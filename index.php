@@ -90,7 +90,6 @@ $email=$_POST['username'];
 									<label for="" class="text-uppercase text-sm">Your Email</label>
 									<input type="text" placeholder="Email" name="username" class="form-control mb" required>
 										
-
 									<label for="" class="text-uppercase text-sm">Password</label>
 									<input type="password" placeholder="Password" name="password" class="form-control mb" required>
 									
