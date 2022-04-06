@@ -97,7 +97,5 @@ echo "<script type='text/javascript'> document.location = 'guest-messages.php'; 
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
-
 </body>
-
 </html>
