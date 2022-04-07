@@ -24,7 +24,7 @@ if(isset($_POST['submit']))
 {
 $username=$_SESSION['alogin'];
 
-$sql = "SELECT password FROM students WHERE email = (:username)";
+$sql = "CALL changePwStudentSelect(:username)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':username', $username, PDO::PARAM_STR);
 $query->execute();
@@ -75,7 +75,7 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 		$query-> execute();
 		$results = $query -> fetchAll(PDO::FETCH_OBJ);
 		
-		$con="UPDATE STUDENTS SET password=:newpassword WHERE email=:username";
+		$con="CALL updatePwStudentUpdate(:username, :newpassword)";
 		$chngpwd1 = $dbh->prepare($con);
 		$chngpwd1-> bindParam(':username', $username, PDO::PARAM_STR);
 		$chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
