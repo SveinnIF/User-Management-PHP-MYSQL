@@ -40,12 +40,14 @@ if(isset($_POST['submit']))
 	
 	// name validation
     if (empty($title)) {
+    	sleep(1);
         $titleResponse = array(
             "type" => "titleError",
             "message" => "Title is required"
         );
     }    
     else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
+	sleep(1);
         $titleResponse = array(
             "type" => "titleError",
             "message" => "Invalid title"
@@ -57,12 +59,14 @@ if(isset($_POST['submit']))
 
 	// course validation
 	if(isset($_REQUEST['course']) && $_REQUEST['course'] == "0") { 
+	sleep(1);
         $courseResponse = array(
             "type" => "courseError",
             "message" => "Course is required"
         );
     }    
     else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+	sleep(1);
         $courseResponse = array(
             "type" => "courseError",
             "message" => "Invalid course"
@@ -74,12 +78,14 @@ if(isset($_POST['submit']))
 	
 	// message validation
     if (empty($message)) {
+	sleep(1);
         $msgResponse = array(
             "type" => "msgError",
             "message" => "Message is required"
         );
     }    
     else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+	sleep(1);
         $msgResponse = array(
             "type" => "msgError",
             "message" => "Invalid message"
@@ -91,6 +97,7 @@ if(isset($_POST['submit']))
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
 	if($inputValidation == "titleCourseMsg") {
+		sleep(1);
 		$query=$dbh->prepare("CALL studentFeedbackInfo(:id, :user, :receiver, :course, :title, :message)");
 		if ($_POST['anon'] == 'anonymous') {
 			$query-> bindParam(':user', $anon, PDO::PARAM_STR);
