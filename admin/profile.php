@@ -63,6 +63,7 @@ if(isset($_POST['submit']))
 	}
 	
 	if($inputValidation = "nameEmail") {
+		sleep(1);
 		$sql="UPDATE admin SET username=(:name), email=(:email)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':name', $name, PDO::PARAM_STR);
