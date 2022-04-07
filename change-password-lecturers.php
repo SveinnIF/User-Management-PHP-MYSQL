@@ -41,26 +41,31 @@ $lowercase    = preg_match('@[a-z æøå]@', $newpassword);
 $number    	  = preg_match('@[0-9]@', $newpassword);
 $specialChars = preg_match('@[^\w]@', $newpassword);
 
-	if(!$password) // sjekker om current pw er riktig med password_verify
+	if(!$password) // sjekker om current pw er feil med password_verify
 		{
+		sleep(1);
 		$pwdResponse = array(
 			"type" => "passwordError",
-			"message" => "Current password invalid"
+			"message" => "Something went wrong"
 		);
 	}
 	else if ($newpassword != $cnfpassword) {
+		sleep(1);
 		$pwdResponse = array(
 			"type" => "passwordError",
 			"message" => "New Password and Confirm Password fields do not match"
 		);
 	}
 	else if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($newpassword) < 8) {
+		sleep(1);
 		$pwdResponse = array(
 			"type" => "passwordError",
 			"message" => "New password must be at least 8 characters long and must include at least one upper case letter, one lower case letter, one number, and one special character."
 		);
 	}
 	else if ($uppercase && $lowercase && $number && $specialChars && strlen($newpassword) > 8){
+		sleep(1);
+		
 		$newpassword=password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
 		$cnfpassword=password_hash($_POST['confirmpassword'], PASSWORD_DEFAULT);
 		
