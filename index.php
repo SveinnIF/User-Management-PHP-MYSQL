@@ -48,8 +48,8 @@ $email=$_POST['username'];
 			echo "<script type='text/javascript'> document.location = 'feedback-students.php'; </script>";
 		} 
 		else{
+			sleep(1);
 			$emailResponse = array(
-				sleep(1);
 				"type" => "emailError",
 				"message" => "Invalid Details Or Account Not Confirmed"
 			);
