@@ -152,6 +152,7 @@ $emailCheck = $query->fetch();
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
 	if($inputValidation == "imgNameEmailPwCourse") {
+		sleep(1);
 		$sql="CALL lecturerRegistrationInfo(:name, :email, :password, :course, :image, '0')";
 		$query= $dbh -> prepare($sql);
 		$query-> bindParam(':name', $name, PDO::PARAM_STR);
