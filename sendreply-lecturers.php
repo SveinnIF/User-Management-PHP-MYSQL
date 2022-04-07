@@ -32,10 +32,10 @@ else{
 
 
 	if(isset($_POST['submit']))
-  {	
+  	{	
 	$id=uniqid();
 	$receiver=$_POST['email'];
-    $message=$_POST['message'];
+    	$message=$_POST['message'];
 	$course=$_POST['course'];
 	$sender=$_SESSION['alogin'];
 	
@@ -78,18 +78,18 @@ else{
 	}
 	
 	// message validation
-    if (empty($message)) {
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Message is required"
-        );
-    }    
-    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Invalid message"
-        ); 
-    } 
+    	if (empty($message)) {
+        	$msgResponse = array(
+            		"type" => "msgError",
+            		"message" => "Message is required"
+        	);
+    	}    
+	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+        	$msgResponse = array(
+            		"type" => "msgError",
+            		"message" => "Invalid message"
+        	); 
+    	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
 		$inputValidation .= "Msg";
 	}
@@ -97,6 +97,7 @@ else{
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
 	if($inputValidation == "receiverCourseMsg") {
+		sleep(1);
 		$sql = "CALL lecturerSendreplyInfo(:id, :sender, :receiver, :course, :message)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':id', $id, PDO::PARAM_STR);
