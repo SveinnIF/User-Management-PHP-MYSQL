@@ -39,58 +39,52 @@ if(isset($_POST['submit']))
 	$inputValidation="";
 	
 	// name validation
-    if (empty($title)) {
-    	sleep(1);
-        $titleResponse = array(
-            "type" => "titleError",
-            "message" => "Title is required"
-        );
-    }    
-    else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
-	sleep(1);
-        $titleResponse = array(
-            "type" => "titleError",
-            "message" => "Invalid title"
-        ); 
-    } 
+    	if (empty($title)) {
+		$titleResponse = array(
+            		"type" => "titleError",
+			    "message" => "Title is required"
+        	);
+    	}    
+    	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
+        	$titleResponse = array(
+            		"type" => "titleError",
+            		"message" => "Invalid title"
+        	); 
+    	} 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
 		$inputValidation="title";
 	}
 
 	// course validation
 	if(isset($_REQUEST['course']) && $_REQUEST['course'] == "0") { 
-	sleep(1);
-        $courseResponse = array(
-            "type" => "courseError",
-            "message" => "Course is required"
-        );
-    }    
-    else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
-	sleep(1);
-        $courseResponse = array(
-            "type" => "courseError",
-            "message" => "Invalid course"
-        ); 
-    } 
+        	$courseResponse = array(
+            		"type" => "courseError",
+            		"message" => "Course is required"
+        	);
+    	}    
+    	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+        	$courseResponse = array(
+            		"type" => "courseError",
+            		"message" => "Invalid course"
+        	); 
+    	} 
 	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
 		$inputValidation .="Course";
 	}
 	
 	// message validation
-    if (empty($message)) {
-	sleep(1);
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Message is required"
-        );
-    }    
-    else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
-	sleep(1);
-        $msgResponse = array(
-            "type" => "msgError",
-            "message" => "Invalid message"
-        ); 
-    } 
+    	if (empty($message)) {
+        	$msgResponse = array(
+            		"type" => "msgError",
+            		"message" => "Message is required"
+        	);
+    	}    
+    	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
+        	$msgResponse = array(
+            		"type" => "msgError",
+            		"message" => "Invalid message"
+        	); 
+    	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
 		$inputValidation .= "Msg";
 	}
@@ -155,7 +149,7 @@ if(isset($_POST['submit']))
 	color:#fff;
     	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
+	}
 	.succWrap{
     	padding: 10px;
     	margin: 0 0 20px 0;
@@ -163,7 +157,7 @@ if(isset($_POST['submit']))
 	color:#fff;
     	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
     	box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
+	}
 	</style>
 
 
