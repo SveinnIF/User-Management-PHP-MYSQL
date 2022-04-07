@@ -123,6 +123,7 @@ $emailCheck = $query->fetch();
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
 	if($inputValidation == "nameEmailPwFosClass") {
+		sleep(1);
 		$sql ="CALL studentRegistrationInfo(:id, :name, :email, :password, :fieldofstudy, :class, '1')";
 		$query= $dbh -> prepare($sql);
 		$query-> bindParam(':id', $id, PDO::PARAM_STR);
