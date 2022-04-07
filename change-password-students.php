@@ -24,7 +24,6 @@ if(isset($_POST['submit']))
 {
 $username=$_SESSION['alogin'];
 
-
 $sql = "SELECT password FROM students WHERE email = (:username)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':username', $username, PDO::PARAM_STR);
@@ -44,24 +43,28 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 
 	if(!$password) // sjekker om passordet er samme som i DB (if true)
 		{
+		sleep(1);
 		$pwdResponse = array(
 			"type" => "passwordError",
-			"message" => "Current password invalid"
+			"message" => "Something went wrong"
 		);
 	}
 	else if ($newpassword != $cnfpassword) {
+		sleep(1);
 		$pwdResponse = array(
 			"type" => "passwordError",
 			"message" => "New Password and Confirm Password fields do not match"
 		);
 	}
 	else if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($newpassword) <= 8) {
+		sleep(1);
 		$pwdResponse = array(
 			"type" => "passwordError",
 			"message" => "New password must be at least 8 characters long and must include at least one upper case letter, one lower case letter, one number, and one special character."
 		);
 	}
 	else if ($uppercase && $lowercase && $number && $specialChars && strlen($newpassword) >= 8){
+		sleep(1);
 		$newpassword=password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
 		$cnfpassword=password_hash($_POST['confirmpassword'], PASSWORD_DEFAULT);
 		
