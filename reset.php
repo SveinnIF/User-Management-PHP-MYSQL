@@ -37,8 +37,8 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
 
     // UPDATE PASSWORD
   if ($result=="") {
-    $password=md5($_POST['password']);
-    $newpassword=md5($_POST['newpassword']);
+    $password=password_hash("password", PASSWORD_DEFAULT);
+    $newpassword=password_hash("newpassword", PASSWORD_DEFAULT);
     $id=$_GET["i"];
     $sql ="SELECT Password FROM lecturers WHERE id=:id";
     $query= $dbh -> prepare($sql);

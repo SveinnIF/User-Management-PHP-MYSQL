@@ -21,28 +21,69 @@ header('location:index.php');
 else{
 // Code for change password	
 if(isset($_POST['submit']))
-	{
-$password=md5($_POST['password']);
-$newpassword=md5($_POST['newpassword']);
-$username=$_SESSION['alogin'];
-$sql ="SELECT Password FROM admin WHERE UserName=:username and Password=:password";
-$query= $dbh -> prepare($sql);
-$query-> bindParam(':username', $username, PDO::PARAM_STR);
-$query-> bindParam(':password', $password, PDO::PARAM_STR);
-$query-> execute();
-$results = $query -> fetchAll(PDO::FETCH_OBJ);
-if($query -> rowCount() > 0)
 {
-$con="update admin set Password=:newpassword where UserName=:username";
-$chngpwd1 = $dbh->prepare($con);
-$chngpwd1-> bindParam(':username', $username, PDO::PARAM_STR);
-$chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
-$chngpwd1->execute();
-$msg="Your Password succesfully changed";
-}
-else {
-$error="Your current password is not valid.";	
-}
+$username=$_SESSION['alogin'];
+
+$sql = "SELECT password FROM admin WHERE username=:username";
+$query = $dbh -> prepare($sql);
+$query-> bindParam(':username', $username, PDO::PARAM_STR);
+$query->execute();
+$result=$query->fetch(PDO::FETCH_OBJ);	
+$pwd = ($result->password);  
+$password=password_verify($_POST['password'], $pwd); 
+		
+$newpassword=$_POST['newpassword'];
+$cnfpassword=$_POST['confirmpassword'];
+
+// validation
+$uppercase    = preg_match('@[A-Z ÆØÅ]@', $newpassword);
+$lowercase    = preg_match('@[a-z æøå]@', $newpassword);
+$number    	  = preg_match('@[0-9]@', $newpassword);
+$specialChars = preg_match('@[^\w]@', $newpassword);
+
+	if(!$password) // sjekker om current pw er riktig med password_verify
+		{
+		sleep(1);
+		$pwdResponse = array(
+			"type" => "passwordError",
+			"message" => "Current password invalid"
+		);
+	}
+	else if ($newpassword != $cnfpassword) {
+		sleep(1);
+		$pwdResponse = array(
+			"type" => "passwordError",
+			"message" => "New Password and Confirm Password fields do not match"
+		);
+	}
+	else if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($newpassword) <= 8) {
+		sleep(1);
+		$pwdResponse = array(
+			"type" => "passwordError",
+			"message" => "New password must be at least 8 characters long and must include at least one upper case letter, one lower case letter, one number, and one special character."
+		);
+	}
+	else if ($uppercase && $lowercase && $number && $specialChars && strlen($newpassword) >= 8){
+		$newpassword=password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
+		$cnfpassword=password_hash($_POST['confirmpassword'], PASSWORD_DEFAULT);
+		
+		sleep(1);
+		
+		$sql ="SELECT password FROM admin WHERE username=:username and password=:password";
+		$query= $dbh -> prepare($sql);
+		$query-> bindParam(':username', $username, PDO::PARAM_STR);
+		$query-> bindParam(':password', $password, PDO::PARAM_STR);
+		$query-> execute();
+		$results = $query -> fetchAll(PDO::FETCH_OBJ);
+		
+		$con="UPDATE admin SET password=:newpassword WHERE username=:username";
+		$chngpwd1 = $dbh->prepare($con);
+		$chngpwd1-> bindParam(':username', $username, PDO::PARAM_STR);
+		$chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
+		$chngpwd1->execute();
+		$msg="Your Password succesfully changed";
+	}
+//
 }
 ?>
 
@@ -75,36 +116,25 @@ $error="Your current password is not valid.";
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
-<script type="text/javascript">
-function valid()
-{
-if(document.chngpwd.newpassword.value!= document.chngpwd.confirmpassword.value)
-{
-alert("New Password and Confirm Password Field do not match  !!");
-document.chngpwd.confirmpassword.focus();
-return false;
-}
-return true;
-}
-</script>
-  <style>
-.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #dd3d36;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-	background: #5cb85c;
-	color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-		</style>
+	
+	<style>
+	.errorWrap {
+    		padding: 10px;
+   	 	margin: 0 0 20px 0;
+		background: #dd3d36;
+		color:#fff;
+    		-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    		box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+	}
+	.succWrap{
+    		padding: 10px;
+    		margin: 0 0 20px 0;
+		background: #5cb85c;
+		color:#fff;
+    		-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    		box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+	}
+	</style>
 
 
 </head>
@@ -151,6 +181,13 @@ return true;
 												<label class="col-sm-4 control-label">Confirm Password</label>
 												<div class="col-sm-8">
 													<input type="password" class="form-control" name="confirmpassword" id="confirmpassword" required>
+														<br>
+														<br>
+														<?php if(!empty($pwdResponse)) { ?>
+														<div class="response <?php echo $pwdResponse["type"]; ?> " color=red>
+														<?php echo $pwdResponse["message"]; ?>
+														</div>
+														<?php }?>
 												</div>
 											</div>
 											<div class="hr-dashed"></div>

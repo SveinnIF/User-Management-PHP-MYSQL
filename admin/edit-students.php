@@ -107,7 +107,8 @@ if(isset($_POST['submit']))
 	
 	// Sender informasjonen til databasen om alle validations er suksessfulle
 	if($inputValidation == "nameEmailFosClass") {
-		$sql="UPDATE students SET name=(:name), email=(:email), fieldofstudy=(:fieldofstudy), class=(:class) WHERE id=(:idedit)";
+		sleep(1);
+		$sql="CALL editStudentUpdate(:name, :email, :fieldofstudy, :class, :idedit)";
 		$query = $dbh->prepare($sql);
 		$query-> bindParam(':name', $name, PDO::PARAM_STR);
 		$query-> bindParam(':email', $email, PDO::PARAM_STR);

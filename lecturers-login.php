@@ -21,12 +21,14 @@ $email=$_POST['username'];
 
 	// email validation		
 	if (empty($email)) {
+		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "Invalid Details Or Account Not Confirmed"
 		);
 	}
 	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "Invalid Details Or Account Not Confirmed"
@@ -43,12 +45,14 @@ $email=$_POST['username'];
 
 		if($password)
 		{
+			sleep(1);
 			$_SESSION['alogin']=$_POST['username'];
 			echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
 		} 
 		else{
-		  $pw_error_ms = "<p style='color:red;'>Invalid Details Or Account Not Confirmed.</p><p>Forgot your password? <a href='forgotten-password.php' >Change password</a></p>";
-		  #echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
+			sleep(1);
+		  	$pw_error_ms = "<p style='color:red;'>Invalid Details Or Account Not Confirmed.</p><p>Forgot your password? <a href='forgotten-password.php' >Change password</a></p>";
+		  	#echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
 		}
 	}
 }

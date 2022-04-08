@@ -19,12 +19,14 @@ $email=$_POST['username'];
 
 	// email validation		
 	if (empty($email)) {
+		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "Invalid Details Or Account Not Confirmed"
 		);
 	}
 	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "Invalid Details Or Account Not Confirmed"
@@ -41,10 +43,12 @@ $email=$_POST['username'];
 
 		if($password)
 		{
+			sleep(1);
 			$_SESSION['alogin']=$_POST['username'];
 			echo "<script type='text/javascript'> document.location = 'feedback-students.php'; </script>";
 		} 
 		else{
+			sleep(1);
 			$emailResponse = array(
 				"type" => "emailError",
 				"message" => "Invalid Details Or Account Not Confirmed"

@@ -12,27 +12,49 @@ $publisher = new Gelf\Publisher($transport);
 $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
+error_reporting(0);
 include('includes/config.php');
 if(isset($_POST['login']))
 {
-$email=$_POST['username'];
-$password=md5($_POST['password']);
-$sql ="CALL adminLoginCheck(:email, :password)";
-$query= $dbh -> prepare($sql);
-$query-> bindParam(':email', $email, PDO::PARAM_STR);
-$query-> bindParam(':password', $password, PDO::PARAM_STR);
-$query-> execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-if($query->rowCount() > 0)
-{
-$_SESSION['alogin']=$_POST['username'];
-echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
-} else{
-  
-  echo "<script>alert('Invalid Details');</script>";
-
-}
-
+	$username=$_POST['username'];
+	
+	if (empty($username)) {
+		sleep(1);
+		$usernameResponse = array(
+			"type" => "adminError",
+			"message" => "Invalid Details Or Account Not Confirmed"
+		);
+	}
+	else if(!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $username)) {
+		sleep(1);
+        	$usernameResponse = array(
+            		"type" => "adminError",
+            		"message" => "Invalid Details Or Account Not Confirmed"
+        	); 
+    	} 
+	else if(preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $username)) {
+		$sql ="SELECT username, password FROM admin WHERE username=:username ";
+		$query= $dbh -> prepare($sql);
+		$query-> bindParam(':username', $username, PDO::PARAM_STR);
+		$query-> execute();
+		$result=$query->fetch(PDO::FETCH_OBJ);
+		$pwd = ($result->password);  
+		$password=password_verify($_POST['password'], $pwd);
+		
+		if($password)
+		{
+			sleep(1);
+			$_SESSION['alogin']=$_POST['username'];
+			echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
+		} 
+		else{
+			sleep(1);
+			$usernameResponse = array(
+				"type" => "adminError",
+				"message" => "Invalid Details Or Account Not Confirmed asdasasd"
+			);
+		}
+	}
 }
 
 ?>
@@ -73,6 +95,14 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
 
 									<label for="" class="text-uppercase text-sm">Password</label>
 									<input type="password" placeholder="Password" name="password" class="form-control mb" required>
+									
+										<?php if(!empty($usernameResponse)) { ?>
+										<div class="response <?php echo $usernameResponse["type"]; ?> " color=red>
+										<?php echo $usernameResponse["message"]; ?>
+										</div>
+										<?php }?>
+										<br>
+										
 									<button class="btn btn-primary btn-block" name="login" type="submit">LOGIN</button>
 								</form>
 							</div>
