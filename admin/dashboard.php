@@ -187,7 +187,6 @@ $delcnt=$query->rowCount();
 		// Dougnut Chart from doughnutData
 		var doctx = document.getElementById("chart-area4").getContext("2d");
 		window.myDoughnut = new Chart(doctx).Doughnut(doughnutData, {responsive : true});
-
 	}
 	</script>
 </body>
