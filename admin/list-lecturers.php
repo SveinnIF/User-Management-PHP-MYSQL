@@ -114,7 +114,6 @@ if(isset($_REQUEST['unconfirm']))
 		</style>
 
 </head>
-
 <body>
 	<?php include('includes/header.php');?>
 
