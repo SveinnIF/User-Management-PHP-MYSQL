@@ -13,7 +13,7 @@ $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
 error_reporting(0);
-include('includes/adminconfig.php');
+include('includes/adminConfig.php');
 if(isset($_POST['login']))
 {
 	$username=$_POST['username'];
