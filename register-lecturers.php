@@ -178,7 +178,6 @@ $emailCheck = $query->fetch();
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
