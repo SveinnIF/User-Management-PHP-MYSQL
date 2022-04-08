@@ -12,7 +12,7 @@ $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
 error_reporting(0);
-include('includes/adminConfig.php');
+include('includes/studentConfig.php');
 if(isset($_POST['submit']))
 {
 $id=uniqid();
