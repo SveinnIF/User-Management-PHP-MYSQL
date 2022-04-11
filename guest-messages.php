@@ -29,15 +29,6 @@ else{
       $user=$_SESSION['alogin'];
       $receiver='Lecturers, Admin , Guest';
   
-      $sender = $_SESSION['alogin'];
-      $sql = "SELECT * FROM  guest where email = '$sender'";
-      $query = $dbh -> prepare($sql);
-      $query->execute();
-      $result=$query->fetch(PDO::FETCH_OBJ);
-      $cnt=1;   
-      $anon= ($result->id);
-      
-  
       $sql="CALL guestCommentInfo(:id, :user, :receiver, :course, :title, :description)";
       $query = $dbh->prepare($sql);
       if ($_POST['anon'] == 'anonymous') {
@@ -232,15 +223,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   	<span class="error"> <?php echo $messageErr;?></span>
     </div>
 </div>
-
-<!-- checkbox anonym  -->
-<div class="form-group">
-    <div class="col-sm-8 col-sm-offset-2">
-        <input type="checkbox" name="anon" value="anonymous">
-        <label for="anonymous"> Hide your name from lecturer </label><br>
-    </div>
-</div>
-<!-- checkbox anonym  -->
 
 <div class="form-group">
     <div class="col-sm-8 col-sm-offset-2">
