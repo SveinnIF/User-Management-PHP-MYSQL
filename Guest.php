@@ -11,13 +11,12 @@ Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN*/);
 $publisher = new Gelf\Publisher($transport);
 $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
-
 include('includes/config.php');
 if(isset($_POST['login']))
 {
 $status='1';
 $password=md5($_POST['password']);
-$sql ="SELECT email,password FROM students WHERE password=:password and status=(:status)";
+$sql ="SELECT * FROM guest WHERE password=:password and status=(:status)";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);
 $query-> bindParam(':status', $status, PDO::PARAM_STR);
@@ -72,7 +71,7 @@ echo "<script type='text/javascript'> document.location = 'guest-messages.php'; 
 	
 								
 
-									<label for="" class="text-uppercase text-sm">4 digits numbers</label>
+									<label form="password" class="password">4 digits numbers</label>
 									<input type="password" placeholder="Password" name="password" class="form-control mb" required>
 									<button class="btn btn-primary btn-block" name="login" type="submit">LOGIN</button>
 								</form>
@@ -97,5 +96,7 @@ echo "<script type='text/javascript'> document.location = 'guest-messages.php'; 
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
+
 </body>
+
 </html>
