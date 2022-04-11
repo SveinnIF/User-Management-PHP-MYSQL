@@ -49,7 +49,7 @@ INSERT INTO `admin` (`id`, `username`, `email`, `password`) VALUES
 --
 
 CREATE TABLE `deleteduser` (
-  `id` int(11) NOT NULL,
+  `id` varchar(13) NOT NULL,
   `email` varchar(50) NOT NULL,
   `deltime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
