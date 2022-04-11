@@ -13,7 +13,7 @@ $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
 error_reporting(0);
-include('includes/studentConfig.php');
+include('includes/config.php');
 if(strlen($_SESSION['alogin'])==0)
 	{	
 header('location:index.php');
@@ -50,7 +50,6 @@ if(isset($_POST['submit']))
             		"type" => "titleError",
             		"message" => "Invalid title"
         	); 
-			$logger->info('Invalid tittel ved sending av melding til foreleser'); // logging 
     	} 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
 		$inputValidation="title";
@@ -63,13 +62,13 @@ if(isset($_POST['submit']))
             		"message" => "Course is required"
         	);
     	}    
-    	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+    	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], ["3474", "8473", "1273", "8674", "9375", "7573"], true)) {
         	$courseResponse = array(
             		"type" => "courseError",
             		"message" => "Invalid course"
         	); 
     	} 
-	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], ["3474", "8473", "1273", "8674", "9375", "7573"], true)) {
 		$inputValidation .="Course";
 	}
 	
@@ -85,7 +84,6 @@ if(isset($_POST['submit']))
             		"type" => "msgError",
             		"message" => "Invalid message"
         	); 
-			$logger->info('Invalid message ved sending av melding til foreleser'); // logging
     	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
 		$inputValidation .= "Msg";
@@ -107,7 +105,6 @@ if(isset($_POST['submit']))
 		$query-> bindParam(':message', $message, PDO::PARAM_STR);
 		$query->execute(); 
 		$msg="Feedback Sent";
-		$logger->info('En student har sendt en melding til en foreleser'); // logging 
 	}
 }    
 ?>
@@ -168,27 +165,27 @@ if(isset($_POST['submit']))
 
 <body>
 <?php
-$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('.NET')");
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('3474')");
 $query->execute();
 $dotNET=$query->fetch(PDO::FETCH_OBJ);
 
-$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('aod')");
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('8473')");
 $query->execute();
 $algoritmer=$query->fetch(PDO::FETCH_OBJ);
 
-$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('diuod')");
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('1273')");
 $query->execute();
 $datasikkerhet=$query->fetch(PDO::FETCH_OBJ);
 
-$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('blyse')");
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('8674')");
 $query->execute();
 $bildeanalyse=$query->fetch(PDO::FETCH_OBJ);
 
-$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('laoi')");
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('9375')");
 $query->execute();
 $algebra=$query->fetch(PDO::FETCH_OBJ);
 
-$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('ak')");
+$query=$dbh->prepare("CALL lecturerInfoStudentFeedback('7573')");
 $query->execute();
 $autonome=$query->fetch(PDO::FETCH_OBJ);
 ?>
@@ -229,12 +226,12 @@ $autonome=$query->fetch(PDO::FETCH_OBJ);
 		<div class="col-sm-4">
 			<select name="course" class="form-control" required>
 				<option value="0">Select</option>
-				<option value=".NET">.NET</option>
-				<option value="aod">Algoritmer og datastrukturer</option>
-				<option value="diuod">Datasikkerhet i utvikling og drift</option>
-				<option value="blyse">Bildeanalyse</option>
-				<option value="laoi">Lineær algebra og integraltransformer</option>
-				<option value="ak">Autonome kjøretøy</option>
+				<option value="3474">.NET</option>
+				<option value="8473">Algoritmer og datastrukturer</option>
+				<option value="1273">Datasikkerhet i utvikling og drift</option>
+				<option value="8674">Bildeanalyse</option>
+				<option value="9375">Lineær algebra og integraltransformer</option>
+				<option value="7573">Autonome kjøretøy</option>
 			</select>
 				<?php if(!empty($courseResponse)) { ?>
 				<div class="response <?php echo $courseResponse["type"]; ?>
