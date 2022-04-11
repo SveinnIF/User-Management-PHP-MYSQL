@@ -54,9 +54,9 @@ $email=$_POST['username'];
 			sleep(1);
 			$emailResponse = array(
 				"type" => "emailError",
-				"message" => "Invalid Details Or Account Not Confirmed",
-				$logger->info('En student forsøkte å logge inn, men feilet'); // logging 
+				"message" => "Invalid Details Or Account Not Confirmed"
 			);
+			$logger->info('En student forsøkte å logge inn, men feilet'); // logging 
 		}
 	}
 }
