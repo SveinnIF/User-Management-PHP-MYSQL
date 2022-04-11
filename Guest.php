@@ -11,7 +11,8 @@ Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN*/);
 $publisher = new Gelf\Publisher($transport);
 $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
-include('includes/guestConfig.php');
+
+include('includes/config.php');
 if(isset($_POST['login']))
 {
 $status='1';
