@@ -13,7 +13,7 @@ $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
 error_reporting(0);
-include('includes/lecturerConfig.php');
+include('includes/config.php');
 if(strlen($_SESSION['alogin'])==0)
 	{	
 header('location:index.php');
@@ -123,7 +123,27 @@ foreach($results as $result)
 {				?>	
 										<tr>
 											<td><?php echo $cnt;?></td>
-											<td><?php echo htmlentities($result->course);?></td>
+											<td>
+												<?php 
+												if ($result->course == "3474") {
+													echo '<p>.NET</p>';
+												}
+												else if($result->course == "8473") {
+													echo '<p>Algoritmer og datastrukturer</p>';
+												}
+												else if($result->course == "1273") {
+													echo '<p>Datasikkerhet i utvikling og drift</p>';
+												}
+												else if($result->course == "8674") {
+													echo '<p>Bildeanalyse</p>';
+												}
+												else if($result->course == "9375") {
+													echo '<p>Lineær algebra og integraltransformer</p>';
+												}
+												else if($result->course == "7573") {
+													echo '<p>Autonome kjøretøy</p>';
+												}
+												?></td>
 											<td><?php echo htmlentities($result->title);?></td>
                                             <td><?php echo htmlentities($result->feedbackdata);?></td>
 											<td>
