@@ -36,8 +36,9 @@ $number    	  = preg_match('@[0-9]@', $password);
 $specialChars = preg_match('@[^\w]@', $password);
 
 // Check if email is in use
-$query = $dbh->prepare("SELECT email FROM lecturers WHERE email=?");
-$query->execute([$email]); 
+$query = $dbh->prepare("CALL lecturerEmailInUse(:email)");
+$query-> bindParam(':email', $email, PDO::PARAM_STR);
+$query->execute(); 
 $emailCheck = $query->fetch();
     
 	// image validation
