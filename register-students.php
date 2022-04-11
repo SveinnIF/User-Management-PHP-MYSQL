@@ -31,24 +31,25 @@ $number    	  = preg_match('@[0-9]@', $password);
 $specialChars = preg_match('@[^\w]@', $password);
 
 // Check if email is in use
-$query = $dbh->prepare("SELECT email FROM students WHERE email=?");
-$query->execute([$email]); 
+$query = $dbh->prepare("CALL studentEmailInUse(:email)");
+$query-> bindParam(':email', $email, PDO::PARAM_STR);
+$query->execute(); 
 $emailCheck = $query->fetch();
 
 	// name validation
-    if (empty($name)) {
-        $nameResponse = array(
-            "type" => "nameError",
-            "message" => "Name is required"
-        );
-    }    
-    else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
-        $nameResponse = array(
-            "type" => "nameError",
-            "message" => "Invalid name"
-        ); 
+    	if (empty($name)) {
+        	$nameResponse = array(
+            		"type" => "nameError",
+            		"message" => "Name is required"
+        	);
+    	}    
+    	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
+        	$nameResponse = array(
+            		"type" => "nameError",
+            		"message" => "Invalid name"
+        	); 
 		$logger->info('Invalid name ved registrering av student'); // logging
-    } 
+    	} 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
 		$inputValidation="name";
 	}
