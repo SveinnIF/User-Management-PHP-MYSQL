@@ -24,17 +24,17 @@ $email=$_POST['username'];
 		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid Details Or Account Not Confirmed",
-			$logger->info('En foreleser forsøkte å logge inn, men feilet'); // logging 
+			"message" => "Invalid Details Or Account Not Confirmed"
 		);
+		$logger->info('En foreleser forsøkte å logge inn, men feilet'); // logging 
 	}
 	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid Details Or Account Not Confirmed",
-			$logger->info('En foreleser forsøkte å logge inn, men feilet'); // logging 
+			"message" => "Invalid Details Or Account Not Confirmed"
 		);
+		$logger->info('En foreleser forsøkte å logge inn, men feilet'); // logging 
 	}
 	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$sql = "CALL lecturerLoginCheck(:email)";

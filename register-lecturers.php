@@ -57,9 +57,9 @@ $emailCheck = $query->fetch();
     else if(! in_array($file_extension, $allowed_image_extension)) {
         $response = array(
             "type" => "error",
-            "message" => "Image must be .JPG or .JPEG.",
-			$logger->warn('En bruker forsøkte å laste opp annen filtype enn .jpg/.jpeg'); // logging 
+            "message" => "Image must be .JPG or .JPEG."
         ); 
+		$logger->warn('En bruker forsøkte å laste opp annen filtype enn .jpg/.jpeg'); // logging 
         
     }    
     else if($_FILES["image"]["size"] > 2000000) {
@@ -91,9 +91,9 @@ $emailCheck = $query->fetch();
     	else if(!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
         	$nameResponse = array(
             		"type" => "nameError",
-            		"message" => "Invalid name",
-					$logger->info('Invalid name ved registrering av foreleser'); // logging
+            		"message" => "Invalid name"
         	); 
+			$logger->info('Invalid name ved registrering av foreleser'); // logging
     	} 
 	else if(preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
 		$inputValidation .= "Name";
@@ -109,16 +109,16 @@ $emailCheck = $query->fetch();
 	else if ($emailCheck) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid email",
-			$logger->info('Invalid email ved registrering av foreleser'); // logging
+			"message" => "Invalid email"
 		);
+		$logger->info('Invalid email ved registrering av foreleser'); // logging
 	}
 	else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid email",
-			$logger->info('Invalid email ved registrering av foreleser'); // logging
+			"message" => "Invalid email"
 		);
+		$logger->info('Invalid email ved registrering av foreleser'); // logging
 	}
 	else if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$inputValidation .= "Email";

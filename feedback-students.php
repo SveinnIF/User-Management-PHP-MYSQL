@@ -48,10 +48,9 @@ if(isset($_POST['submit']))
     	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
         	$titleResponse = array(
             		"type" => "titleError",
-            		"message" => "Invalid title",
-					$logger->info('Invalid tittel ved sending av melding til foreleser'); // logging 
-					
+            		"message" => "Invalid title"
         	); 
+			$logger->info('Invalid tittel ved sending av melding til foreleser'); // logging 
     	} 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
 		$inputValidation="title";
@@ -84,9 +83,9 @@ if(isset($_POST['submit']))
     	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
         	$msgResponse = array(
             		"type" => "msgError",
-            		"message" => "Invalid message",
-					$logger->info('Invalid message ved sending av melding til foreleser'); // logging
+            		"message" => "Invalid message"
         	); 
+			$logger->info('Invalid message ved sending av melding til foreleser'); // logging
     	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
 		$inputValidation .= "Msg";

@@ -45,9 +45,9 @@ $emailCheck = $query->fetch();
     else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
         $nameResponse = array(
             "type" => "nameError",
-            "message" => "Invalid name",
-			$logger->info('Invalid name ved registrering av student'); // logging
+            "message" => "Invalid name"
         ); 
+		$logger->info('Invalid name ved registrering av student'); // logging
     } 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
 		$inputValidation="name";
@@ -63,16 +63,16 @@ $emailCheck = $query->fetch();
 	else if ($emailCheck) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid email",
-			$logger->info('Invalid email ved registrering av student'); // logging
+			"message" => "Invalid email"
 		);
+		$logger->info('Invalid email ved registrering av student'); // logging
 	}
 	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid email",
-			$logger->info('Invalid email ved registrering av student'); // logging
+			"message" => "Invalid email"
 		);
+		$logger->info('Invalid email ved registrering av student'); // logging
 	}
 	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$inputValidation .= "Email";
