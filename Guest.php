@@ -16,7 +16,7 @@ if(isset($_POST['login']))
 {
 $status='1';
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-$sql ="SELECT * FROM guest WHERE password=:password and status=(:status)";
+$sql ="CALL guestLoginCheck(:password, :status)";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);
 $query-> bindParam(':status', $status, PDO::PARAM_STR);
