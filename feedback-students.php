@@ -92,7 +92,7 @@ if(isset($_POST['submit']))
 	// Sender informasjonen til databasen om alle validations er suksessfulle
 	if($inputValidation == "titleCourseMsg") {
 		sleep(1);
-		$query=$dbh->prepare("CALL studentFeedbackInfo(:id, :user, :receiver, :course, :title, :message)");
+		$query=$dbh->prepare("CALL studentFeedbackInfo(:id, :user, :receiver, :course, :title, :message, '0')");
 		if ($_POST['anon'] == 'anonymous') {
 			$query-> bindParam(':user', $anon, PDO::PARAM_STR);
 		} else {
