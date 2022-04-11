@@ -13,7 +13,7 @@ $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
 error_reporting(0);
-include('includes/config.php');
+include('includes/lecturerConfig.php');
 $result = "";
 
 if (isset($_GET["i"]) && isset($_GET["h"])) {
