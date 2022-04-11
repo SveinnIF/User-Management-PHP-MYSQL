@@ -70,14 +70,14 @@ else{
 		);
 		$logger->info('Bruker forsøkte å endre et felt som ikke er lov å endre'); // logging
 	}
-	else if (!in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+	else if (!in_array($_REQUEST['course'], ["3474", "8473", "1273", "8674", "9375", "7573"], true)) {
 		$courseResponse = array(
 			"type" => "courseError",
 			"message" => "This field cannot be changed"
 		);
 		$logger->info('Bruker forsøkte å endre et felt som ikke er lov å endre'); // logging
 	}
-	else if (in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+	else if (in_array($_REQUEST['course'], ["3474", "8473", "1273", "8674", "9375", "7573"], true)) {
 		$inputValidation .= "Course";
 	}
 	
