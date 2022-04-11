@@ -22,15 +22,12 @@ else{
     
     if(isset($_POST['submit']))
     {   
-     
-      
+      $id=uniqid();
       $title=$_POST['title'];
-          $description=$_POST['description'];
+      $description=$_POST['description'];
       $course=$_POST['course'];
       $user=$_SESSION['alogin'];
       $receiver='Lecturers, Admin , Guest';
-          $notitype='Send Feedback';
-          $attachment=' ';
   
       $sender = $_SESSION['alogin'];
       $sql = "SELECT * FROM  guest where email = '$sender'";
@@ -41,7 +38,7 @@ else{
       $anon= ($result->id);
       
   
-      $sql="INSERT INTO feedback (sender,receiver,course,title,feedbackdata,attachment) values (:user,:receiver,:course,:title,:description,:attachment)";
+      $sql="CALL guestCommentInfo(:id, :user, :receiver, :course, :title, :description)";
       $query = $dbh->prepare($sql);
       if ($_POST['anon'] == 'anonymous') {
 		$query-> bindParam(':user', $anon, PDO::PARAM_STR);
@@ -49,12 +46,11 @@ else{
 		$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	  }
 
-	  $query-> bindParam(':user', $user, PDO::PARAM_STR);
+      $query-> bindParam(':user', $user, PDO::PARAM_STR);
       $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
       $query-> bindParam(':course', $course, PDO::PARAM_STR);
       $query-> bindParam(':title', $title, PDO::PARAM_STR);
       $query-> bindParam(':description', $description, PDO::PARAM_STR);
-      $query-> bindParam(':attachment', $attachment, PDO::PARAM_STR);
       $query->execute(); 
       $msg="Feedback Sent";
   } 
@@ -144,7 +140,7 @@ else{
 
 <?php 
 $receiver = $_SESSION['alogin'];
-$sql = "SELECT * from  feedback where sender = (:receiver)";
+$sql = "CALL guestMessageTable(:receiver)";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
 $query->execute();
