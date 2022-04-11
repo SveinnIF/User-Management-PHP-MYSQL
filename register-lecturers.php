@@ -12,7 +12,7 @@ $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
 error_reporting(0);
-include('includes/lecturerConfig.php');
+include('includes/config.php');
 if(isset($_POST['submit']))
 {
 $name=$_POST['name'];
@@ -60,7 +60,6 @@ $emailCheck = $query->fetch();
             "type" => "error",
             "message" => "Image must be .JPG or .JPEG."
         ); 
-		$logger->warn('En bruker forsøkte å laste opp annen filtype enn .jpg/.jpeg'); // logging 
         
     }    
     else if($_FILES["image"]["size"] > 2000000) {
@@ -94,7 +93,6 @@ $emailCheck = $query->fetch();
             		"type" => "nameError",
             		"message" => "Invalid name"
         	); 
-			$logger->info('Invalid name ved registrering av foreleser'); // logging
     	} 
 	else if(preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
 		$inputValidation .= "Name";
@@ -112,14 +110,12 @@ $emailCheck = $query->fetch();
 			"type" => "emailError",
 			"message" => "Invalid email"
 		);
-		$logger->info('Invalid email ved registrering av foreleser'); // logging
 	}
 	else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$emailResponse = array(
 			"type" => "emailError",
 			"message" => "Invalid email"
 		);
-		$logger->info('Invalid email ved registrering av foreleser'); // logging
 	}
 	else if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$inputValidation .= "Email";
@@ -145,13 +141,13 @@ $emailCheck = $query->fetch();
             "message" => "Course is required"
         );
     	}    
-    	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+    	else if(isset($_REQUEST['course']) &&  !in_array($_REQUEST['course'], ["3474", "8473", "1273", "8674", "9375", "7573"], true)) {
         	$courseResponse = array(
             		"type" => "courseError",
             		"message" => "Invalid course"
         	); 
 	} 
-	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
+	else if(isset($_REQUEST['course']) &&  in_array($_REQUEST['course'], ["3474", "8473", "1273", "8674", "9375", "7573"], true)) {
 		$inputValidation .= "Course";
 	}
 	
@@ -166,7 +162,6 @@ $emailCheck = $query->fetch();
 		$query-> bindParam(':course', $course, PDO::PARAM_STR);
 		$query-> bindParam(':image', $image, PDO::PARAM_STR);
 		$query->execute();
-		$logger->info('En ny foreleser har opprettet en bruker'); // logging 
 		
 		echo "<script type='text/javascript'>alert('Registration Successful!');</script>";
 		echo "<script type='text/javascript'> document.location = 'lecturers-login.php'; </script>";
@@ -184,6 +179,7 @@ $emailCheck = $query->fetch();
 	<meta name="description" content="">
 	<meta name="author" content="">
 
+	
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
@@ -244,12 +240,12 @@ $emailCheck = $query->fetch();
                             				<div class="col-sm-5">
 								<select name="course" class="form-control" required>
 									<option value="0">Select</option>
-									<option value=".NET">.NET</option>
-									<option value="aod">Algoritmer og datastrukturer</option>
-									<option value="diuod">Datasikkerhet i utvikling og drift</option>
-									<option value="blyse">Bildeanalyse</option>
-									<option value="laoi">Lineær algebra og integraltransformer</option>
-									<option value="ak">Autonome kjøretøy</option>
+									<option value="3474">.NET</option>
+									<option value="8473">Algoritmer og datastrukturer</option>
+									<option value="1273">Datasikkerhet i utvikling og drift</option>
+									<option value="8674">Bildeanalyse</option>
+									<option value="9375">Lineær algebra og integraltransformer</option>
+									<option value="7573">Autonome kjøretøy</option>
 								</select>
 									<?php if(!empty($courseResponse)) { ?>
 									<div class="response <?php echo $courseResponse["type"]; ?> " color=red>
