@@ -12,6 +12,7 @@ $publisher = new Gelf\Publisher($transport);
 $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
+session_start();
 error_reporting(0);
 include('includes/studentConfig.php');
 if(strlen($_SESSION['alogin'])==0)
@@ -137,7 +138,28 @@ foreach($results as $result)
 												<?php echo str_repeat('&nbsp;', 3);?>
 												<?php echo htmlentities($result->name);?>
 											</td>
-											<td><?php echo htmlentities($result->course);?></td>
+											<td>
+												<?php 
+												if ($result->course == "3474") {
+													echo '<p>.NET</p>';
+												}
+												else if($result->course == "8473") {
+													echo '<p>Algoritmer og datastrukturer</p>';
+												}
+												else if($result->course == "1273") {
+													echo '<p>Datasikkerhet i utvikling og drift</p>';
+												}
+												else if($result->course == "8674") {
+													echo '<p>Bildeanalyse</p>';
+												}
+												else if($result->course == "9375") {
+													echo '<p>Lineær algebra og integraltransformer</p>';
+												}
+												else if($result->course == "7573") {
+													echo '<p>Autonome kjøretøy</p>';
+												}
+												?>
+											</td>
 											<td><?php echo htmlentities($result->feedbackdata);?></td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
