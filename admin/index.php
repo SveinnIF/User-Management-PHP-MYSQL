@@ -78,7 +78,6 @@ if(isset($_POST['login']))
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 	<div class="login-page bk-img" style="background-image: url(img/background.jpg);">
 		<div class="form-content">
