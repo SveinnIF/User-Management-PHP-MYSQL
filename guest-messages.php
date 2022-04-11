@@ -13,7 +13,7 @@ $handler = new GelfHandler($publisher,Logger::DEBUG);
 $logger->pushHandler($handler);
 
 error_reporting(0);
-include('includes/guestConfig.php');
+include('includes/config.php');
 if(strlen($_SESSION['alogin'])==0)
     {   
 header('location:index.php');
@@ -110,7 +110,29 @@ else{
                 <div class="row">
                     <div class="col-md-12">
 
-                        <h2 class="page-title">Messages for Course: ITF25019-1 22V Datasikkerhet i utvikling og drift</h2>
+                        <?php 
+                            $course = $_SESSION['alogin'];
+
+                            if ($course == "3474") {
+                                echo '<h2 class="page-title">Messages for Course: .NET</h2>';
+                            }
+                            else if($course == "8473") {
+                                echo '<h2 class="page-title">Messages for Course: Algoritmer og datastrukturer</h2>';
+                            }
+                            else if($course == "1273") {
+                                echo '<h2 class="page-title">Messages for Course: Datasikkerhet i utvikling og drift</h2>';
+                            }
+                            else if($course == "8674") {
+                                echo '<h2 class="page-title">Messages for Course: Bildeanalyse</h2>';
+                            }
+                            else if($course == "9375") {
+                                echo '<h2 class="page-title">Messages for Course: Lineær algebra og integraltransformer</h2>';
+                            }
+                            else if($course == "7573") {
+                                echo '<h2 class="page-title">Messages for Course: Autonome kjøretøy</h2>';
+                            }
+                            ?>
+                        
 
                         <!-- Zero Configuration Table -->
                         <div class="panel panel-default">
@@ -130,10 +152,10 @@ else{
                                     <tbody>
 
 <?php 
-$receiver = $_SESSION['alogin'];
-$sql = "CALL guestMessageTable(:receiver)";
+$course = $_SESSION['alogin'];
+$sql = "CALL guestMessageTable(:course)";
 $query = $dbh -> prepare($sql);
-$query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
+$query-> bindParam(':course', $course, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -204,12 +226,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="col-sm-4">
     <select name="course" class="form-control" required>
             <option value="">Select</option>
-            <option value=".NET">.NET</option>
-        <option value="Algoritmer og datastrukturer">Algoritmer og datastrukturer</option>
-        <option value="Datasikkerhet i utvikling og drift">Datasikkerhet i utvikling og drift</option>
-        <option value="Bildeanalyse">Bildeanalyse</option>
-        <option value="Lineær algebra og integraltransformer">Lineær algebra og integraltransformer</option>
-        <option value="Autonome kjøretøy">Autonome kjøretøy</option>
+            <option value="3474">.NET</option>
+        <option value="8473">Algoritmer og datastrukturer</option>
+        <option value="1273">Datasikkerhet i utvikling og drift</option>
+        <option value="8674">Bildeanalyse</option>
+        <option value="9375">Lineær algebra og integraltransformer</option>
+        <option value="7573">Autonome kjøretøy</option>
     </select>
     </div>  
 </div>
@@ -277,4 +299,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 </html>
 <?php } ?>
-
