@@ -15,7 +15,7 @@ include('includes/guestConfig.php');
 if(isset($_POST['login']))
 {
 $status='1';
-$password=md5($_POST['password']);
+$password=$_POST['password'];
 $sql ="CALL guestLoginCheck(:password, :status)";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);
