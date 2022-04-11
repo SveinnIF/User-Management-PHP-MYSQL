@@ -45,7 +45,7 @@ else{
 	} else {
 		$query-> bindParam(':user', $user, PDO::PARAM_STR);
 	  }
-
+      $query-> bindParam(':id', $user, PDO::PARAM_STR);
       $query-> bindParam(':user', $user, PDO::PARAM_STR);
       $query-> bindParam(':receiver', $receiver, PDO::PARAM_STR);
       $query-> bindParam(':course', $course, PDO::PARAM_STR);
