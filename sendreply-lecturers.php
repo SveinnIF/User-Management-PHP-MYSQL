@@ -107,7 +107,7 @@ else{
 		$query-> bindParam(':message', $message, PDO::PARAM_STR);
 		$query->execute();
 		
-		$answerSql = "UPDATE feedback SET answered = '1' WHERE id=:answerId";
+		$answerSql = "CALL updateAnsweredValue(:answerId)";
 		$answerQuery = $dbh->prepare($answerSql);
 		$answerQuery-> bindParam(':answerId', $answerId, PDO::PARAM_STR);
 		$answerQuery->execute();
