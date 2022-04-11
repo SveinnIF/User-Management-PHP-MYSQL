@@ -22,5 +22,6 @@ if (ini_get("session.use_cookies")) {
 }
 unset($_SESSION['login']);
 session_destroy(); // destroy session
+$logger->info('En foreleser har logget ut'); // logging 
 header("location:lecturers-login.php"); 
 ?>

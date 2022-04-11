@@ -47,13 +47,15 @@ else{
 	if(empty($receiver)) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "This field cannot be changed"
+			"message" => "This field cannot be changed",
+			$logger->info('Bruker forsøkte å endre et felt som ikke er lov å endre'); // logging
 		);
 	}
 	else if(!preg_match("/^[a-zA-Z0-9 \@\. æøåÆØÅ]*$/", $receiver)) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "This field cannot be changed"
+			"message" => "This field cannot be changed",
+			$logger->info('Bruker forsøkte å endre et felt som ikke er lov å endre'); // logging
 		);
 	}
 	else if(preg_match("/^[a-zA-Z0-9 \@\. æøåÆØÅ]*$/", $receiver)) {
@@ -64,13 +66,15 @@ else{
 	if (empty($course)) {
 		$courseResponse = array(
 			"type" => "courseError",
-			"message" => "This field cannot be changed"
+			"message" => "This field cannot be changed",
+			$logger->info('Bruker forsøkte å endre et felt som ikke er lov å endre'); // logging
 		);
 	}
 	else if (!in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
 		$courseResponse = array(
 			"type" => "courseError",
-			"message" => "This field cannot be changed"
+			"message" => "This field cannot be changed",
+			$logger->info('Bruker forsøkte å endre et felt som ikke er lov å endre'); // logging
 		);
 	}
 	else if (in_array($_REQUEST['course'], [".NET", "aod", "diuod", "blyse", "laoi", "ak"], true)) {
@@ -87,7 +91,8 @@ else{
 	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
         	$msgResponse = array(
             		"type" => "msgError",
-            		"message" => "Invalid message"
+            		"message" => "Invalid message",
+					$logger->info('Invalid message ved sending av svar til student fra foreleser'); // logging
         	); 
     	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
@@ -112,6 +117,7 @@ else{
 		$answerQuery-> bindParam(':answerId', $answerId, PDO::PARAM_STR);
 		$answerQuery->execute();
 
+		$logger->info('En foreleser har svart på en melding fra en student'); // logging 
 		
 		echo "<script type='text/javascript'>alert('Reply Sent!');</script>";
 		echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";

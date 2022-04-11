@@ -81,6 +81,7 @@ $specialChars = preg_match('@[^\w]@', $newpassword);
 		$chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
 		$chngpwd1->execute();
 		$msg="Your Password succesfully changed";
+		$logger->info('En student har byttet passordet sitt'); // logging 
 	}
 //
 }

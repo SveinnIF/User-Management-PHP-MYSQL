@@ -45,7 +45,8 @@ $emailCheck = $query->fetch();
     else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
         $nameResponse = array(
             "type" => "nameError",
-            "message" => "Invalid name"
+            "message" => "Invalid name",
+			$logger->info('Invalid name ved registrering av student'); // logging
         ); 
     } 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
@@ -62,13 +63,15 @@ $emailCheck = $query->fetch();
 	else if ($emailCheck) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid email"
+			"message" => "Invalid email",
+			$logger->info('Invalid email ved registrering av student'); // logging
 		);
 	}
 	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid email"
+			"message" => "Invalid email",
+			$logger->info('Invalid email ved registrering av student'); // logging
 		);
 	}
 	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -133,6 +136,7 @@ $emailCheck = $query->fetch();
 		$query-> bindParam(':fieldofstudy', $fieldofstudy, PDO::PARAM_STR);
 		$query-> bindParam(':class', $class, PDO::PARAM_STR);
 		$query->execute();
+		$logger->info('En ny student har opprettet en bruker'); // logging 
 		
 		echo "<script type='text/javascript'>alert('Registration Successful!');</script>";
 		echo "<script type='text/javascript'> document.location = 'index.php'; </script>";

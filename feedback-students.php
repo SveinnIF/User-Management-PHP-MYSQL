@@ -48,7 +48,9 @@ if(isset($_POST['submit']))
     	else if (!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
         	$titleResponse = array(
             		"type" => "titleError",
-            		"message" => "Invalid title"
+            		"message" => "Invalid title",
+					$logger->info('Invalid tittel ved sending av melding til foreleser'); // logging 
+					
         	); 
     	} 
 	else if (preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $title)) {
@@ -82,7 +84,8 @@ if(isset($_POST['submit']))
     	else if (!preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
         	$msgResponse = array(
             		"type" => "msgError",
-            		"message" => "Invalid message"
+            		"message" => "Invalid message",
+					$logger->info('Invalid message ved sending av melding til foreleser'); // logging
         	); 
     	} 
 	else if (preg_match("/^[a-zA-Z \-\'\,\.\?\!\/\(\)\%\+\=\"\^\r?\n æøåÆØÅ 0-9]*$/", $message)) {
@@ -105,6 +108,7 @@ if(isset($_POST['submit']))
 		$query-> bindParam(':message', $message, PDO::PARAM_STR);
 		$query->execute(); 
 		$msg="Feedback Sent";
+		$logger->info('En student har sendt en melding til en foreleser'); // logging 
 	}
 }    
 ?>

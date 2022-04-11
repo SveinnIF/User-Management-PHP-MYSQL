@@ -24,14 +24,16 @@ $email=$_POST['username'];
 		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid Details Or Account Not Confirmed"
+			"message" => "Invalid Details Or Account Not Confirmed",
+			$logger->info('En foreleser forsøkte å logge inn, men feilet'); // logging 
 		);
 	}
 	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid Details Or Account Not Confirmed"
+			"message" => "Invalid Details Or Account Not Confirmed",
+			$logger->info('En foreleser forsøkte å logge inn, men feilet'); // logging 
 		);
 	}
 	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -48,11 +50,13 @@ $email=$_POST['username'];
 			sleep(1);
 			$_SESSION['alogin']=$_POST['username'];
 			echo "<script type='text/javascript'> document.location = 'feedback-lecturers.php'; </script>";
+			$logger->info('En foreleser har logget inn'); // logging 
 		} 
 		else{
 			sleep(1);
 		  	$pw_error_ms = "<p style='color:red;'>Invalid Details Or Account Not Confirmed.</p><p>Forgot your password? <a href='forgotten-password.php' >Change password</a></p>";
 		  	#echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
+			  $logger->info('En foreleser forsøkte å logge inn, men feilet'); // logging 
 		}
 	}
 }

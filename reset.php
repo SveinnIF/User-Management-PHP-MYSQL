@@ -54,6 +54,7 @@ if (isset($_GET["i"]) && isset($_GET["h"])) {
     $chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
     $chngpwd1->execute();
     $msg="<p>Your Password succesfully changed.</p>";
+    $logger->info('En bruker har endret passordet sitt'); // logging
     }
   else {
     $error="<p>Enter password.</p>"; 

@@ -57,7 +57,8 @@ $emailCheck = $query->fetch();
     else if(! in_array($file_extension, $allowed_image_extension)) {
         $response = array(
             "type" => "error",
-            "message" => "Image must be .JPG or .JPEG."
+            "message" => "Image must be .JPG or .JPEG.",
+			$logger->warn('En bruker forsøkte å laste opp annen filtype enn .jpg/.jpeg'); // logging 
         ); 
         
     }    
@@ -90,7 +91,8 @@ $emailCheck = $query->fetch();
     	else if(!preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
         	$nameResponse = array(
             		"type" => "nameError",
-            		"message" => "Invalid name"
+            		"message" => "Invalid name",
+					$logger->info('Invalid name ved registrering av foreleser'); // logging
         	); 
     	} 
 	else if(preg_match("/^[a-zA-Z-' æøåÆØÅ]*$/", $name)) {
@@ -107,13 +109,15 @@ $emailCheck = $query->fetch();
 	else if ($emailCheck) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid email"
+			"message" => "Invalid email",
+			$logger->info('Invalid email ved registrering av foreleser'); // logging
 		);
 	}
 	else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid email"
+			"message" => "Invalid email",
+			$logger->info('Invalid email ved registrering av foreleser'); // logging
 		);
 	}
 	else if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -161,6 +165,7 @@ $emailCheck = $query->fetch();
 		$query-> bindParam(':course', $course, PDO::PARAM_STR);
 		$query-> bindParam(':image', $image, PDO::PARAM_STR);
 		$query->execute();
+		$logger->info('En ny foreleser har opprettet en bruker'); // logging 
 		
 		echo "<script type='text/javascript'>alert('Registration Successful!');</script>";
 		echo "<script type='text/javascript'> document.location = 'lecturers-login.php'; </script>";

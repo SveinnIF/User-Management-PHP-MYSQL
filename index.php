@@ -22,14 +22,16 @@ $email=$_POST['username'];
 		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid Details Or Account Not Confirmed"
+			"message" => "Invalid Details Or Account Not Confirmed",
+			$logger->info('En student forsøkte å logge inn, men feilet'); // logging 
 		);
 	}
 	else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		sleep(1);
 		$emailResponse = array(
 			"type" => "emailError",
-			"message" => "Invalid Details Or Account Not Confirmed"
+			"message" => "Invalid Details Or Account Not Confirmed",
+			$logger->info('En student forsøkte å logge inn, men feilet'); // logging 
 		);
 	}
 	else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -46,12 +48,14 @@ $email=$_POST['username'];
 			sleep(1);
 			$_SESSION['alogin']=$_POST['username'];
 			echo "<script type='text/javascript'> document.location = 'feedback-students.php'; </script>";
+			$logger->info('En student har logget inn'); // logging 
 		} 
 		else{
 			sleep(1);
 			$emailResponse = array(
 				"type" => "emailError",
-				"message" => "Invalid Details Or Account Not Confirmed"
+				"message" => "Invalid Details Or Account Not Confirmed",
+				$logger->info('En student forsøkte å logge inn, men feilet'); // logging 
 			);
 		}
 	}
